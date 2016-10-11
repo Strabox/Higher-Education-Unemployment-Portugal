@@ -1,4 +1,4 @@
-SubsistemaDeEnsino;CodigoUniversidade;NomeUniversidade;CodigoCurso;NomeCurso;Grau;1ºEmp<6;1ºEmp6a12;1ºEmp>=12;NovoEmp<6;NovoEmp6a12;NovoEmp>=12;1996-1997 a 2000-2001;2001-2002;2002-2003;2003-2004;2004-2005;2005-2006;Total
+SubsistemaDeEnsino;CodigoUniversidade;NomeUniversidade;CodigoCurso;NomeCurso;Grau;1ºEmp<6;1ºEmp6a12;1ºEmp>=12;NovoEmp<6;NovoEmp6a12;NovoEmp>=12;TotalDesempregados;1996-1997 a 2000-2001;2001-2002;2002-2003;2003-2004;2004-2005;2005-2006;TotalDiplomados
 Ensino superior público universitário;100;Universidade dos Açores;8020;ADMINISTRAÇÃO E CONTABILIDADE;Bacharelato;;;2;;2;;;;;;;
 Ensino superior público universitário;110;Universidade dos Açores - Angra do Heroísmo;0198;ENGENHARIA AGRÍCOLA;Licenciatura;;;6;;6;81;11;11;8;3;;114
 Ensino superior público universitário;110;Universidade dos Açores - Angra do Heroísmo;0347;ENGENHARIA ZOOTÉCNICA;Licenciatura;1;;1;2;4;98;27;29;15;22;10;201
