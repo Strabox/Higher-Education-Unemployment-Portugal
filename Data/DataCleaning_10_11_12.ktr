@@ -102,9 +102,8 @@
   <hop> <from>Dummy &#x28;do nothing&#x29;</from><to>Sort rows 2 2</to><enabled>Y</enabled> </hop>
   <hop> <from>Dummy &#x28;do nothing&#x29;</from><to>Sort rows 2 2 2</to><enabled>Y</enabled> </hop>
   <hop> <from>CSV file input&#x3a; areas 2</from><to>Sort rows 3 2 2</to><enabled>Y</enabled> </hop>
-  <hop> <from>Sort rows 3</from><to>Merge Join 2</to><enabled>Y</enabled> </hop>
   <hop> <from>Sort rows 3 2 2</from><to>Merge Join 2</to><enabled>Y</enabled> </hop>
-  <hop> <from>Merge Join 2</from><to>Merge Join</to><enabled>Y</enabled> </hop>
+  <hop> <from>Sort rows 3</from><to>Merge Join</to><enabled>Y</enabled> </hop>
   </order>
   <step>
     <name>Areas2011</name>
@@ -125,7 +124,7 @@
     <encoding>UTF-8</encoding>
     <addtoresult>N</addtoresult>
     <file>
-      <name>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;output&#x5c;aaAreas2012</name>
+      <name>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;output&#x5c;lixo</name>
       <extention>json</extention>
       <append>N</append>
       <split>N</split>
@@ -366,7 +365,7 @@
            <method>none</method>
            <schema_name/>
            </partitioning>
-    <filename>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;Pre Processed CSV&#x27;s&#x5c;2015.csv</filename>
+    <filename>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;Pre Processed CSV&#x27;s&#x5c;2012.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -381,17 +380,6 @@
     <encoding/>
     <fields>
       <field>
-        <name>NomeFaculdade</name>
-        <type>String</type>
-        <format/>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>104</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
         <name>CodigoFaculdade</name>
         <type>Integer</type>
         <format>&#x23;</format>
@@ -403,13 +391,13 @@
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>NomeCurso</name>
+        <name>NomeFaculdade</name>
         <type>String</type>
         <format/>
         <currency>&#x20ac;</currency>
         <decimal>,</decimal>
         <group>.</group>
-        <length>76</length>
+        <length>104</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -425,260 +413,29 @@
         <trim_type>none</trim_type>
       </field>
       <field>
+        <name>NomeCurso</name>
+        <type>String</type>
+        <format/>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>75</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
         <name>Grau</name>
         <type>String</type>
         <format/>
         <currency>&#x20ac;</currency>
         <decimal>,</decimal>
         <group>.</group>
-        <length>2</length>
+        <length>12</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>CNAEF_3D</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>CNAEF_3D_Nome</name>
-        <type>String</type>
-        <format/>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>81</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>A2006_Total</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>A2007_Total</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>A2008_Total</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>A2009_Total</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>A2010_Total</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>A2011_Total</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>A2012_Total</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>A2013_Total</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>A2014_Total</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>A2015_Total</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
         <name>TotalDesempregados</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Dip_2005</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Dip_2006</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Dip_2007</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Dip_2008</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Dip_2009</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Dip_2010</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Dip_2011</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Dip_2012</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Dip_2013</name>
-        <type>Integer</type>
-        <format>&#x23;</format>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>Dip_2014</name>
         <type>Integer</type>
         <format>&#x23;</format>
         <currency>&#x20ac;</currency>
@@ -727,7 +484,7 @@
     <encoding>UTF-8</encoding>
     <addtoresult>N</addtoresult>
     <file>
-      <name>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;output&#x5c;special2015</name>
+      <name>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;output&#x5c;Courses2012</name>
       <extention>json</extention>
       <append>N</append>
       <split>N</split>
@@ -772,8 +529,8 @@
         <element>PercentagemDesemprego</element>
     </field>
       <field>
-        <name>Nota</name>
-        <element>Nota</element>
+        <name>CNAEF_3D</name>
+        <element>CNAEF_3D</element>
     </field>
     </fields>
      <cluster_schema/>
@@ -1199,7 +956,7 @@
            </partitioning>
 <join_type>INNER</join_type>
 <step1>Sort rows 3 2</step1>
-<step2>Merge Join 2</step2>
+<step2>Sort rows 3</step2>
     <keys_1>
       <key>CodigoFaculdade</key>
       <key>CodigoCurso</key>
@@ -1228,7 +985,7 @@
            <schema_name/>
            </partitioning>
 <join_type>INNER</join_type>
-<step1>Sort rows 3</step1>
+<step1>Sort rows 3 2 2</step1>
 <step2>Sort rows 3 2 2</step2>
     <keys_1>
       <key>CodigoFaculdade</key>
@@ -1629,7 +1386,7 @@
     <encoding>UTF-8</encoding>
     <addtoresult>N</addtoresult>
     <file>
-      <name>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;output&#x5c;aaUniversity2012</name>
+      <name>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;output&#x5c;lixo</name>
       <extention>json</extention>
       <append>N</append>
       <split>N</split>
