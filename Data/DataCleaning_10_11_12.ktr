@@ -82,12 +82,29 @@
   <hop> <from>CSV file input&#x3a; year</from><to>Sort rows 3</to><enabled>Y</enabled> </hop>
   <hop> <from>CSV file input&#x3a; areas</from><to>Sort rows 3 2</to><enabled>Y</enabled> </hop>
   <hop> <from>Sort rows 3 2</from><to>Merge Join</to><enabled>Y</enabled> </hop>
-  <hop> <from>Sort rows 3</from><to>Merge Join</to><enabled>Y</enabled> </hop>
   <hop> <from>Merge Join</from><to>If field value is null</to><enabled>Y</enabled> </hop>
   <hop> <from>If field value is null</from><to>Formula</to><enabled>Y</enabled> </hop>
   <hop> <from>Merge Join</from><to>If field value is null 2</to><enabled>Y</enabled> </hop>
   <hop> <from>If field value is null 2</from><to>Filter rows</to><enabled>Y</enabled> </hop>
-  <hop> <from>Filter rows</from><to>Sort rows</to><enabled>Y</enabled> </hop>
+  <hop> <from>Formula 2 2</from><to>Areas2011</to><enabled>Y</enabled> </hop>
+  <hop> <from>Sort rows 2</from><to>Group by 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Sort rows 2 2</from><to>Group by 2 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Sort rows 2 2 2</from><to>Group by 2 2 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Group by 2 2</from><to>Select values</to><enabled>Y</enabled> </hop>
+  <hop> <from>Select values</from><to>Formula 2 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Select values 3</from><to>Formula 2 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Group by 2 2 2</from><to>Select values 3</to><enabled>Y</enabled> </hop>
+  <hop> <from>Group by 2</from><to>Select values 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Select values 2</from><to>Formula 2 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Filter rows</from><to>Dummy &#x28;do nothing&#x29;</to><enabled>Y</enabled> </hop>
+  <hop> <from>Dummy &#x28;do nothing&#x29;</from><to>Sort rows</to><enabled>Y</enabled> </hop>
+  <hop> <from>Dummy &#x28;do nothing&#x29;</from><to>Sort rows 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Dummy &#x28;do nothing&#x29;</from><to>Sort rows 2 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Dummy &#x28;do nothing&#x29;</from><to>Sort rows 2 2 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>CSV file input&#x3a; areas 2</from><to>Sort rows 3 2 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Sort rows 3</from><to>Merge Join 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Sort rows 3 2 2</from><to>Merge Join 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Merge Join 2</from><to>Merge Join</to><enabled>Y</enabled> </hop>
   </order>
   <step>
     <name>Areas2011</name>
@@ -108,7 +125,7 @@
     <encoding>UTF-8</encoding>
     <addtoresult>N</addtoresult>
     <file>
-      <name>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;output&#x5c;Areas2011</name>
+      <name>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;output&#x5c;aaAreas2012</name>
       <extention>json</extention>
       <append>N</append>
       <split>N</split>
@@ -121,8 +138,12 @@
       </file>
     <fields>
       <field>
-        <name>CNAEF3D</name>
+        <name>CNAEF</name>
         <element>CNAEF</element>
+    </field>
+      <field>
+        <name>CNAEFNome</name>
+        <element>CNAEFNome</element>
     </field>
       <field>
         <name>TotalDesempregados</name>
@@ -268,7 +289,7 @@
     </step>
 
   <step>
-    <name>CSV file input&#x3a; year</name>
+    <name>CSV file input&#x3a; areas 2</name>
     <type>CsvInput</type>
     <description/>
     <distribute>N</distribute>
@@ -278,7 +299,7 @@
            <method>none</method>
            <schema_name/>
            </partitioning>
-    <filename>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;Pre Processed CSV&#x27;s&#x5c;2010.csv</filename>
+    <filename>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;Pre Processed CSV&#x27;s&#x5c;_Admiss&#xe3;o2016.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -304,6 +325,62 @@
         <trim_type>none</trim_type>
       </field>
       <field>
+        <name>CodigoCurso</name>
+        <type>String</type>
+        <format/>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>4</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>Nota</name>
+        <type>Number</type>
+        <format>&#x23;.&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>1</precision>
+        <trim_type>none</trim_type>
+      </field>
+    </fields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>91</xloc>
+      <yloc>353</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>CSV file input&#x3a; year</name>
+    <type>CsvInput</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <filename>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;Pre Processed CSV&#x27;s&#x5c;2015.csv</filename>
+    <filename_field/>
+    <rownum_field/>
+    <include_filename>N</include_filename>
+    <separator>&#x3b;</separator>
+    <enclosure>&#x22;</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>N</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <encoding/>
+    <fields>
+      <field>
         <name>NomeFaculdade</name>
         <type>String</type>
         <format/>
@@ -311,6 +388,28 @@
         <decimal>,</decimal>
         <group>.</group>
         <length>104</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>CodigoFaculdade</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>NomeCurso</name>
+        <type>String</type>
+        <format/>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>76</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
@@ -326,29 +425,260 @@
         <trim_type>none</trim_type>
       </field>
       <field>
-        <name>NomeCurso</name>
-        <type>String</type>
-        <format/>
-        <currency>&#x20ac;</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>75</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
         <name>Grau</name>
         <type>String</type>
         <format/>
         <currency>&#x20ac;</currency>
         <decimal>,</decimal>
         <group>.</group>
-        <length>12</length>
+        <length>2</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
       <field>
+        <name>CNAEF_3D</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>CNAEF_3D_Nome</name>
+        <type>String</type>
+        <format/>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>81</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>A2006_Total</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>A2007_Total</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>A2008_Total</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>A2009_Total</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>A2010_Total</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>A2011_Total</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>A2012_Total</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>A2013_Total</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>A2014_Total</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>A2015_Total</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
         <name>TotalDesempregados</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>Dip_2005</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>Dip_2006</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>Dip_2007</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>Dip_2008</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>Dip_2009</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>Dip_2010</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>Dip_2011</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>Dip_2012</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>Dip_2013</name>
+        <type>Integer</type>
+        <format>&#x23;</format>
+        <currency>&#x20ac;</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>Dip_2014</name>
         <type>Integer</type>
         <format>&#x23;</format>
         <currency>&#x20ac;</currency>
@@ -397,7 +727,7 @@
     <encoding>UTF-8</encoding>
     <addtoresult>N</addtoresult>
     <file>
-      <name>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;output&#x5c;Courses2011</name>
+      <name>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;output&#x5c;special2015</name>
       <extention>json</extention>
       <append>N</append>
       <split>N</split>
@@ -441,11 +771,63 @@
         <name>PercentagemDesemprego</name>
         <element>PercentagemDesemprego</element>
     </field>
+      <field>
+        <name>Nota</name>
+        <element>Nota</element>
+    </field>
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>934</xloc>
       <yloc>83</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Dummy &#x28;do nothing&#x29;</name>
+    <type>Dummy</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>435</xloc>
+      <yloc>363</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Filter rows</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+<send_true_to>Dummy &#x28;do nothing&#x29;</send_true_to>
+<send_false_to/>
+    <compare>
+<condition>
+ <negated>N</negated>
+ <leftvalue>TotalDiplomados</leftvalue>
+ <function>&#x3c;&#x3e;</function>
+ <rightvalue/>
+ <value><name>constant</name><type>Integer</type><text>-1</text><length>-1</length><precision>0</precision><isnull>N</isnull><mask>&#x23;&#x3b;-&#x23;</mask></value> </condition>
+    </compare>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>416</xloc>
+      <yloc>222</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -503,6 +885,32 @@
     </step>
 
   <step>
+    <name>Formula 2 2</name>
+    <type>Formula</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+       <formula><field_name>PercentagemDesemprego</field_name>
+<formula_string>100&#x2a;&#x5b;TotalDesempregados&#x5d;&#x2f;&#x5b;TotalDiplomados&#x5d;</formula_string>
+<value_type>Number</value_type>
+<value_length>-1</value_length>
+<value_precision>-1</value_precision>
+<replace_field/>
+</formula>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>937</xloc>
+      <yloc>391</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
     <name>Group by</name>
     <type>GroupBy</type>
     <description/>
@@ -550,6 +958,162 @@
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>557</xloc>
       <yloc>222</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Group by 2</name>
+    <type>GroupBy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+      <all_rows>N</all_rows>
+      <ignore_aggregate>N</ignore_aggregate>
+      <field_ignore/>
+      <directory>&#x25;&#x25;java.io.tmpdir&#x25;&#x25;</directory>
+      <prefix>grp</prefix>
+      <add_linenr>N</add_linenr>
+      <linenr_fieldname/>
+      <give_back_row>N</give_back_row>
+      <group>
+        <field>
+          <name>CNAEF_1D</name>
+        </field>
+      </group>
+      <fields>
+        <field>
+          <aggregate>CNAEF_1D_Nome</aggregate>
+          <subject>CNAEF_1D_Nome</subject>
+          <type>FIRST</type>
+          <valuefield/>
+        </field>
+        <field>
+          <aggregate>TotalDesempregados</aggregate>
+          <subject>TotalDesempregados</subject>
+          <type>SUM</type>
+          <valuefield/>
+        </field>
+        <field>
+          <aggregate>TotalDiplomados</aggregate>
+          <subject>TotalDiplomados</subject>
+          <type>SUM</type>
+          <valuefield/>
+        </field>
+      </fields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>674</xloc>
+      <yloc>311</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Group by 2 2</name>
+    <type>GroupBy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+      <all_rows>N</all_rows>
+      <ignore_aggregate>N</ignore_aggregate>
+      <field_ignore/>
+      <directory>&#x25;&#x25;java.io.tmpdir&#x25;&#x25;</directory>
+      <prefix>grp</prefix>
+      <add_linenr>N</add_linenr>
+      <linenr_fieldname/>
+      <give_back_row>N</give_back_row>
+      <group>
+        <field>
+          <name>CNAEF_2D</name>
+        </field>
+      </group>
+      <fields>
+        <field>
+          <aggregate>CNAEF_2D_Nome</aggregate>
+          <subject>CNAEF_2D_Nome</subject>
+          <type>FIRST</type>
+          <valuefield/>
+        </field>
+        <field>
+          <aggregate>TotalDesempregados</aggregate>
+          <subject>TotalDesempregados</subject>
+          <type>SUM</type>
+          <valuefield/>
+        </field>
+        <field>
+          <aggregate>TotalDiplomados</aggregate>
+          <subject>TotalDiplomados</subject>
+          <type>SUM</type>
+          <valuefield/>
+        </field>
+      </fields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>691</xloc>
+      <yloc>389</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Group by 2 2 2</name>
+    <type>GroupBy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+      <all_rows>N</all_rows>
+      <ignore_aggregate>N</ignore_aggregate>
+      <field_ignore/>
+      <directory>&#x25;&#x25;java.io.tmpdir&#x25;&#x25;</directory>
+      <prefix>grp</prefix>
+      <add_linenr>N</add_linenr>
+      <linenr_fieldname/>
+      <give_back_row>N</give_back_row>
+      <group>
+        <field>
+          <name>CNAEF_3D</name>
+        </field>
+      </group>
+      <fields>
+        <field>
+          <aggregate>CNAEF_3D_Nome</aggregate>
+          <subject>CNAEF_3D_Nome</subject>
+          <type>FIRST</type>
+          <valuefield/>
+        </field>
+        <field>
+          <aggregate>TotalDesempregados</aggregate>
+          <subject>TotalDesempregados</subject>
+          <type>SUM</type>
+          <valuefield/>
+        </field>
+        <field>
+          <aggregate>TotalDiplomados</aggregate>
+          <subject>TotalDiplomados</subject>
+          <type>SUM</type>
+          <valuefield/>
+        </field>
+      </fields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>690</xloc>
+      <yloc>457</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -635,7 +1199,7 @@
            </partitioning>
 <join_type>INNER</join_type>
 <step1>Sort rows 3 2</step1>
-<step2>Sort rows 3</step2>
+<step2>Merge Join 2</step2>
     <keys_1>
       <key>CodigoFaculdade</key>
       <key>CodigoCurso</key>
@@ -646,8 +1210,146 @@
     </keys_2>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>337</xloc>
-      <yloc>110</yloc>
+      <xloc>296</xloc>
+      <yloc>105</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Merge Join 2</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+<join_type>INNER</join_type>
+<step1>Sort rows 3</step1>
+<step2>Sort rows 3 2 2</step2>
+    <keys_1>
+      <key>CodigoFaculdade</key>
+      <key>CodigoCurso</key>
+    </keys_1>
+    <keys_2>
+      <key>CodigoFaculdade</key>
+      <key>CodigoCurso</key>
+    </keys_2>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>306</xloc>
+      <yloc>385</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Select values</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <fields>      <field>        <name>CNAEF_2D</name>
+        <rename>CNAEF</rename>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>CNAEF_2D_Nome</name>
+        <rename>CNAEFNome</rename>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>TotalDesempregados</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>TotalDiplomados</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>        <select_unspecified>N</select_unspecified>
+    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>763</xloc>
+      <yloc>388</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Select values 2</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <fields>      <field>        <name>CNAEF_1D</name>
+        <rename>CNAEF</rename>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>CNAEF_1D_Nome</name>
+        <rename>CNAEFNome</rename>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>TotalDesempregados</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>TotalDiplomados</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>        <select_unspecified>N</select_unspecified>
+    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>781</xloc>
+      <yloc>310</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Select values 3</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <fields>      <field>        <name>CNAEF_3D</name>
+        <rename>CNAEF</rename>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>CNAEF_3D_Nome</name>
+        <rename>CNAEFNome</rename>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>TotalDesempregados</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>      <field>        <name>TotalDiplomados</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>        <select_unspecified>N</select_unspecified>
+    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>767</xloc>
+      <yloc>456</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -687,10 +1389,112 @@
     </step>
 
   <step>
-    <name>Sort rows 3</name>
+    <name>Sort rows 2</name>
     <type>SortRows</type>
     <description/>
     <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+      <directory>&#x25;&#x25;java.io.tmpdir&#x25;&#x25;</directory>
+      <prefix>out</prefix>
+      <sort_size>1000000</sort_size>
+      <free_memory/>
+      <compress>N</compress>
+      <compress_variable/>
+      <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>CNAEF_1D</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>554</xloc>
+      <yloc>312</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Sort rows 2 2</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+      <directory>&#x25;&#x25;java.io.tmpdir&#x25;&#x25;</directory>
+      <prefix>out</prefix>
+      <sort_size>1000000</sort_size>
+      <free_memory/>
+      <compress>N</compress>
+      <compress_variable/>
+      <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>CNAEF_2D</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>571</xloc>
+      <yloc>390</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Sort rows 2 2 2</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+      <directory>&#x25;&#x25;java.io.tmpdir&#x25;&#x25;</directory>
+      <prefix>out</prefix>
+      <sort_size>1000000</sort_size>
+      <free_memory/>
+      <compress>N</compress>
+      <compress_variable/>
+      <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>CNAEF_3D</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>570</xloc>
+      <yloc>458</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Sort rows 3</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>N</distribute>
     <custom_distribution/>
     <copies>1</copies>
          <partitioning>
@@ -767,6 +1571,46 @@
     </step>
 
   <step>
+    <name>Sort rows 3 2 2</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+      <directory>&#x25;&#x25;java.io.tmpdir&#x25;&#x25;</directory>
+      <prefix>out</prefix>
+      <sort_size>1000000</sort_size>
+      <free_memory/>
+      <compress>N</compress>
+      <compress_variable/>
+      <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>CodigoFaculdade</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>CodigoCurso</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>200</xloc>
+      <yloc>358</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
     <name>University2011</name>
     <type>JsonOutput</type>
     <description/>
@@ -785,7 +1629,7 @@
     <encoding>UTF-8</encoding>
     <addtoresult>N</addtoresult>
     <file>
-      <name>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;output&#x5c;University2011</name>
+      <name>C&#x3a;&#x5c;Users&#x5c;artur&#x5c;Documents&#x5c;GitHub&#x5c;VI-Project&#x5c;Data&#x5c;output&#x5c;aaUniversity2012</name>
       <extention>json</extention>
       <append>N</append>
       <split>N</split>
@@ -822,35 +1666,6 @@
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>935</xloc>
       <yloc>184</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Filter rows</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-<send_true_to>Sort rows</send_true_to>
-<send_false_to/>
-    <compare>
-<condition>
- <negated>N</negated>
- <leftvalue>TotalDiplomados</leftvalue>
- <function>&#x3c;&#x3e;</function>
- <rightvalue/>
- <value><name>constant</name><type>Integer</type><text>-1</text><length>-1</length><precision>0</precision><isnull>N</isnull><mask>&#x23;&#x3b;-&#x23;</mask></value> </condition>
-    </compare>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>377</xloc>
-      <yloc>333</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
