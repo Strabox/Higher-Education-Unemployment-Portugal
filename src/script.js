@@ -25,7 +25,7 @@ d3.json("University.json",function (data) {
 		a.push(temp[key]);
 	}
 	
-	universityDataset = a.slice(0,6);
+	universityDataset = a.slice(0,4);
 
 	generateUniversityVis();
 });
@@ -59,7 +59,15 @@ function generateUniversityVis(){
 	.data(universityDataset)
 	.enter().append("g")
 			.attr("y",(function(d){return yscale(d.NomeFaculdade); }))
-			.attr("height",30).append("rect");
+			.attr("height",30)
+            .each(function (d,i,n) { 
+                d3.select(n[i]).selectAll("circle").data(d.Anos)
+                .enter().append("circle")
+                        .attr("r",function (d2) {return circleScale(d2.PercentagemDesemprego); })
+                        .attr("cy",yscale(d.NomeFaculdade))
+                        .attr("cx",function(d2) {return xscale(d2.Ano);});
+                
+            } );
 	
 	var xaxis = d3.axisTop().scale(xscale);
 	var yaxis = d3.axisLeft().scale(yscale);
