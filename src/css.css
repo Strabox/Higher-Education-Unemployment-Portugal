@@ -1,4 +1,13 @@
-
 .title{
 	text-align: center;
+}
+
+circle:hover {
+	fill: red;
+}
+
+#universityVis{
+	width: 100%;
+	height: 50%;
+	overflow:scroll;
 }
