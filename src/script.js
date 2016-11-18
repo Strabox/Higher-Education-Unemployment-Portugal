@@ -5,6 +5,8 @@
 var fullUniversityDataset;	//All the data from the university file
 var universityDataset;		//The current data showing in university view
 
+var fullScatterDataset;		//All the data from the entry grades file
+
 //###########################################################################
 //#           				 University View                                #
 //###########################################################################
@@ -99,8 +101,7 @@ function updateUniversityVisualization(universityVisObj) {
 		.select("title").text(function(dy) { return universityToString(dy); });
 
 	//Update yaxis labels
-	universityVisObj.svg.selectAll(".yaxis").transition().duration(1000).call(universityVisObj.yaxis)
-		.selectAll("text").attr("transform", "rotate(25)");
+	universityVisObj.svg.selectAll(".yaxis").transition().duration(1000).call(universityVisObj.yaxis);
 	universityVisObj.svg.selectAll(".tick").append("title").text(function(d) { return d; });
 }
 
@@ -144,8 +145,7 @@ function generateUniversityVis(){
 	var xaxis = d3.axisTop().scale(xscale);
 	var yaxis = d3.axisLeft().scale(yscale).tickFormat(function(d) { return getUniversityAcronym(d); });
 	svg.append("g").attr("class","xaxis").attr("transform","translate(0,"+padding+")").call(xaxis);
-	svg.append("g").attr("class","yaxis").attr("transform","translate("+leftPadding+",0)").call(yaxis)
-		.selectAll("text").attr("transform", "rotate(25)");
+	svg.append("g").attr("class","yaxis").attr("transform","translate("+leftPadding+",0)").call(yaxis);
 	svg.selectAll(".tick").append("title").text(function(d) { return d; });
 	
 	universityVisObj.svg = svg;
@@ -190,7 +190,63 @@ function generateUniversityVis(){
 //TODO
 
 //###########################################################################
-//#      					 Courses Scatter View                           #
+//#      				Courses ScatterPlot View                            #
 //###########################################################################
 
-//TODO
+function getDotToolTip(d){
+	var res = "";
+	res += "Faculdade: " + d.NomeFaculdade;
+	res += "\nCurso: " + d.NomeCurso;
+	res += "\nNota: " + d.Nota;
+	return res;
+}
+
+//Load the ScatterPlot Courses Data and prepare it to be used in Visualization
+d3.json("EntryGrades.json",function (data) {
+	fullScatterDataset = data.data;
+	generateScatterVis();
+});
+
+function generateScatterVis(){
+	var height = 265;
+	var width = 600;
+	var padding = 25;
+	var dotRadius = 2;
+	
+	var svg = d3.select("#courseScatterVis")
+				.append("svg")
+				.attr("width",width)
+				.attr("height",height);
+	
+	var xscale = d3.scaleLinear().domain([9.5,20]).range([padding*2,width - padding]);
+	var yscale = d3.scaleLinear().domain([100,0]).range([0,height - padding*2]);
+	
+	//Enter the new data
+	svg.selectAll("circle")
+		.data(fullScatterDataset)
+		.enter().append("circle")
+			.attr("r",function(d) { 
+				if(d.PercentagemDesemprego < 0) { return 0; }
+				else { return dotRadius; }
+			})
+			.attr("cx",function(d) { return xscale(d.Nota/10); })
+			.attr("cy",function(d) { return yscale(d.PercentagemDesemprego); })
+			.append("title").text(function(d) { return getDotToolTip(d); });;
+	//==================
+	var xaxis = d3.axisBottom().scale(xscale);
+	var yaxis = d3.axisLeft().scale(yscale);
+	svg.append("g").attr("class","xaxis").attr("transform","translate(0,"+(height - padding*2)+")").call(xaxis);
+	svg.append("g").attr("class","yaxis").attr("transform","translate("+padding*2+",0)").call(yaxis);
+	svg.append("text")
+		.attr("x",-padding*5)
+		.attr("y",padding/2)
+		.attr("transform","rotate(-90)")
+        .text("Unemployment %");
+	svg.append("text")
+		.attr("x",width-padding*6)
+		.attr("y",height-padding*1)
+        .text("Minimum Entry Grade");
+}
+
+//###########################################################################
+//###########################################################################
