@@ -37,45 +37,18 @@ function getUniversityUnemployment(d){
 
 function universityToString(u){
 	var res = "Percentagem Desemprego: " + u.PercentagemDesemprego + "%";
-	res += "\nTotal Desempregados: " + u.TotalDesempregados;
-	res += "\nTotal Dimplomados: " + u.TotalDiplomados;
+	//res += "\nTotal Desempregados: " + u.TotalDesempregados;
+	//res += "\nTotal Dimplomados: " + u.TotalDiplomados;
 	return res;
 }
 
 //############################ Visualization Functions ######################
 
 //Load the University Data and prepare it to be used in Visualization
-d3.json("University.json",function (data) {
+d3.json("Courses.json",function (data) {
 	//Transforms the original file entries in hierarchical object good to use in d3.
-	fullUniversityDataset = d3.nest()
-				.key(function(d) { return d.NomeFaculdade; })
-				.entries(data);		
-	fullUniversityDataset.sortAscending = function() {
-		this.sort(function (d1,d2) {
-			return getUniversityUnemployment(d1) - getUniversityUnemployment(d2);
-		});
-	}
-	fullUniversityDataset.sortDescending = function() {
-		this.sort(function (d1,d2) {
-			return -(getUniversityUnemployment(d1) - getUniversityUnemployment(d2));
-		});
-	}
-		
-	//Dirty Trick necessary to easy update in DOM (Talk with Professor)
-	var i = 0;			
-	for(; i < fullUniversityDataset.length; i++){
-		var insideYears = fullUniversityDataset[i].values.map(function(d) { return d.Ano; });
-		for(var k = 2007; k <= 2015;k++){
-			if(!(k in insideYears)){
-				var object = new Object();
-				object.Ano = k;
-				object.PercentagemDesemprego = 0;
-				object.NomeFaculdade = fullUniversityDataset[i].key;
-				fullUniversityDataset[i].values.push(object);
-			}
-		}
-	}
-	fullUniversityDataset.sortDescending();
+	fullUniversityDataset = data;
+
 	universityDataset = fullUniversityDataset.slice(0,fullUniversityDataset.length);
 	generateUniversityVis();
 });
@@ -98,7 +71,7 @@ function updateUniversityVisualization(universityVisObj) {
 		.attr("r",function (dy) { return Math.sqrt(universityVisObj.circleScale(dy.PercentagemDesemprego)); })
 		.attr("cy",function(dy) { return universityVisObj.yscale(dy.NomeFaculdade); })
 		.attr("cx",function(dy) { return universityVisObj.xscale(dy.Ano); })
-		.select("title").text(function(dy) { return universityToString(dy); });
+		.select("title").text(function(dy) { universityToString(dy); });
 
 	//Update yaxis labels
 	universityVisObj.svg.selectAll(".yaxis").transition().duration(1000).call(universityVisObj.yaxis);
@@ -107,11 +80,12 @@ function updateUniversityVisualization(universityVisObj) {
 
 // Code related to University Visualization creation (Bertin Matrix)
 function generateUniversityVis(){
-	var width = 600;
-	var height = fullUniversityDataset.length*50;
-	var padding = 25;
-	var leftPadding = 60;
-	var maximumCircleRadius = 425;	
+	var matrixLineHeight = 15;
+	var width = 375;
+	var height = fullUniversityDataset.length * matrixLineHeight;
+	var padding = 20;
+	var leftPadding = 50;
+	var maximumCircleRadius = 90;	
 	var years = [2007,2008,2009,2010,2011,2012,2013,2014,2015];
 	
 	var universityVisObj = new Object();
@@ -123,8 +97,8 @@ function generateUniversityVis(){
 		
 	//Scale for the unemployment circles
 	var circleScale = d3.scaleLinear().domain([0,100]).range([0,maximumCircleRadius]);
-	var xscale = d3.scalePoint().domain(years).range([leftPadding+(leftPadding/2),width - leftPadding]);
-	var yscale = d3.scalePoint().domain(universityDataset.map(function(d) { return d.key; })).range([padding*2,/*height - padding*/fullUniversityDataset.length*50 ]);
+	var xscale = d3.scalePoint().domain(years).range([leftPadding+padding,width - leftPadding]);
+	var yscale = d3.scalePoint().domain(universityDataset.map(function(d) { return d.key; })).range([padding+20,height+matrixLineHeight ]);
 	
 	//Enter/load the data in visualization
 	var lines = svg.selectAll("g")
@@ -134,10 +108,10 @@ function generateUniversityVis(){
 			.attr("y",function(d) {return yscale(d.key); });
 			
 	lines.selectAll("circle")
-		.data(function(d) { return d.values;} )
+		.data(function(d) { return d.data;} )
 		.enter().append("circle")
 			.attr("r",function (dy) { return Math.sqrt(circleScale(dy.PercentagemDesemprego)); })
-			.attr("cy",function(dy) { return yscale(dy.NomeFaculdade);})
+			.attr("cy",function(dy) { return yscale(dy.NomeUniversidade);})
 			.attr("cx",function(dy) { return xscale(dy.Ano);})
 			.append("title").text(function(dy) { return universityToString(dy); });
 	//======================================
@@ -164,14 +138,14 @@ function generateUniversityVis(){
 	// INTERACTION - Sort Universities Unemployment in Ascending order
 	d3.selectAll("#universityAscending")
 	.on("click",function() {
-		fullUniversityDataset.sortAscending();
+
 		updateUniversityVisualization(universityVisObj);	
 	});
 	
 	// INTERACTION - Sort Universities Unemployment in Descending order
 	d3.selectAll("#universityDescending")
 	.on("click",function() {
-		fullUniversityDataset.sortDescending();
+
 		updateUniversityVisualization(universityVisObj);	
 	});
 	
@@ -181,13 +155,33 @@ function generateUniversityVis(){
 //#             				 Area View                                  #
 //###########################################################################
 
-//TODO
+generateAreaVis();
+
+function generateAreaVis(){
+	var height = 350;
+	var width = 700;
+	
+	var svg = d3.select("#areaVis")
+				.append("svg")
+				.attr("width",width)
+				.attr("height",height);
+}
 
 //###########################################################################
 //#       					Courses Line Chart View                         #
 //###########################################################################
 
-//TODO
+generateLineVis();
+
+function generateLineVis(){
+	var height = 200;
+	var width = 450;
+	
+	var svg = d3.select("#lineChartVis")
+				.append("svg")
+				.attr("width",width)
+				.attr("height",height);
+}
 
 //###########################################################################
 //#      				Courses ScatterPlot View                            #
@@ -208,8 +202,8 @@ d3.json("EntryGrades.json",function (data) {
 });
 
 function generateScatterVis(){
-	var height = 265;
-	var width = 600;
+	var height = 200;
+	var width = 450;
 	var padding = 25;
 	var dotRadius = 2;
 	
