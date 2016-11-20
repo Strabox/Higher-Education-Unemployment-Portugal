@@ -3,7 +3,6 @@
 //###########################################################################
 
 var fullUniversityDataset;	//All the data from the university file
-var universityDataset;		//The current data showing in university view
 
 var fullScatterDataset;		//All the data from the entry grades file
 
@@ -25,16 +24,6 @@ function getUniversityAcronym(universityName){
 	return res;
 }
 
-/*Calculate and return a unemployment rate to a university
- allowing ordering between universities. */
-function getUniversityUnemployment(d){
-	var res = 0;
-	for(var i = 0;i < d.values.length; i++){
-		res += d.values[i].PercentagemDesemprego;
-	}
-	return res/3;
-}
-
 function universityToString(u){
 	var res = "Percentagem Desemprego: " + u.PercentagemDesemprego + "%";
 	//res += "\nTotal Desempregados: " + u.TotalDesempregados;
@@ -46,22 +35,18 @@ function universityToString(u){
 
 //Load the University Data and prepare it to be used in Visualization
 d3.json("Courses.json",function (data) {
-	//Transforms the original file entries in hierarchical object good to use in d3.
 	fullUniversityDataset = data;
-
-	universityDataset = fullUniversityDataset.slice(0,fullUniversityDataset.length);
 	generateUniversityVis();
 });
 
 //Call to update university (Bertin Matrix) visualization
 function updateUniversityVisualization(universityVisObj) {
-	universityDataset = fullUniversityDataset.slice(0,fullUniversityDataset.length);
 	//Update de yscale domain with the new universities name
-	universityVisObj.yscale.domain(universityDataset.map(function(d) { return d.key; }));
+	universityVisObj.yscale.domain(fullUniversityDataset.map(function(d) { return d.key; }));
 	
 	//Update to the new data
-	var lines = universityVisObj.svg.selectAll("g")
-		.data(universityDataset)
+	var lines = universityVisObj.svg.selectAll("g.data")
+		.data(fullUniversityDataset)
 		.attr("class","data")
 		.attr("y",function(d) { return universityVisObj.yscale(d.key); });
 	
@@ -98,11 +83,11 @@ function generateUniversityVis(){
 	//Scale for the unemployment circles
 	var circleScale = d3.scaleLinear().domain([0,100]).range([0,maximumCircleRadius]);
 	var xscale = d3.scalePoint().domain(years).range([leftPadding+padding,width - leftPadding]);
-	var yscale = d3.scalePoint().domain(universityDataset.map(function(d) { return d.key; })).range([padding+20,height+matrixLineHeight ]);
+	var yscale = d3.scalePoint().domain(fullUniversityDataset.map(function(d) { return d.key; })).range([padding+20,height+matrixLineHeight ]);
 	
 	//Enter/load the data in visualization
-	var lines = svg.selectAll("g")
-		.data(universityDataset)
+	var lines = svg.selectAll("g.data")
+		.data(fullUniversityDataset)
 		.enter().append("g")
 			.attr("class","data")
 			.attr("y",function(d) {return yscale(d.key); });
@@ -130,9 +115,42 @@ function generateUniversityVis(){
 	
 	/* ########################## Interaction Events ############################# */
 	
-	//INTERACTION - 
+	// INTERACTION - 
 	svg.select(".yaxis").selectAll(".tick").on("dblclick",function() {
-		alert(d3.select(this).select("title").text());
+		var newHeight;
+		var	key = d3.select(this).select("title").text();
+		var newCollection;
+		for(var i = 0 ; i <  fullUniversityDataset.length; i++){
+			if(fullUniversityDataset[i].key === key){
+				newCollection = fullUniversityDataset[i].values;
+				break;
+			}
+		}
+		newHeight = newCollection.length * matrixLineHeight + matrixLineHeight*6;
+		
+		universityVisObj.yscale.domain(newCollection.map(function(d) { return d.key; }))
+						.range([padding + 20,newHeight + matrixLineHeight]);
+		
+		universityVisObj.svg.attr("height",newHeight);
+		
+		var lines = svg.selectAll("g.data")
+				.data(newCollection)
+				.attr("class","data")
+				.attr("y",function(d) {return yscale(d.key); });
+		
+		lines.selectAll("circle")
+			.data(function(d) { return d.data; },function(dy) { return dy.Ano; })
+			.transition().duration(1000)
+			.attr("r",function (dy) { return Math.sqrt(universityVisObj.circleScale(dy.PercentagemDesemprego)); })
+			.attr("cy",function(dy) { return universityVisObj.yscale(dy.NomeFaculdade); })
+			.attr("cx",function(dy) { return universityVisObj.xscale(dy.Ano); })
+			.select("title").text(function(dy) { return "TODO"; });
+		
+		lines.exit().remove();
+		
+		//Update yaxis labels
+		universityVisObj.svg.selectAll(".yaxis").transition().duration(1000).call(universityVisObj.yaxis);
+		universityVisObj.svg.selectAll(".tick").append("title").text(function(d) { return d; });
 	});
 	
 	// INTERACTION - Sort Universities Unemployment in Ascending order
@@ -171,16 +189,27 @@ function generateAreaVis(){
 //#       					Courses Line Chart View                         #
 //###########################################################################
 
-generateLineVis();
+generateLineChartVis();
 
-function generateLineVis(){
+function generateLineChartVis(){
 	var height = 200;
 	var width = 450;
-	
+	var padding = 25;
+		
+	var years = [2007,2008,2009,2010,2011,2012,2013,2014,2015];
+
 	var svg = d3.select("#lineChartVis")
 				.append("svg")
 				.attr("width",width)
 				.attr("height",height);
+				
+	var xscale = d3.scalePoint().domain(years).range([padding*2,width - padding]);
+	var yscale = d3.scaleLinear().domain([100,0]).range([0,height - padding*2]);
+	
+	var xaxis = d3.axisBottom().scale(xscale);
+	var yaxis = d3.axisLeft().scale(yscale);
+	svg.append("g").attr("class","xaxis").attr("transform","translate(0,"+(height - padding*2)+")").call(xaxis);
+	svg.append("g").attr("class","yaxis").attr("transform","translate("+padding*2+",0)").call(yaxis);
 }
 
 //###########################################################################
@@ -242,5 +271,6 @@ function generateScatterVis(){
         .text("Minimum Entry Grade");
 }
 
+//###########################################################################
 //###########################################################################
 //###########################################################################
