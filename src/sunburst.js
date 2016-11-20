@@ -45,7 +45,7 @@ function drawSunburst(year) {
 		.append("g")
 		.attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
-	d3.json("data/Areas" + year + ".json", function(error, root) {
+	d3.json("Areas" + year + ".json", function(error, root) {
 		if (error) throw error;
 
 		svg.selectAll("path")
