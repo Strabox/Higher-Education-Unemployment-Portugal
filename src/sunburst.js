@@ -2,9 +2,10 @@ $("#year").change(function() {
 	d3.select("svg").remove();
 	var y = $("#year").val();
 	drawSunburst(y);
-	});
+});
 
 drawSunburst("2015");
+
 function drawSunburst(year) {
 	var width = 960,
 		height = 700,
@@ -64,26 +65,25 @@ function drawSunburst(year) {
 
 
 	d3.select(self.frameElement).style("height", height + "px");
-}
 
 
-
-function click(d) {
-	svg.transition()
-		.duration(750)
-		.tween("scale", function() {
-			var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
-				yd = d3.interpolate(y.domain(), [d.y, 1]),
-				yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
-			return function(t) {
-				x.domain(xd(t));
-				y.domain(yd(t)).range(yr(t));
-			};
-		})
-		.selectAll("path")
-		.attrTween("d", function(d) {
-			return function() {
-				return arc(d);
-			};
-		});
+	function click(d) {
+		svg.transition()
+			.duration(750)
+			.tween("scale", function() {
+				var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
+					yd = d3.interpolate(y.domain(), [d.y, 1]),
+					yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
+				return function(t) {
+					x.domain(xd(t));
+					y.domain(yd(t)).range(yr(t));
+				};
+			})
+			.selectAll("path")
+			.attrTween("d", function(d) {
+				return function() {
+					return arc(d);
+				};
+			});
+	}
 }
