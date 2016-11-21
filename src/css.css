@@ -1,27 +1,25 @@
 .title{
 	text-align: center;
 }
-
+path {
+  stroke: #fff;
+}
 circle:hover {
 	fill: red;
 }
-
 #universityVis{
 	width: 100%;
 	height: 88%;
 	overflow:scroll;
 }
-
 #areaVis{
 	width: 100%;
 	height: 60%;
 }
-
 #courseScatterVis{
 	width: 100%;
 	height: 25%;
 }
-
 #lineChartVis{
 	width: 100%;
 	height: 50%;

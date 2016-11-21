@@ -1,17 +1,21 @@
-//###########################################################################
-//#       				Global Code to all Views                            #
-//###########################################################################
+//#############################################################################
+//#             				 		                                      #
+//#             		   GLOBAL VARIABLES AND CODE                          #
+//#             				       			                              #
+//#############################################################################
 
 var fullUniversityDataset;	//All the data from the university file
 var currentCourseDataset;
 
 var fullScatterDataset;		//All the data from the entry grades file
 
-//###########################################################################
-//#           				 University View                                #
-//###########################################################################
+//#############################################################################
+//#             				 		                                      #
+//#             		   UNIVERSITY AND COURSES VIEW                        #
+//#             				       			                              #
+//#############################################################################
 
-//######################## Auxiliary functions ##############################
+//######################## Auxiliary functions ################################
 
 //Return the acronym of university name
 function getUniversityAcronym(universityName){
@@ -129,11 +133,10 @@ function generateUniversityVis(){
 	universityVisObj.level = 0;
 	universityVisObj.tokenLevel = [];
 	
-	/* ########################## Interaction Events ############################# */
-	
 	registerEventsUniversityVis();	
 }
 
+/* ########################## Interaction Events ############################# */
 function registerEventsUniversityVis(){
 	// INTERACTION - 
 	universityVisObj.svg.select(".yaxis").selectAll(".tick").on("dblclick",function() {
@@ -183,25 +186,95 @@ function registerEventsUniversityVis(){
 	});
 }
 
-//###########################################################################
-//#             				 Area View                                  #
-//###########################################################################
+//#############################################################################
+//#             				 		                                      #
+//#             				 AREA VIEW                                    #
+//#             				       			                              #
+//#############################################################################
 
-generateAreaVis();
+$("#year").change(function() {
+	d3.select("svg").remove();
+	var y = $("#year").val();
+	drawSunburst(y);
+});
 
-function generateAreaVis(){
-	var height = 350;
-	var width = 700;
-	
+drawSunburst("2015");
+
+function drawSunburst(year) {
+	var width = 550,
+		height = 300,
+		radius = (Math.min(width, height) / 2) - 10;
+
+	var formatNumber = d3.format(",d");
+
+	var x = d3.scaleLinear().range([0, 2 * Math.PI]);
+	var y = d3.scaleSqrt().range([0, radius]);
+
+	var color = d3.scaleOrdinal(d3.schemeCategory20c);
+	var partition = d3.partition();
+
+	var arc = d3.arc()
+		.startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
+		.endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
+		.innerRadius(function(d) { return Math.max(0, y(d.y0)); })
+		.outerRadius(function(d) { return Math.max(0, y(d.y1)); });
+
 	var svg = d3.select("#areaVis")
-				.append("svg")
-				.attr("width",width)
-				.attr("height",height);
+		.append("svg")
+		.attr("width", width)
+		.attr("height", height)
+			.append("g")
+			.attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+
+	d3.json("Areas" + year + ".json", function(error, root) {
+		if (error) throw error;
+
+		root = d3.hierarchy(root);
+		root.sum(function(d) { console.log(d.TotalDesempregados); return d.TotalDesempregados; });
+		svg.selectAll("path")
+			.data(partition(root).descendants()).enter()
+			.append("path")
+			.attr("d", arc)
+			.style("fill", function(d) {
+				return color((d.children ? d : d.parent).CNAEFNome);
+			})
+			.on("click", click)
+				.append("title")
+				.text(function(d) {
+					return d.CNAEFNome + "\n" + "Total Desempregados: " + 
+							d.TotalDesempregados + "\n" + "Percentagem Desemprego: " + 
+							d.PercentagemDesemprego + "%";
+				});
+	});
+
+	d3.select(self.frameElement).style("height", height + "px");
+
+	function click(d) {
+		svg.transition()
+			.duration(750)
+			.tween("scale", function() {
+				var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
+					yd = d3.interpolate(y.domain(), [d.y, 1]),
+					yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
+				return function(t) {
+					x.domain(xd(t));
+					y.domain(yd(t)).range(yr(t));
+				};
+			})
+			.selectAll("path")
+			.attrTween("d", function(d) {
+				return function() {
+					return arc(d);
+				};
+			});
+	}
 }
 
-//###########################################################################
-//#       					Courses Line Chart View                         #
-//###########################################################################
+//#############################################################################
+//#             				 		                                      #
+//#             		   COURSE LINE CHART VIEW                             #
+//#             				       			                              #
+//#############################################################################
 
 generateLineChartVis();
 
@@ -226,9 +299,11 @@ function generateLineChartVis(){
 	svg.append("g").attr("class","yaxis").attr("transform","translate("+padding*2+",0)").call(yaxis);
 }
 
-//###########################################################################
-//#      				Courses ScatterPlot View                            #
-//###########################################################################
+//#############################################################################
+//#             				 		                                      #
+//#                  COURSE SCATTER PLOT CHART VIEW                           #
+//#             				       			                              #
+//#############################################################################
 
 function getDotToolTip(d){
 	var res = "";
@@ -285,6 +360,7 @@ function generateScatterVis(){
         .text("Minimum Entry Grade");
 }
 
-//###########################################################################
-//###########################################################################
-//###########################################################################
+//#############################################################################
+//#############################################################################
+//#############################################################################
+//#############################################################################
