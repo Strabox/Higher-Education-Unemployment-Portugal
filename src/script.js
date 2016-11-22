@@ -221,7 +221,7 @@ function registerEventsUniversityVis(){
 //#############################################################################
 
 $("#year").change(function() {
-	d3.select("svg").remove();
+	d3.select("#sunburst").remove();
 	var y = $("#year").val();
 	drawSunburst(y);
 });
@@ -229,63 +229,98 @@ $("#year").change(function() {
 drawSunburst("2015");
 
 function drawSunburst(year) {
-	var width = 550,
-		height = 425,
+	var width = 960,
+		height = 700,
 		radius = (Math.min(width, height) / 2) - 10;
 
 	var formatNumber = d3.format(",d");
 
-	var x = d3.scaleLinear().range([0, 2 * Math.PI]);
-	var y = d3.scaleSqrt().range([0, radius]);
+	var x = d3.scaleLinear()
+		.range([0, 2 * Math.PI]);
 
-	var color = d3.scaleOrdinal(d3.schemeCategory20c);
+	var y = d3.scaleSqrt()
+		.range([0, radius]);
+
+	var color = d3.scaleOrdinal(d3.schemeCategory20);
+
 	var partition = d3.partition();
 
 	var arc = d3.arc()
-		.startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
-		.endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
-		.innerRadius(function(d) { return Math.max(0, y(d.y0)); })
-		.outerRadius(function(d) { return Math.max(0, y(d.y1)); });
+		.startAngle(function(d) {
+			return Math.max(0, Math.min(2 * Math.PI, x(d.x0)));
+		})
+		.endAngle(function(d) {
+			return Math.max(0, Math.min(2 * Math.PI, x(d.x1)));
+		})
+		.innerRadius(function(d) {
+			return Math.max(0, y(d.y0));
+		})
+		.outerRadius(function(d) {
+			return Math.max(0, y(d.y1));
+		});
 
-	var svg = d3.select("#areaVis")
-		.append("svg")
+
+	var svg = d3.select("body").append("svg")
+		.attr("id", "sunburst")
 		.attr("width", width)
 		.attr("height", height)
-		.attr("class","col-md-offset-2")
-			.append("g")
-			.attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+		.append("g")
+		.attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+
+
 
 	d3.json("Areas" + year + ".json", function(error, root) {
 		if (error) throw error;
 
 		root = d3.hierarchy(root);
-		root.sum(function(d) { console.log(d.TotalDesempregados); return d.TotalDesempregados; });
+		root.sum(function(d) {
+			if (d.CNAEFNome == "Raíz")
+				return 0;
+			var n = d.CNAEF.toString();
+			if (n.endsWith("0")) {
+				return 0;
+			} else
+				return d.TotalDesempregados;
+		});
 		svg.selectAll("path")
-			.data(partition(root).descendants()).enter()
-			.append("path")
-			.attr("class","sunburst")
+			.data(partition(root).descendants())
+			.enter().append("path")
 			.attr("d", arc)
 			.style("fill", function(d) {
-				return color((d.children ? d : d.parent).CNAEFNome);
+				return color((d.children ? d : d.parent).data.CNAEFNome);
 			})
 			.on("click", click)
-				.append("title")
-				.text(function(d) {
-					return d.CNAEFNome + "\n" + "Total Desempregados: " + 
-							d.TotalDesempregados + "\n" + "Percentagem Desemprego: " + 
-							d.PercentagemDesemprego + "%";
-				});
-	});
+			.append("title")
+			.text(function(d) {
+				return d.data.CNAEFNome + "\n" + formatNumber(d.value);
+			});
 
-	d3.select(self.frameElement).style("height", height + "px");
+		var g = svg.selectAll("g")
+			.data(partition(root).descendants())
+			.enter().append("g");
+
+
+		var text = g.append("text")
+			.attr("transform", function(d) {
+				return "rotate(" + computeTextRotation(d) + ")";
+			})
+			.attr("x0", function(d) {
+				return y(d.y0);
+			})
+			.attr("x1", "6") // margin
+			.attr("y1", ".35em") // vertical-align
+			.text(function(d) {
+				return d.data.CNAEF;
+			});
+	});
 
 	function click(d) {
 		svg.transition()
 			.duration(750)
 			.tween("scale", function() {
-				var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
-					yd = d3.interpolate(y.domain(), [d.y, 1]),
-					yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
+				var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
+					yd = d3.interpolate(y.domain(), [d.y0, 1]),
+					yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
 				return function(t) {
 					x.domain(xd(t));
 					y.domain(yd(t)).range(yr(t));
@@ -298,6 +333,13 @@ function drawSunburst(year) {
 				};
 			});
 	}
+
+	d3.select(self.frameElement).style("height", height + "px");
+
+	function computeTextRotation(d) {
+		return (x(d.x0 + d.x1 / 2) - Math.PI / 2) / Math.PI * 180;
+	}
+
 }
 
 //#############################################################################
