@@ -8,15 +8,16 @@
 		<link rel="stylesheet" href="css.css"></link>
 		<link rel="stylesheet" href="bootstrap.css"></link>
 	</head>
-	<body>
+	<body oncontextmenu="return false;">
 		<div class="container-fluid">
 				<div class="container-fluid">
 					<h4 class="title"><b>Unemployment of Higher Education Courses in Portugal</b></h4>
 				</div>
 			<div class="row">
 				<div class="col-md-4">
-					<button id="universityAscending" type="button" class="btn btn-primary btn-sm">Ascending</button>
-					<button id="universityDescending" type="button" class="btn btn-primary btn-sm">Descending</button>
+					<button id="universityAscendingButton" type="button" class="btn btn-primary btn-sm">Ascending</button>
+					<button id="universityDescendingButton" type="button" class="btn btn-primary btn-sm">Descending</button>
+					<button id="universityTypeButton" type="button" class="btn btn-primary btn-sm">Private Universities</button>
 					<p id="universityContext"></p>
 					<div id="universityVis"></div>
 			</div>
