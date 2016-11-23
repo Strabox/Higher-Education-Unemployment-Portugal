@@ -1,15 +1,10 @@
 //#############################################################################
 //#             				 		                                      #
-//#             		   GLOBAL VARIABLES AND CODE                          #
+//#             		   			GLOBAL CODE 	                       #
 //#             				       			                              #
 //#############################################################################
 
-var fullPublicCourseDataset; //All the public course dataset
-var fullPrivateCourseDataset; //All the private course dataset
-var currentCourseDataset; //The current course dataset seen	
-var activeCourseSubsetDataset;
-
-var fullScatterDataset; //All the data from the entry grades file
+var dispatch = d3.dispatch("selectCourse");
 
 //#############################################################################
 //#             				 		                                      #
@@ -20,9 +15,9 @@ var fullScatterDataset; //All the data from the entry grades file
 //######################## Auxiliary functions ################################
 
 //Return the acronym of the name
-function getAcronym(universityName) {
+function getAcronym(name) {
 	var res = "";
-	var tokens = universityName.split(" ");
+	var tokens = name.split(" ");
 	for (var i = 0; i < tokens.length; i++) {
 		if (tokens[i][0] != null && tokens[i][0].match(/[A-Z]|-/)) {
 			res += tokens[i][0];
@@ -31,78 +26,155 @@ function getAcronym(universityName) {
 	return res;
 }
 
-function universityToString(u) {
-	var res = "Percentagem Desemprego: " + u.PercentagemDesemprego + "%";
-	//res += "\nTotal Desempregados: " + u.TotalDesempregados;
-	//res += "\nTotal Dimplomados: " + u.TotalDiplomados;
+function dataToString(d) {
+	var res = "Percentagem Desemprego: " + d.PercentagemDesemprego.toFixed(2) + "%";
+	res += "\nTotal Desempregados: " + d.TotalDesempregados;
+	res += "\nTotal Dimplomados: " + d.TotalDiplomados;
 	return res;
 }
 
 //######################## Visualization Functions #########################
 
+var fullPublicCourseDataset; 	//All the public courses dataset
+var fullPrivateCourseDataset; 	//All the private courses dataset
+var currentCourseDataset; 		//The current course dataset seen [public or private]	
+var activeCourseSubsetDataset;	//Universities or Sub-Universities or Courses
+
 var universityVisObj = new Object();
 
-//Load all the course data
+// Load all the course data!
 d3.json("CoursesPublic.json", function(data1) {
 	d3.json("CoursesPrivate.json", function(data2) {
 		fullPrivateCourseDataset = data2;
 	});
 	fullPublicCourseDataset = data1;
 	activeCourseSubsetDataset = currentCourseDataset = data1;
+	activeCourseSubsetDataset.sort(function(d1, d2) {
+		return d2.MediaDesemprego - d1.MediaDesemprego;
+	});
 	generateUniversityVis();
 });
 
-//Call to update university (Bertin Matrix) visualization
-function updateUniversityVisualization(universityVisObj, selectedItemId, newCollection) {
-	var newHeight = newCollection.length * universityVisObj.matrixLineHeight + universityVisObj.padding + 20;
+function contextMenu(x, y) {
+	//Remove the current menu if we open it in other place	
+	d3.select('.context-menu').remove();
 
-	universityVisObj.yscale.domain(newCollection.map(function(d) {
-			return d.key;
-		}))
+	var menuItemHeight = 25;
+	var menuItemWidth = 150;
+	// Draw the menu
+	universityVisObj.svg
+		.append('g').attr('class', 'context-menu')
+		.selectAll('tmp')
+		.data(universityVisObj.contextMenuItems).enter()
+		.append('g').attr('class', 'menu-entry');
+	
+	d3.selectAll('.menu-entry')
+		.append('rect')
+		.attr('x', x)
+		.attr('y', function(d, i){ return y + (i * menuItemHeight); })
+		.attr('width', menuItemWidth)
+		.attr('height', menuItemHeight);
+	
+	d3.selectAll(".menu-entry")
+		.append("text")
+		.text(function(d){ return d; })
+		.attr("class","menu-entry text")
+		.attr("x", x)
+		.attr("y", function(d, i){ return y + (i * menuItemHeight); })
+		.attr("dy", menuItemHeight - 5 / 2)
+		.attr("dx", 5)
+		.on("click", function() {		//Context menu click actions
+			if(d3.select(this).text() === "Sort Ascending"){
+				activeCourseSubsetDataset.sort(function(d1, d2) {
+					return d1.MediaDesemprego - d2.MediaDesemprego;
+				});
+			}
+			else if(d3.select(this).text() === "Sort Descending"){
+				activeCourseSubsetDataset.sort(function(d1, d2) {
+					return d2.MediaDesemprego - d1.MediaDesemprego;
+				});
+			}
+			else{
+				if (universityVisObj.publicUniversities) {
+					universityVisObj.publicUniversities = false;
+					universityVisObj.contextMenuItems[2] = "Public Courses";
+					activeCourseSubsetDataset = currentCourseDataset = fullPrivateCourseDataset;
+				} else {
+					universityVisObj.publicUniversities = true;
+					universityVisObj.contextMenuItems[2] = "Private Courses";
+					activeCourseSubsetDataset = currentCourseDataset = fullPublicCourseDataset;
+				}
+				activeCourseSubsetDataset.sort(function(d1, d2) {
+					return d2.MediaDesemprego - d1.MediaDesemprego;
+				});
+			}
+			universityVisObj.level = 0;
+			universityVisObj.tokenLevel = [];
+			updateUniversityVisualization(universityVisObj, activeCourseSubsetDataset);
+		})
+		.style({'cursor': 'pointer'});
+
+	// Other interactions remove the menu!!
+	d3.select("body")
+		.on("click", function() {
+			d3.select(".context-menu").remove();
+	});
+}
+
+//Call to update university (Bertin Matrix) visualization
+function updateUniversityVisualization(universityVisObj, newCollection) {
+	var minimumHeight = 300;
+	var newHeight = newCollection.length * universityVisObj.matrixLineHeight + universityVisObj.padding + 20;
+	newHeight = (newHeight < minimumHeight && newCollection.length <= 4) ? minimumHeight : newHeight;
+	
+	universityVisObj.yscale.domain(newCollection.map(function(d) { return d.key; }))
 		.range([universityVisObj.padding + 20, newHeight - universityVisObj.matrixLineHeight]);
 	universityVisObj.svg.attr("height", newHeight);
 
-	var lines = universityVisObj.svg.selectAll("g.data");
+	var transition = d3.transition().duration(1000);
+	
+	//Select all the matrix data lines and remove them
+	universityVisObj.svg.selectAll("g.data").remove();
 
-	lines.remove();
-
-	lines = universityVisObj.svg.selectAll("g.data")
+	//Add new Data
+	universityVisObj.svg
+		.selectAll("g.data")
 		.data(newCollection).enter().append("g")
 		.attr("class", "data")
-		.attr("y", function(d) {
-			return universityVisObj.yscale(d.key);
-		});
+		.attr("y", function(d) { return universityVisObj.yscale(d.key); })
+		.selectAll("circle")
+		.data(function(d) { return d.data; })
+			.enter().append("circle")
+			.on("contextmenu", function() { 
+				d3.event.preventDefault();
+				contextMenu(d3.mouse(this)[0], d3.mouse(this)[1]);
+			})
+			//.transition(transition)
+			.attr("r", function(dy) {
+				return Math.sqrt(universityVisObj.circleScale(dy.PercentagemDesemprego));
+			})
+			.attr("cy", function(dy) {
+				return universityVisObj.yscale(dy.key);
+			})
+			.attr("cx", function(dy) {
+				return universityVisObj.xscale(dy.Ano);
+			})
+			.append("title").text(function(dy) {
+				return dataToString(dy);
+			});
 
-	lines.selectAll("circle")
-		.data(function(d) {
-			return d.data;
-		}).enter().append("circle")
-		.transition().duration(1000)
-		.attr("r", function(dy) {
-			return Math.sqrt(universityVisObj.circleScale(dy.PercentagemDesemprego));
-		})
-		.attr("cy", function(dy) {
-			return universityVisObj.yscale(dy.key);
-		})
-		.attr("cx", function(dy) {
-			return universityVisObj.xscale(dy.Ano);
-		})
-		.select("title").text(function(dy) {
-			return "TODO";
-		});
-
-
-	//Update yaxis labels
+	//Update yaxis labels due to new elements
 	universityVisObj.svg.selectAll(".yaxis").transition().duration(1000).call(universityVisObj.yaxis);
 	universityVisObj.svg.selectAll(".tick").append("title").text(function(d) {
 		return d;
 	});
-
+	//Register Interaction events to the new elements!!
 	registerEventsUniversityVis();
 }
 
 // Code related to University Visualization creation (Bertin Matrix)
 function generateUniversityVis() {
+	var padding = { "top": 10, "bottom": 10, "left":10, "rigth":10 }
 	var matrixLineHeight = 15;
 	var width = 400;
 	var height = activeCourseSubsetDataset.length * matrixLineHeight + universityVisObj.padding + 20;
@@ -114,8 +186,23 @@ function generateUniversityVis() {
 	var svg = d3.select("#universityVis")
 		.append("svg")
 		.attr("width", width)
-		.attr("height", height);
-
+		.attr("height", height)
+		.on("contextmenu", function() { 
+				d3.event.preventDefault();
+				contextMenu(d3.mouse(this)[0], d3.mouse(this)[1]);
+		});
+		
+	//Add the navigation context header
+	svg.append("rect")
+		.attr("x",0)
+		.attr("y",0)
+		.attr("height",25)
+		.attr("width",60)
+		.attr("class","typeCourse")
+		.append("text")
+		.text("Ensino Público")
+		.attr("class","text");
+	
 	//Scale for the unemployment circles
 	var circleScale = d3.scaleLinear().domain([0, 100]).range([0, maximumCircleRadius]);
 	var xscale = d3.scalePoint().domain(years).range([leftPadding + padding, width - leftPadding]);
@@ -129,9 +216,7 @@ function generateUniversityVis() {
 	});
 	svg.append("g").attr("class", "xaxis").attr("transform", "translate(0," + padding + ")").call(xaxis);
 	svg.append("g").attr("class", "yaxis").attr("transform", "translate(" + leftPadding + ",0)").call(yaxis);
-	svg.selectAll(".tick").append("title").text(function(d) {
-		return d;
-	});
+	svg.selectAll(".tick").append("title").text(function(d) { return d; });
 
 	universityVisObj.publicUniversities = true;
 	universityVisObj.matrixLineHeight = matrixLineHeight;
@@ -144,13 +229,10 @@ function generateUniversityVis() {
 	universityVisObj.yaxis = yaxis;
 	universityVisObj.level = 0;
 	universityVisObj.tokenLevel = [];
-	activeCourseSubsetDataset.sort(function(d1, d2) {
-		return d2.MediaDesemprego - d1.MediaDesemprego;
-	});
+	universityVisObj.contextMenuItems = ["Sort Ascending","Sort Descending","Private Courses"];
+	
 	//Enter/load the data in visualization
-	updateUniversityVisualization(universityVisObj, null, activeCourseSubsetDataset);
-
-	registerEventsUniversityVis();
+	updateUniversityVisualization(universityVisObj, activeCourseSubsetDataset);
 }
 
 /* ########################## Interaction Events ############################# */
@@ -178,8 +260,23 @@ function registerEventsUniversityVis() {
 					}
 				}
 			}
-		} else {
-			return;
+		} else {	//Add to Line Chart !!!!
+			for (var i = 0; i < currentCourseDataset.length; i++) {
+				if (currentCourseDataset[i].key === universityVisObj.tokenLevel[universityVisObj.level - 2]) {
+					for (var k = 0; k < currentCourseDataset[i].values.length; k++) {
+						if (currentCourseDataset[i].values[k].key === universityVisObj.tokenLevel[universityVisObj.level - 1]) {
+							for(var r = 0; r < currentCourseDataset[i].values[k].values.length;r++){
+								if(currentCourseDataset[i].values[k].values[r].key === selectedItemId){
+									console.log(selectedItemId);
+									sendData = currentCourseDataset[i].values[k].values[r].data;
+									dispatch.call("selectCourse",sendData,sendData);
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 		activeCourseSubsetDataset = newCollection;
 		activeCourseSubsetDataset.sort(function(d1, d2) {
@@ -187,49 +284,8 @@ function registerEventsUniversityVis() {
 		});
 		universityVisObj.level++;
 		universityVisObj.tokenLevel.push(selectedItemId);
-		updateUniversityVisualization(universityVisObj, selectedItemId, activeCourseSubsetDataset);
+		updateUniversityVisualization(universityVisObj, activeCourseSubsetDataset);
 	});
-
-	universityVisObj.svg.select(".yaxis").selectAll(".tick").on("contextmenu", function() {
-		//TODO
-		alert("TODO");
-	});
-
-	// INTERACTION - Sort Universities Unemployment in Ascending order
-	d3.selectAll("#universityAscendingButton")
-		.on("click", function() {
-			activeCourseSubsetDataset.sort(function(d1, d2) {
-				return d1.MediaDesemprego - d2.MediaDesemprego;
-			});
-			updateUniversityVisualization(universityVisObj, null, activeCourseSubsetDataset);
-		});
-
-	// INTERACTION - Sort Universities Unemployment in Descending order
-	d3.selectAll("#universityDescendingButton")
-		.on("click", function() {
-			activeCourseSubsetDataset.sort(function(d1, d2) {
-				return d2.MediaDesemprego - d1.MediaDesemprego;
-			});
-			updateUniversityVisualization(universityVisObj, null, activeCourseSubsetDataset);
-		});
-
-	// INTERACTION - Toggle between public anda private courses dataset
-	d3.selectAll("#universityTypeButton")
-		.on("click", function() {
-			if (universityVisObj.publicUniversities) {
-				universityVisObj.publicUniversities = false;
-				$("#universityTypeButton").text("Public Universities");
-				activeCourseSubsetDataset = currentCourseDataset = fullPrivateCourseDataset;
-			} else {
-				universityVisObj.publicUniversities = true;
-				$("#universityTypeButton").text("Private Universities");
-				activeCourseSubsetDataset = currentCourseDataset = fullPublicCourseDataset;
-			}
-			activeCourseSubsetDataset.sort(function(d1, d2) {
-				return d2.MediaDesemprego - d1.MediaDesemprego;
-			});
-			updateUniversityVisualization(universityVisObj, null, activeCourseSubsetDataset);
-		});
 
 }
 
@@ -279,7 +335,7 @@ function drawSunburst(year) {
 		});
 
 
-	var svg = d3.select("body").append("svg")
+	var svg = d3.select("#areaVis").append("svg")
 		.attr("id", "sunburst")
 		.attr("width", width)
 		.attr("height", height)
@@ -360,7 +416,30 @@ function drawSunburst(year) {
 //#             				       			                              #
 //#############################################################################
 
+var lineChartObj = new Object();
+
 generateLineChartVis();
+
+//Receive event from selecting course in courses view
+dispatch.on("selectCourse",function(d) {
+	updateLineChartVis(d);
+});
+
+function updateLineChartVis(collection){
+	var line = d3.line()
+		.x(function(d) { return lineChartObj.xscale(d.Ano); })
+		.y(function(d) { return lineChartObj.yscale(d.PercentagemDesemprego); });
+	
+	//Add the new data
+	d3.select("#lineChartVis").select("svg")
+		.append("path")
+		.datum(collection)
+		.attr("class", "line")
+		.attr("d", line)
+		.append("title").text(function(d){
+			return "TODO";
+		});
+}
 
 function generateLineChartVis() {
 	var height = 200;
@@ -381,6 +460,19 @@ function generateLineChartVis() {
 	var yaxis = d3.axisLeft().scale(yscale);
 	svg.append("g").attr("class", "xaxis").attr("transform", "translate(0," + (height - padding * 2) + ")").call(xaxis);
 	svg.append("g").attr("class", "yaxis").attr("transform", "translate(" + padding * 2 + ",0)").call(yaxis);
+
+	lineChartObj.xscale = xscale;
+	lineChartObj.yscale = yscale;
+	
+	svg.append("text")
+		.attr("x", -padding * 5)
+		.attr("y", padding / 2)
+		.attr("transform", "rotate(-90)")
+		.text("Unemployment %");
+	svg.append("text")
+		.attr("x", width - padding * 2)
+		.attr("y", height - padding * 1)
+		.text("Year");
 }
 
 //#############################################################################
@@ -396,6 +488,8 @@ function getDotToolTip(d) {
 	res += "\nNota: " + d.Nota;
 	return res;
 }
+
+var fullScatterDataset; //All the data from the entry grades file
 
 //Load the ScatterPlot Courses Data and prepare it to be used in Visualization
 d3.json("EntryGrades.json", function(data) {
@@ -436,8 +530,9 @@ function generateScatterVis() {
 		})
 		.append("title").text(function(d) {
 			return getDotToolTip(d);
-		});;
+		});
 	//==================
+	
 	var xaxis = d3.axisBottom().scale(xscale);
 	var yaxis = d3.axisLeft().scale(yscale);
 	svg.append("g").attr("class", "xaxis").attr("transform", "translate(0," + (height - padding * 2) + ")").call(xaxis);

@@ -24,3 +24,37 @@ circle:hover {
 	width: 100%;
 	height: 20%;
 }
+
+.typeCourse{
+	fill: yellow;
+}
+
+.text{
+	fill: black;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+.line:hover {
+  fill: none;
+  stroke: red;
+  stroke-width: 4px;
+}
+
+/*#############################################
+################# CONTEXT MENU ################
+###############################################*/
+.menu-entry{
+	fill: steelblue;
+	cursor: pointer;
+}
+.menu-entry:hover{
+	fill: red;
+}
+.menu-entry.text{
+	fill: black;
+}
