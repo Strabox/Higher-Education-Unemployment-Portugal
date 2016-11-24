@@ -1,15 +1,11 @@
+/*################## HTML ##################*/
 .title{
 	text-align: center;
 }
-path.sunburst {
-  stroke: #fff;
-}
-circle:hover {
-	fill: red;
-}
+
 #universityVis{
 	width: 100%;
-	height: 88%;
+	height: 92%;
 	overflow:scroll;
 }
 #areaVis{
@@ -25,6 +21,10 @@ circle:hover {
 	height: 20%;
 }
 
+/*#############################################
+#             Courses Matrix View             #
+#############################################*/
+
 .typeCourse{
 	fill: yellow;
 }
@@ -32,6 +32,43 @@ circle:hover {
 .text{
 	fill: black;
 }
+
+circle:hover {
+	fill: red;
+}
+
+.yaxis{
+	cursor: pointer;
+}
+
+/*############ CONTEXT MENU ################ */
+
+.menu-entry{
+	fill: steelblue;
+	cursor: pointer;
+}
+.menu-entry:hover{
+	fill: red;
+}
+.menu-entry.text{
+	fill: black;
+}
+
+/*#############################################
+#               Sunburst View                 #
+#############################################*/
+
+.sunburst{
+	cursor: pointer;
+}
+
+path.sunburst {
+  stroke: #fff;
+}
+
+/*#############################################
+#             Line Chart View                 #
+#############################################*/
 
 .line {
   fill: none;
@@ -43,18 +80,4 @@ circle:hover {
   fill: none;
   stroke: red;
   stroke-width: 4px;
-}
-
-/*#############################################
-################# CONTEXT MENU ################
-###############################################*/
-.menu-entry{
-	fill: steelblue;
-	cursor: pointer;
-}
-.menu-entry:hover{
-	fill: red;
-}
-.menu-entry.text{
-	fill: black;
 }
