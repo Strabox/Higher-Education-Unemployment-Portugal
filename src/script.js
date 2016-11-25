@@ -14,6 +14,32 @@ var dispatch = d3.dispatch("selectCourse");
 
 //######################## Auxiliary functions ################################
 
+function getBreadcrumbString(text){
+	var res = "";
+	var tokens = text.split(" ");
+	var cleanTokens = [];
+	for (var i = 0; i < tokens.length; i++) {
+		if (tokens[i][0] != null && tokens[i][0].match(/[A-Z]|É|-/)) {
+			cleanTokens.push(tokens[i]);
+		}
+	}
+	for (var i = 0; i < cleanTokens.length; i++) {
+		if(cleanTokens.length <= 2){
+			res += cleanTokens[i] + " "; 
+		}
+		else if(cleanTokens.length == 3){
+			res += cleanTokens[i].substring(0,6) + ". "; 
+		}
+		else if(cleanTokens.length == 4){
+			res += cleanTokens[i].substring(0,4) + ". "; 
+		}
+		else{
+			res += cleanTokens[i].substring(0,3) + ". "; 
+		}
+	}
+	return res;
+}
+
 //Return the acronym of the name
 function getAcronym(name) {
 	var res = "";
@@ -48,19 +74,83 @@ var fullPrivateCourseDataset; 	//All the private courses dataset
 
 var universityVisObj = new Object();
 
+var breadcrumbDim = { w: 195, h: 30, s: 3, t: 10 };
+
 // Load all the course data!
-d3.json("CoursesPublic.json", function(data1) {
-	d3.json("CoursesPrivate.json", function(data2) {
-		fullPrivateCourseDataset = data2;
+d3.json("CoursesPublic.json", function(publicCoursesData) {
+	d3.json("CoursesPrivate.json", function(privateCoursesData) {
+		fullPrivateCourseDataset = {"key": "Ensino Privado", "values": privateCoursesData};
 	});
-	fullPublicCourseDataset = data1;
-	fullPublicCourseDataset.sort(function(d1, d2) {
-		return d2.MediaDesemprego - d1.MediaDesemprego;
-	});
-	generateUniversityVis();
+	fullPublicCourseDataset = {"key": "Ensino Público", "values": publicCoursesData};
+	generateUniversityVis();	//Generate the matrix Visualisation
 });
 
-function contextMenu(x, y) {
+/*######################## Breadcrumb Functions ########################*/
+
+function breadcrumbPoints(d, i) {
+	var points = [];
+	points.push("0,0");
+	points.push(breadcrumbDim.w + ",0");
+	points.push(breadcrumbDim.w + breadcrumbDim.t + "," + (breadcrumbDim.h / 2));
+	points.push(breadcrumbDim.w + "," + breadcrumbDim.h);
+	points.push("0," + breadcrumbDim.h);
+	if (i > 0) { 		// Leftmost breadcrumb; don't include 6th vertex.
+		points.push(breadcrumbDim.t + "," + (breadcrumbDim.h / 2));
+	}
+	return points.join(" ");
+}
+
+function initializeBreadcrumbTrail() {
+  var trail = d3.select("#universityBreadcrumb").append("svg")
+	.attr("width", 600)
+	.attr("height", breadcrumbDim.h)
+	.attr("id", "universityTrail");
+}
+
+// Draw/update the matrix breadcrumbs
+function drawBreadcrumbs(nodeArray){
+	var breadcrumbClick = function(d,i) {
+		var removeCount = universityVisObj.previousCollections.length - (i+1) 
+		for(var k = 0; k < removeCount; k++){
+			universityVisObj.previousCollections.pop();
+			universityVisObj.currentCollIndex--;
+		}
+		updateUniversityVisualization(universityVisObj, universityVisObj.previousCollections[universityVisObj.currentCollIndex].values);
+	}
+	
+	var g = d3.select("#universityTrail")
+		.selectAll("g")
+		.data(nodeArray, function(d) { return d.key; });
+		
+	var entering = g.enter()
+		.append("g")
+		.attr("transform", function(d, i) {
+			return "translate(" + i * (breadcrumbDim.w + breadcrumbDim.s) + ", 0)";
+		});
+	
+	entering
+		.append("polygon")
+		.on("click", breadcrumbClick)
+		.transition().duration(500)
+		.attr("points", breadcrumbPoints)
+		.attr("class","breadcrumbItem")
+		.style("fill", function(d) { return "steelblue"; });
+	
+	entering.append("text")
+		.on("click", breadcrumbClick)
+		.attr("x", (breadcrumbDim.w + breadcrumbDim.t) / 2)
+		.attr("y", breadcrumbDim.h / 2)
+		.attr("dy", "0.35em")
+		.attr("text-anchor", "middle")
+		.attr("class","breadcrumbItem")
+		.text(function(d) { return getBreadcrumbString(d.key); });
+	
+	g.exit().transition().duration(200).remove()
+}
+
+/*######################## Context Menu Functions ########################*/
+
+function drawContextMenu(x, y) {
 	//Remove the current menu if we open it in other place	
 	d3.select('.context-menu').remove();
 
@@ -75,12 +165,12 @@ function contextMenu(x, y) {
 		.attr('class', 'menu-entry')
 		.on("click", function() {		//Context menu click actions
 			if(d3.select(this).select("text").text() === "Sort Ascending"){
-				universityVisObj.previousCollections[universityVisObj.currentCollIndex].sort(function(d1, d2) {
+				universityVisObj.previousCollections[universityVisObj.currentCollIndex].values.sort(function(d1, d2) {
 					return d1.MediaDesemprego - d2.MediaDesemprego;
 				});
 			}
 			else if(d3.select(this).select("text").text() === "Sort Descending"){
-				universityVisObj.previousCollections[universityVisObj.currentCollIndex].sort(function(d1, d2) {
+				universityVisObj.previousCollections[universityVisObj.currentCollIndex].values.sort(function(d1, d2) {
 					return d2.MediaDesemprego - d1.MediaDesemprego;
 				});
 			}
@@ -97,9 +187,6 @@ function contextMenu(x, y) {
 					universityVisObj.previousCollections = [fullPublicCourseDataset];
 					universityVisObj.currentCollIndex = 0;
 				}
-				universityVisObj.previousCollections[universityVisObj.currentCollIndex].sort(function(d1, d2) {
-					return d2.MediaDesemprego - d1.MediaDesemprego;
-				});
 			}
 			else{
 				if(universityVisObj.currentCollIndex > 0){
@@ -110,7 +197,7 @@ function contextMenu(x, y) {
 					return;
 				}
 			}
-			updateUniversityVisualization(universityVisObj, universityVisObj.previousCollections[universityVisObj.currentCollIndex]);
+			updateUniversityVisualization(universityVisObj, universityVisObj.previousCollections[universityVisObj.currentCollIndex].values);
 		});
 	
 	d3.selectAll('.menu-entry')
@@ -162,7 +249,7 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 			.enter().append("circle")
 			.on("contextmenu", function() { 
 				d3.event.preventDefault();
-				contextMenu(d3.mouse(this)[0], d3.mouse(this)[1]);
+				drawContextMenu(d3.mouse(this)[0], d3.mouse(this)[1]);
 			})
 			.transition(transition)
 			.attr("r", function(dy) {
@@ -182,23 +269,24 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 			return dataToString(dy);
 		});
 		
-	universityVisObj.svg.select("text").text(universityVisObj.currentContext());
-		
 	//Update yaxis labels due to new elements
 	universityVisObj.svg.selectAll(".yaxis").transition().duration(1000).call(universityVisObj.yaxis);
 	universityVisObj.svg.select(".yaxis").selectAll(".tick").append("title").text(function(d) {
 		return d;
 	});
+	
+	drawBreadcrumbs(universityVisObj.previousCollections);
+	
 	//Register Interaction events to the new elements!!
 	registerEventsUniversityVis();
 }
 
 // Code related to University Visualization creation (Bertin Matrix)
 function generateUniversityVis() {
-	var paddingObj = { "top": 70, "bottom": 20, "left":50, "right":20 }
-	var matrixLineHeight = 17;
-	var width = 400;
-	var height = fullPublicCourseDataset.length * matrixLineHeight;
+	var paddingObj = { "top": 40, "bottom": 20, "left":50, "right":20 }
+	var matrixLineHeight = 17.2;
+	var width = 500;
+	var height = fullPublicCourseDataset.values.length * matrixLineHeight;
 	var maximumCircleRadius = 90;
 	var years = [2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015];
 
@@ -208,21 +296,21 @@ function generateUniversityVis() {
 		.attr("height", height)
 		.on("contextmenu", function() { 
 			d3.event.preventDefault();
-			contextMenu(d3.mouse(this)[0], d3.mouse(this)[1]);
+			drawContextMenu(d3.mouse(this)[0], d3.mouse(this)[1]);
 		});
 	
 	//Scale for the unemployment circles
 	var circleScale = d3.scaleLinear().domain([0, 100]).range([0, maximumCircleRadius]);
 	var xscale = d3.scalePoint().domain(years).range([paddingObj.left + paddingObj.right, width - paddingObj.right]);
-	var yscale = d3.scalePoint().domain(fullPublicCourseDataset.map(function(d) {
+	var yscale = d3.scalePoint().domain(fullPublicCourseDataset.values.map(function(d) {
 		return d.key;
 	})).range([paddingObj.top, height - paddingObj.bottom]);
 
 	var xaxis = d3.axisTop().scale(xscale);
 	var yaxis = d3.axisLeft().scale(yscale).tickFormat(function(d) { return getAcronym(d); });
 	
-	svg.append("g").attr("class", "xaxis").attr("transform", "translate(0," + paddingObj.top*0.7 + ")").call(xaxis);
-	svg.append("g").attr("class", "yaxis").attr("transform", "translate(" + paddingObj.left + ",0)").call(yaxis);
+	svg.append("g").attr("class", "xaxis").attr("transform", "translate(0," + paddingObj.top/2 + ")").call(xaxis);
+	svg.append("g").attr("class", "yaxis").attr("transform", "translate(" + paddingObj.left + "," + 0 +")").call(yaxis);
 	svg.select(".yaxis").selectAll(".tick").append("title").text(function(d) { return d; });
 
 	universityVisObj.publicUniversities = true;
@@ -235,32 +323,11 @@ function generateUniversityVis() {
 	universityVisObj.previousCollections = [fullPublicCourseDataset];
 	universityVisObj.currentCollIndex = 0;
 	universityVisObj.contextMenuItems = ["Back","Private Courses","Sort Ascending","Sort Descending"];
-	universityVisObj.currentContext = function() {
-		var res = "";
-		if(this.publicUniversities){
-			res = "Público";
-		}
-		else{
-			res = "Privado";
-		}
-		/*
-		for(var i = 1; i < this.previousCollections.length; i++){
-			res += " >> " + this.previousCollections[i].key;
-		}
-		*/
-		return res;
-	};
 	
-	//Add the navigation context header
-	svg.append("text")
-		.attr("x",15)
-		.attr("y",15)
-		.attr("class","text")
-		.attr("class","context-header")
-		.text(universityVisObj.currentContext());
+	initializeBreadcrumbTrail();
 	
 	//Enter/load the data in visualization
-	updateUniversityVisualization(universityVisObj, fullPublicCourseDataset);
+	updateUniversityVisualization(universityVisObj, fullPublicCourseDataset.values);
 }
 
 /* ########################## Interaction Events ############################# */
@@ -272,9 +339,9 @@ function registerEventsUniversityVis() {
 		var newCollection;
 		
 		if(universityVisObj.currentCollIndex < 2) {
-			for(var i = 0; i < currentCollection.length; i++){
-				if(currentCollection[i].key === selectedItemId){
-					newCollection = currentCollection[i].values;
+			for(var i = 0; i < currentCollection.values.length; i++){
+				if(currentCollection.values[i].key === selectedItemId){
+					newCollection = currentCollection.values[i].values;
 					break;
 				}			
 			}
@@ -282,13 +349,13 @@ function registerEventsUniversityVis() {
 				return d2.MediaDesemprego - d1.MediaDesemprego;
 			});
 			universityVisObj.currentCollIndex++;
-			universityVisObj.previousCollections.push(newCollection);
+			universityVisObj.previousCollections.push({"key": selectedItemId ,"values": newCollection});
 			updateUniversityVisualization(universityVisObj, newCollection);
 		}
 		else{
-			for(var i = 0; i < currentCollection.length; i++){
-				if(currentCollection[i].key === selectedItemId){
-					var sendData = currentCollection[i].data;
+			for(var i = 0; i < currentCollection.values.length; i++){
+				if(currentCollection.values[i].key === selectedItemId){
+					var sendData = currentCollection.values[i].data;
 					dispatch.call("selectCourse",sendData,sendData);
 					break;
 				}			
@@ -314,7 +381,7 @@ drawSunburst("2015");
 
 function drawSunburst(year) {
 	var width = 550,
-		height = 425,
+		height = 550,
 		radius = (Math.min(width, height) / 2) - 10;
 
 	var formatNumber = d3.format(",d");
@@ -348,7 +415,7 @@ function drawSunburst(year) {
 		.attr("id", "sunburst")
 		.attr("width", width)
 		.attr("height", height)
-		.attr("class", "col-md-offset-2")
+		.attr("class", "col-md-offset-3")
 		.append("g")
 		.attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
@@ -455,8 +522,8 @@ function updateLineChartVis(collection){
 }
 
 function generateLineChartVis() {
-	var height = 200;
-	var width = 450;
+	var height = 310;
+	var width = 620;
 	var padding = 25;
 
 	var years = [2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015];
@@ -511,8 +578,8 @@ d3.json("EntryGrades.json", function(data) {
 });
 
 function generateScatterVis() {
-	var height = 200;
-	var width = 425;
+	var height = 310;
+	var width = 620;
 	var padding = 25;
 	var dotRadius = 2;
 

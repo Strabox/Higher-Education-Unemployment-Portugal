@@ -6,8 +6,12 @@
 #universityVis{
 	width: 100%;
 	height: 92%;
-	overflow:scroll;
+	overflow-y: scroll;
 }
+#universityBreadcrumb{
+	width: 100%;
+}
+
 #areaVis{
 	width: 100%;
 	height: 60%;
@@ -35,6 +39,10 @@
 
 circle:hover {
 	fill: red;
+}
+
+.breadcrumbItem{
+	cursor: pointer;
 }
 
 .yaxis{
