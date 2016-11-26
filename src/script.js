@@ -4,7 +4,7 @@
 //#             				       			                              #
 //#############################################################################
 
-var dispatch = d3.dispatch("selectCourse");
+var dispatch = d3.dispatch("selectCourse","selectUniversity");
 
 //#############################################################################
 //#             				 		                                      #
@@ -275,8 +275,15 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 		return d;
 	});
 	
-	drawBreadcrumbs(universityVisObj.previousCollections);
+	var currentSelection = [universityVisObj.previousCollections[universityVisObj.currentCollIndex].key];
+	if(universityVisObj.currentCollIndex == 2){
+		currentSelection.push(universityVisObj.previousCollections[universityVisObj.currentCollIndex - 1].key);
+	}
 	
+	dispatch.call("selectUniversity",currentSelection,currentSelection);
+	
+	drawBreadcrumbs(universityVisObj.previousCollections);
+
 	//Register Interaction events to the new elements!!
 	registerEventsUniversityVis();
 }
@@ -350,6 +357,7 @@ function registerEventsUniversityVis() {
 			});
 			universityVisObj.currentCollIndex++;
 			universityVisObj.previousCollections.push({"key": selectedItemId ,"values": newCollection});
+			
 			updateUniversityVisualization(universityVisObj, newCollection);
 		}
 		else{
@@ -571,29 +579,49 @@ function getDotToolTip(d) {
 
 var fullScatterDataset; //All the data from the entry grades file
 
+var scatterVisObj = new Object();
+
 //Load the ScatterPlot Courses Data and prepare it to be used in Visualization
 d3.json("EntryGrades.json", function(data) {
 	fullScatterDataset = data.data;
 	generateScatterVis();
 });
 
-function generateScatterVis() {
-	var height = 310;
-	var width = 620;
-	var padding = 25;
+//Receive event from view change in university/faculdade matrix view
+dispatch.on("selectUniversity",function(selected,dummy) {
+	//University or faculdade selected
+	if(selected[0] !== "Ensino Público" && selected[0] !== "Ensino Privado"){
+		d3.select("#courseScatterVis").select("svg")
+			.selectAll("circle")
+			.each(function(p,j){
+				d3.select(this)	
+					.attr("class",function(d){
+						var res = "selectedDot";
+						for(var i = 0; i < selected.length; i++){
+							if(!d.NomeFaculdade.includes(selected[i])){
+								res = "unselectedDot";
+								break;
+							}
+						}
+						return res;
+					});
+			});
+	}
+	//Nothing selected
+	else{
+		d3.select("#courseScatterVis").select("svg")
+			.selectAll("circle")
+			.attr("class","dot");
+	}
+});
+
+function updateScatterVis(newCollection){
 	var dotRadius = 2;
-
-	var svg = d3.select("#courseScatterVis")
-		.append("svg")
-		.attr("width", width)
-		.attr("height", height);
-
-	var xscale = d3.scaleLinear().domain([9.5, 19]).range([padding * 2, width - padding]);
-	var yscale = d3.scaleLinear().domain([100, 0]).range([0, height - padding * 2]);
-
-	//Enter the new data
-	svg.selectAll("circle")
-		.data(fullScatterDataset)
+	
+	//Enter/update the data
+	d3.select("#courseScatterVis").select("svg")
+		.selectAll("circle")
+		.data(newCollection)
 		.enter().append("circle")
 		.attr("r", function(d) {
 			if (d.PercentagemDesemprego < 0) {
@@ -603,15 +631,33 @@ function generateScatterVis() {
 			}
 		})
 		.attr("cx", function(d) {
-			return xscale(d.Nota / 10);
+			return scatterVisObj.xscale(d.Nota / 10);
 		})
 		.attr("cy", function(d) {
-			return yscale(d.PercentagemDesemprego);
+			return scatterVisObj.yscale(d.PercentagemDesemprego);
 		})
 		.append("title").text(function(d) {
 			return getDotToolTip(d);
 		});
-	//==================
+}
+
+function generateScatterVis() {
+	var height = 310;
+	var width = 620;
+	var padding = 25;
+	
+	var svg = d3.select("#courseScatterVis")
+		.append("svg")
+		.attr("width", width)
+		.attr("height", height);
+
+	var xscale = d3.scaleLinear().domain([9.5, 19]).range([padding * 2, width - padding]);
+	var yscale = d3.scaleLinear().domain([100, 0]).range([0, height - padding * 2]);
+		
+	scatterVisObj.xscale = xscale;
+	scatterVisObj.yscale = yscale;
+		
+	updateScatterVis(fullScatterDataset);
 	
 	var xaxis = d3.axisBottom().scale(xscale);
 	var yaxis = d3.axisLeft().scale(yscale);

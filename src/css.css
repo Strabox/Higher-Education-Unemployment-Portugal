@@ -89,3 +89,19 @@ path.sunburst {
   stroke: red;
   stroke-width: 4px;
 }
+
+/*#############################################
+#             Scatterplot View                #
+#############################################*/
+
+.dot{
+	fill: black;
+}
+
+.selectedDot{
+	fill : red;
+}
+
+.unselectedDot{
+	fill : #e6e6e6;
+}
