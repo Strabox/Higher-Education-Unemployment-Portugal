@@ -4,6 +4,7 @@
 //#             				       			                              #
 //#############################################################################
 
+//Register events to alert all the views
 var dispatch = d3.dispatch("selectCourse", "selectUniversity");
 
 //#############################################################################
@@ -690,10 +691,10 @@ function updateLineChartVis(collection) {
 }
 
 function generateLineChartVis() {
-	var height = 310;
+	var height = 330;
 	var width = 620;
-	var padding = 25;
-
+	var padding = { "top": 10,"bottom": 40, "left": 40, "right": 15 };
+	
 	var years = [2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015];
 
 	var svg = d3.select("#lineChartVis")
@@ -701,31 +702,31 @@ function generateLineChartVis() {
 		.attr("width", width)
 		.attr("height", height);
 
-	var xscale = d3.scalePoint().domain(years).range([padding * 2, width - padding]);
-	var yscale = d3.scaleLinear().domain([100, 0]).range([0, height - padding * 2]);
+	var xscale = d3.scalePoint().domain(years).range([padding.left, width - padding.right]);
+	var yscale = d3.scaleLinear().domain([100, 0]).range([padding.top, height - padding.bottom]);
 
 	var xaxis = d3.axisBottom().scale(xscale);
 	var yaxis = d3.axisLeft().scale(yscale);
-	svg.append("g").attr("class", "xaxis").attr("transform", "translate(0," + (height - padding * 2) + ")").call(xaxis);
-	svg.append("g").attr("class", "yaxis").attr("transform", "translate(" + padding * 2 + ",0)").call(yaxis);
+	svg.append("g").attr("class", "xaxis").attr("transform", "translate(0," + (height - padding.bottom) + ")").call(xaxis);
+	svg.append("g").attr("class", "yaxis").attr("transform", "translate(" + padding.left + ",0)").call(yaxis);
 
 	lineChartObj.xscale = xscale;
 	lineChartObj.yscale = yscale;
 
 	svg.append("text")
-		.attr("x", -padding * 5)
-		.attr("y", padding / 2)
+		.attr("x", - 200)
+		.attr("y", 12)
 		.attr("transform", "rotate(-90)")
 		.text("Unemployment %");
 	svg.append("text")
-		.attr("x", width - padding * 2)
-		.attr("y", height - padding * 1)
+		.attr("x", width - 310)
+		.attr("y", height - 10)
 		.text("Year");
 }
 
 //#############################################################################
 //#             				 		                                      #
-//#                  COURSE SCATTER PLOT CHART VIEW                           #
+//#                      COURSE SCATTER PLOT CHART VIEW                       #
 //#             				       			                              #
 //#############################################################################
 
@@ -741,7 +742,7 @@ var fullScatterDataset; //All the data from the entry grades file
 
 var scatterVisObj = new Object();
 
-//Load the ScatterPlot Courses Data and prepare it to be used in Visualization
+//Load the ScatterPlot Courses data and prepare it to be used in visualization
 d3.json("EntryGrades.json", function(data) {
 	fullScatterDataset = data.data;
 	generateScatterVis();
@@ -749,13 +750,14 @@ d3.json("EntryGrades.json", function(data) {
 
 //Receive event from view change in university/faculdade matrix view
 dispatch.on("selectUniversity", function(selected, dummy) {
-	//University or faculdade selected
+	//University or college selected
 	if (selected[0] !== "Ensino Público" && selected[0] !== "Ensino Privado") {
 		d3.select("#courseScatterVis").select("svg")
 			.selectAll("circle")
-			.each(function(p, j) {
+			.each(function(p,j){
 				d3.select(this)
-					.attr("class", function(d) {
+					.transition().duration(1000)
+					.attr("class",function(d){
 						var res = "selectedDot";
 						for (var i = 0; i < selected.length; i++) {
 							if (!d.NomeFaculdade.includes(selected[i])) {
@@ -802,35 +804,35 @@ function updateScatterVis(newCollection) {
 }
 
 function generateScatterVis() {
-	var height = 310;
+	var height = 330;
 	var width = 620;
-	var padding = 25;
-
+	var padding = { "top": 10,"bottom": 40, "left": 40, "right": 10 };
+	
 	var svg = d3.select("#courseScatterVis")
 		.append("svg")
 		.attr("width", width)
 		.attr("height", height);
 
-	var xscale = d3.scaleLinear().domain([9.5, 19]).range([padding * 2, width - padding]);
-	var yscale = d3.scaleLinear().domain([100, 0]).range([0, height - padding * 2]);
+	var xscale = d3.scaleLinear().domain([9.5, 19]).range([padding.left, width - padding.right]);
+	var yscale = d3.scaleLinear().domain([90, 0]).range([padding.top, height - padding.bottom]);
 
 	scatterVisObj.xscale = xscale;
 	scatterVisObj.yscale = yscale;
 
 	updateScatterVis(fullScatterDataset);
 
-	var xaxis = d3.axisBottom().scale(xscale);
+	var xaxis = d3.axisBottom().scale(xscale).ticks(19);
 	var yaxis = d3.axisLeft().scale(yscale);
-	svg.append("g").attr("class", "xaxis").attr("transform", "translate(0," + (height - padding * 2) + ")").call(xaxis);
-	svg.append("g").attr("class", "yaxis").attr("transform", "translate(" + padding * 2 + ",0)").call(yaxis);
+	svg.append("g").attr("class", "xaxis").attr("transform", "translate(0," + (height - padding.bottom) + ")").call(xaxis);
+	svg.append("g").attr("class", "yaxis").attr("transform", "translate(" + padding.left + ",0)").call(yaxis);
 	svg.append("text")
-		.attr("x", -padding * 5)
-		.attr("y", padding / 2)
+		.attr("x", - 200)
+		.attr("y", 12)
 		.attr("transform", "rotate(-90)")
 		.text("Unemployment %");
 	svg.append("text")
-		.attr("x", width - padding * 6)
-		.attr("y", height - padding * 1)
+		.attr("x", width - 350)
+		.attr("y", height - 10)
 		.text("Minimum Entry Grade");
 }
 
