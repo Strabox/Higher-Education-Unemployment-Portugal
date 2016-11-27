@@ -665,7 +665,7 @@ generateLineChartVis();
 dispatch.on("selectCourse", function(d) {
 	updateLineChartVis(d);
 });
-
+git pull --rebase
 function updateLineChartVis(collection) {
 	var line = d3.line()
 		.x(function(d) {
