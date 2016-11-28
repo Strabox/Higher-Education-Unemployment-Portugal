@@ -4,8 +4,11 @@
 //#             				       			                              #
 //#############################################################################
 
-//Register events to alert all the views
-var dispatch = d3.dispatch("selectCourse", "selectUniversity");
+//Register events to use in inter-view communication
+/*
+	
+*/
+var dispatch = d3.dispatch("selectCourse", "selectUniversity", "unselectUniversity");
 
 //#############################################################################
 //#             				 		                                      #
@@ -93,6 +96,11 @@ d3.json("CoursesPublic.json", function(publicCoursesData) {
 	generateUniversityVis(); //Generate the matrix Visualisation
 });
 
+//Receive event from view change in scatterplot when a user remove a filter (university)
+dispatch.on("unselectUniversity", function(selected, dummy) {
+	//TODO
+});
+
 /*######################## Breadcrumb Functions ########################*/
 
 function breadcrumbPoints(d, i) {
@@ -106,13 +114,6 @@ function breadcrumbPoints(d, i) {
 		points.push(breadcrumbDim.t + "," + (breadcrumbDim.h / 2));
 	}
 	return points.join(" ");
-}
-
-function initializeBreadcrumbTrail() {
-	var trail = d3.select("#universityBreadcrumb").append("svg")
-		.attr("width", 600)
-		.attr("height", breadcrumbDim.h)
-		.attr("id", "universityTrail");
 }
 
 // Draw/update the matrix breadcrumbs
@@ -362,7 +363,10 @@ function generateUniversityVis() {
 	universityVisObj.currentCollIndex = 0;
 	universityVisObj.contextMenuItems = ["Back", "Private Courses", "Sort Ascending", "Sort Descending"];
 
-	initializeBreadcrumbTrail();
+	var trail = d3.select("#universityBreadcrumb").append("svg")
+		.attr("width", 600)
+		.attr("height", breadcrumbDim.h)
+		.attr("id", "universityTrail");
 
 	//Enter/load the data in visualization
 	updateUniversityVisualization(universityVisObj, fullPublicCourseDataset.values);
@@ -730,11 +734,11 @@ function generateLineChartVis() {
 //#             				       			                              #
 //#############################################################################
 
-function getDotToolTip(d) {
+function getScatterPlotDotToolTip(datum) {
 	var res = "";
-	res += "Faculdade: " + d.NomeFaculdade;
-	res += "\nCurso: " + d.NomeCurso;
-	res += "\nNota: " + d.Nota;
+	res += "Faculdade: " + datum.NomeFaculdade;
+	res += "\nCurso: " + datum.NomeCurso;
+	res += "\nNota: " + datum.Nota;
 	return res;
 }
 
@@ -751,6 +755,9 @@ d3.json("EntryGrades.json", function(data) {
 //Receive event from view change in university/faculdade matrix view
 dispatch.on("selectUniversity", function(selected, dummy) {
 	//University or college selected
+	var filterWidth = 200;
+	var filterHeight = 22;
+	
 	if (selected[0] !== "Ensino Público" && selected[0] !== "Ensino Privado") {
 		d3.select("#courseScatterVis").select("svg")
 			.selectAll("circle")
@@ -768,6 +775,21 @@ dispatch.on("selectUniversity", function(selected, dummy) {
 						return res;
 					});
 			});
+		/* TODO!!!
+		var g = d3.select("#courseScatterVis").select("svg")
+			.append("g");
+			
+		g.append("rect")
+			.attr("width",filterWidth)
+			.attr("height",filterHeight)
+			.attr("x",scatterVisObj.width - filterWidth)
+			.attr("y",scatterVisObj.top)
+			.attr("fill","steelblue");
+		g.append("text")
+			.attr("x",scatterVisObj.width - filterWidth)
+			.attr("y",scatterVisObj.top)
+			.text("dummy");
+			*/
 	}
 	//Nothing selected
 	else {
@@ -799,7 +821,7 @@ function updateScatterVis(newCollection) {
 			return scatterVisObj.yscale(d.PercentagemDesemprego);
 		})
 		.append("title").text(function(d) {
-			return getDotToolTip(d);
+			return getScatterPlotDotToolTip(d);
 		});
 }
 
@@ -816,9 +838,12 @@ function generateScatterVis() {
 	var xscale = d3.scaleLinear().domain([9.5, 19]).range([padding.left, width - padding.right]);
 	var yscale = d3.scaleLinear().domain([90, 0]).range([padding.top, height - padding.bottom]);
 
+	scatterVisObj.width = width;
+	scatterVisObj.height = height;
 	scatterVisObj.xscale = xscale;
 	scatterVisObj.yscale = yscale;
-
+	scatterVisObj.padding = padding;
+	
 	updateScatterVis(fullScatterDataset);
 
 	var xaxis = d3.axisBottom().scale(xscale).ticks(19);
