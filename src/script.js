@@ -545,7 +545,10 @@ function drawSunburst(year) {
 			.on("click", click)
 			.append("title")
 			.text(function(d) {
-				return d.data.CNAEFNome + "\n" + formatNumber(d.value);
+				var res = d.data.CNAEFNome + "\nPercentagem Desemprego: " + d.data.PercentagemDesemprego + " %";
+ 				res += "\nTotal Desempregados: " + d.data.TotalDesempregados;
+ 				res += "\nTotal Dimplomados: " + d.data.TotalDiplomados;
+ 				return res;				
 			});
 
 
@@ -584,7 +587,7 @@ genSlider();
 function genSlider() {
 	var Width = 400;
 	var Height = 100;
-	var svg = d3.select("svg"),
+	var svg = d3.select("#areaSlider"),
 		margin = {
 			right: 50,
 			left: 50
