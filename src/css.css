@@ -16,9 +16,12 @@
 	width: 100%;
 	height: 60%;
 }
+
 #slider{
 	width: 100%;
-	}
+	height: 5%;
+}
+
 #courseScatterVis{
 	width: 100%;
 	height: 20%;
