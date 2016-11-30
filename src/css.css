@@ -18,7 +18,7 @@
 }
 #slider{
 	width: 100%;
-	}
+}
 #courseScatterVis{
 	width: 100%;
 	height: 20%;
@@ -28,20 +28,25 @@
 	height: 20%;
 }
 
+.axisLabel{
+	font-size: 12pt;
+}
+
 /*#############################################
 #             Courses Matrix View             #
 #############################################*/
-
-.typeCourse{
-	fill: yellow;
-}
-
 .text{
-	fill: black;
+	fill: white;
 }
 
-circle:hover {
-	fill: red;
+.matrixLine{
+	fill-opacity: 0;
+	cursor: pointer;
+}
+
+.matrixLine:hover{
+	fill: steelblue;
+	fill-opacity: 0.2;
 }
 
 .breadcrumbItem{
@@ -136,7 +141,7 @@ path.sunburst {
 }
 
 .selectedDot{
-	fill : red;
+	fill : black;
 }
 
 .unselectedDot{
