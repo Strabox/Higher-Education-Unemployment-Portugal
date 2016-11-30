@@ -534,7 +534,7 @@ function drawSunburst(year) {
 			.attr("class", "sunburst")
 			.style("fill", function(d) {
 				if (d.data.CNAEFNome == "Raíz")
-					return color(0);
+					return color(1);
 				else {
 					var first = (d.children ? d : d.parent).data.CNAEF / 100;
 					return color(Math.floor(first) + 1);
@@ -545,10 +545,7 @@ function drawSunburst(year) {
 			.on("click", click)
 			.append("title")
 			.text(function(d) {
-				var res = d.data.CNAEFNome + "\nPercentagem Desemprego: " + d.data.PercentagemDesemprego + " %";
-				res += "\nTotal Desempregados: " + d.data.TotalDesempregados;
-				res += "\nTotal Dimplomados: " + d.data.TotalDiplomados;
-				return res;
+				return d.data.CNAEFNome + "\n" + formatNumber(d.value);
 			});
 
 
@@ -584,16 +581,15 @@ function drawSunburst(year) {
 
 //Slider
 genSlider();
-
 function genSlider() {
 	var Width = 400;
 	var Height = 100;
-	var svg = d3.select("#slider"),
+	var svg = d3.select("svg"),
 		margin = {
 			right: 50,
 			left: 50
 		},
-		width = +Width - margin.left - margin.right,
+		width = +Width- margin.left - margin.right,
 		height = +Height;
 
 	var x = d3.scaleLinear()
@@ -655,41 +651,40 @@ function genSlider() {
 
 	function dragEnd() {
 		console.log(year(d3.event.x));
-		handle.attr("cx", x(x.invert(value(d3.event.x, width))));
+		handle.attr("cx", x(x.invert(value(d3.event.x,width))));
 		d3.select("#sunburst").remove();
-		drawSunburst(year(d3.event.x, width));
+		drawSunburst(year(d3.event.x,width));
 
 	}
 
-
-
-}
-
-function value(x, w) {
-	var s = w / 8;
-	var h = s / 2;
-	if (x < h)
-		return 0;
-	if (x >= h && x < s + h)
-		return s;
-	if (x >= 2 * s - h && x < 2 * s + h)
-		return 2 * s;
-	if (x >= 3 * s - h && x < 3 * s + h)
-		return 3 * s;
-	if (x >= 4 * s - h && x < 4 * s + h)
-		return 4 * s;
-	if (x >= 5 * s - h && x < 5 * s + h)
-		return 5 * s;
-	if (x >= 6 * s - h && x < 6 * s + h)
-		return 6 * s;
-	if (x >= 7 * s - h && x < 7 * s + h)
-		return 7 * s;
-	if (x >= 8 * s - h)
-		return 8 * s;
+	
 
 }
+function value(x,w) {		
+		var s = w / 8;
+		var h = s / 2;
+		if (x < h)
+			return 0;
+		if (x >= h && x < s + h)
+			return s;
+		if (x >= 2 * s - h && x < 2 * s + h)
+			return 2 * s;
+		if (x >= 3 * s - h && x < 3 * s + h)
+			return 3 * s;
+		if (x >= 4 * s - h && x < 4 * s + h)
+			return 4 * s;
+		if (x >= 5 * s - h && x < 5 * s + h)
+			return 5 * s;
+		if (x >= 6 * s - h && x < 6 * s + h)
+			return 6 * s;
+		if (x >= 7 * s - h && x < 7 * s + h)
+			return 7 * s;
+		if (x >= 8 * s - h)
+			return 8 * s;
 
-function year(x, w) {
+	}
+
+function year(x,w) {
 	var s = w / 8;
 	var h = s / 2;
 	if (x < h)
@@ -754,20 +749,9 @@ function updateLineChartVis(collection) {
 
 function generateLineChartVis() {
 	var height = 330;
-<<<<<<< HEAD
-	var width = 620;
-	var padding = {
-		"top": 10,
-		"bottom": 40,
-		"left": 40,
-		"right": 15
-	};
-
-=======
 	var width = 1250;
 	var padding = { "top": 10,"bottom": 40, "left": 40, "right": 15 };
 	
->>>>>>> origin/master
 	var years = [2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015];
 
 	var svg = d3.select("#lineChartVis")
@@ -787,14 +771,9 @@ function generateLineChartVis() {
 	lineChartObj.yscale = yscale;
 
 	svg.append("text")
-<<<<<<< HEAD
-		.attr("x", -200)
-		.attr("y", 12)
-=======
 		.attr("class","axisLabel")
 		.attr("x", - height / 2)
 		.attr("y", padding.right)
->>>>>>> origin/master
 		.attr("transform", "rotate(-90)")
 		.text("Unemployment %");
 	svg.append("text")
@@ -837,10 +816,10 @@ dispatch.on("selectUniversity", function(selected, dummy) {
 	if (selected[0] !== "Ensino Público" && selected[0] !== "Ensino Privado") {
 		d3.select("#courseScatterVis").select("svg")
 			.selectAll("circle")
-			.each(function(p, j) {
+			.each(function(p,j){
 				d3.select(this)
 					.transition().duration(1000)
-					.attr("class", function(d) {
+					.attr("class",function(d){
 						var res = "selectedDot";
 						for (var i = 0; i < selected.length; i++) {
 							if (!d.NomeFaculdade.includes(selected[i])) {
@@ -904,13 +883,8 @@ function updateScatterVis(newCollection) {
 function generateScatterVis() {
 	var height = 550;
 	var width = 620;
-	var padding = {
-		"top": 10,
-		"bottom": 40,
-		"left": 40,
-		"right": 10
-	};
-
+	var padding = { "top": 10,"bottom": 40, "left": 40, "right": 10 };
+	
 	var svg = d3.select("#courseScatterVis")
 		.append("svg")
 		.attr("width", width)
@@ -932,12 +906,8 @@ function generateScatterVis() {
 	svg.append("g").attr("class", "xaxis").attr("transform", "translate(0," + (height - padding.bottom) + ")").call(xaxis);
 	svg.append("g").attr("class", "yaxis").attr("transform", "translate(" + padding.left + ",0)").call(yaxis);
 	svg.append("text")
-<<<<<<< HEAD
-		.attr("x", -200)
-=======
 		.attr("class","axisLabel")
 		.attr("x", - height / 2)
->>>>>>> origin/master
 		.attr("y", 12)
 		.attr("transform", "rotate(-90)")
 		.text("Unemployment %");
