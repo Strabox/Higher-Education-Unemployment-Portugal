@@ -11,6 +11,10 @@
 var dispatch = d3.dispatch("selectCourse", "selectUniversity", "unselectUniversity",
 	"selectArea");
 
+var color1 = d3.scaleOrdinal(d3.schemeCategory10);
+var scatterVisObj = new Object();
+scatterVisObj.selectedUniversity = ["Ensino Público"];
+scatterVisObj.selectedArea = { "area": 0, "color": color1(0) };
 //#############################################################################
 //#             				 		                                      #
 //#             		   UNIVERSITY AND COURSES VIEW                        #
@@ -471,7 +475,11 @@ function registerEventsUniversityVis() {
 
 drawSunburst("2007");
 
+
 function drawSunburst(year) {
+	var sendObject = { "area": 0, "color": color1(0) };
+	dispatch.call("selectArea", sendObject, sendObject);
+	
 	var width = 550,
 		height = 550,
 		radius = (Math.min(width, height) / 2) - 10;
@@ -483,8 +491,6 @@ function drawSunburst(year) {
 
 	var y = d3.scaleSqrt()
 		.range([0, radius]);
-
-	var color1 = d3.scaleOrdinal(d3.schemeCategory10);
 
 	var partition = d3.partition();
 
@@ -532,7 +538,6 @@ function drawSunburst(year) {
 			.attr("class", "sunburst")
 			.style("fill",
 				function(d) {
-
 					if (d.data.CNAEFNome == "Raíz")
 						return color1(0);
 					else {
@@ -571,8 +576,10 @@ function drawSunburst(year) {
 		var sendObject = new Object();
 		sendObject.area = d.data.CNAEF;
 		sendObject.color = this.style.fill;
-		if (d.data.CNAEFNome != "Raíz")
-			dispatch.call("selectArea", sendObject, sendObject);
+		if (d.data.CNAEFNome === "Raíz"){
+			sendObject.area = 0;			//ROOT is 0
+		}
+		dispatch.call("selectArea", sendObject, sendObject);
 
 		svg.transition()
 			.duration(750)
@@ -835,9 +842,18 @@ function getScatterPlotDotToolTip(datum) {
 	return res;
 }
 
-var fullScatterDataset; //All the data from the entry grades file
+function subArea(a, b) {
+	var a_ = a.toString();
+	var b_ = b.toString();
+	if (b_.substring(1, 3) == "00")
+		return a_[0] == b_[0];
+	else if (b_[2] == "0")
+		return a_.substring(0, 2) == b_.substring(0, 2);
+	else
+		return a_ == b_;
+}
 
-var scatterVisObj = new Object();
+var fullScatterDataset; //All the data from the entry grades file
 
 //Load the ScatterPlot Courses data and prepare it to be used in visualization
 d3.json("EntryGrades.json", function(data) {
@@ -847,6 +863,9 @@ d3.json("EntryGrades.json", function(data) {
 
 //Receive event from view change in the sunburst view (Area Selected)
 dispatch.on("selectArea", function(selectedObject, dummy) {	
+	scatterVisObj.selectedArea = selectedObject;
+	console.log(scatterVisObj.selectedArea);
+	filterScatterVis();
 	/*
 	d3.select("#courseScatterVis").select("svg")
 		.selectAll("circle")
@@ -862,67 +881,54 @@ dispatch.on("selectArea", function(selectedObject, dummy) {
 	*/
 });
 
-function subArea(a, b) {
-	var a_ = a.toString();
-	var b_ = b.toString();
-	if (b_.substring(1, 3) == "00")
-		return a_[0] == b_[0];
-	else if (b_[2] == "0")
-		return a_.substring(0, 2) == b_.substring(0, 2);
-	else
-		return a_ == b_;
-}
-
 //Receive event from view change in university/faculdade matrix view
 dispatch.on("selectUniversity", function(selected, dummy) {
-	//University or college selected
-	var filterWidth = 200;
-	var filterHeight = 22;
+	scatterVisObj.selectedUniversity = selected;
+	console.log(scatterVisObj.selectedUniversity)
+	filterScatterVis();
+});
 
-	if (selected[0] !== "Ensino Público" && selected[0] !== "Ensino Privado") {
-		d3.select("#courseScatterVis").select("svg")
-			.selectAll("circle")
-			.each(function(p, j) {
-				d3.select(this)
-					.transition().duration(1000)
-					.attr("fill", function(d) {
-						var res = "black";
-						for (var i = 0; i < selected.length; i++) {
-							if (!d.NomeFaculdade.includes(selected[i])) {
-								res = "#e6e6e6";
+function filterScatterVis(){
+	var allData = scatterVisObj.selectedUniversity[0] === "Ensino Público";
+	
+	console.log("======Filtering=======")
+	console.log(scatterVisObj.selectedArea);
+	console.log(scatterVisObj.selectedUniversity);
+	console.log("======================")
+	
+	d3.select("#courseScatterVis").select("svg")
+		.selectAll("circle")
+		.each(function(p, j) {
+			d3.select(this)
+				.transition().duration(1000)
+				.attr("fill", function(d) {
+					var res = "#e6e6e6";			//Not accepted by filter
+					if(allData){	//All Data
+						if (scatterVisObj.selectedArea.area == 0 || subArea(d.CNAEF,scatterVisObj.selectedArea.area)) {
+							res = scatterVisObj.selectedArea.color;
+						}
+						return res;						
+					}
+					else {		//University/College selected
+						var university = true;
+						for (var i = 0; i < scatterVisObj.selectedUniversity.length; i++) {
+							if (!d.NomeFaculdade.includes(scatterVisObj.selectedUniversity[i])) {
+								university = false;
 								break;
 							}
 						}
-						return res;
-					});
-			});
-		/* TODO!!!
-		var g = d3.select("#courseScatterVis").select("svg")
-			.append("g");
-			
-		g.append("rect")
-			.attr("width",filterWidth)
-			.attr("height",filterHeight)
-			.attr("x",scatterVisObj.width - filterWidth)
-			.attr("y",scatterVisObj.top)
-			.attr("fill","steelblue");
-		g.append("text")
-			.attr("x",scatterVisObj.width - filterWidth)
-			.attr("y",scatterVisObj.top)
-			.text("dummy");
-			*/
-	}
-	//Nothing selected
-	else {
-		d3.select("#courseScatterVis").select("svg")
-			.selectAll("circle")
-			.transition().duration(1000)
-			.attr("fill", "black");
-	}
-});
+						if(university && (scatterVisObj.selectedArea.area == 0 || subArea(d.CNAEF,scatterVisObj.selectedArea.area))){
+							res = scatterVisObj.selectedArea.color;
+						}
+					}
+					return res;
+				});
+		});
+
+}
 
 function updateScatterVis(newCollection) {
-	var dotRadius = 2;
+	var dotRadius = 2.5;
 
 	//Enter/update the data
 	d3.select("#courseScatterVis").select("svg")
@@ -970,7 +976,10 @@ function generateScatterVis() {
 	scatterVisObj.xscale = xscale;
 	scatterVisObj.yscale = yscale;
 	scatterVisObj.padding = padding;
-
+	scatterVisObj.selectedUniversity = ["Ensino Público"];
+	scatterVisObj.selectedArea = { "area": 0, "color": color1(0) };
+	
+	
 	updateScatterVis(fullScatterDataset);
 
 	var xaxis = d3.axisBottom().scale(xscale).ticks(19);
