@@ -571,7 +571,8 @@ function drawSunburst(year) {
 		var sendObject = new Object();
 		sendObject.area = d.data.CNAEF;
 		sendObject.color = this.style.fill;
-		dispatch.call("selectArea", sendObject, sendObject);
+		if (d.data.CNAEFNome != "Raíz")
+			dispatch.call("selectArea", sendObject, sendObject);
 
 		svg.transition()
 			.duration(750)
@@ -684,7 +685,6 @@ function genSlider() {
 	}
 
 	function dragEnd() {
-		console.log(year(d3.event.x));
 		handle.attr("cx", x(x.invert(value(d3.event.x, width))));
 		d3.select("#sunburst").remove();
 		drawSunburst(year(d3.event.x, width));
@@ -850,21 +850,32 @@ d3.json("EntryGrades.json", function(data) {
 //Receive event from view change in the sunburst view (Area Selected)
 dispatch.on("selectArea", function(selectedObject, dummy) {
 	//TODO update scatter according with the received information!!!!
-	/* Important Code!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	
+
+
 	d3.select("#courseScatterVis").select("svg")
 		.selectAll("circle")
 		.each(function(p, j) {
 			var self = d3.select(this);
-			if(self.attr("fill") !== "#e6e6e6"){
-				self.attr("fill",function(d){
-					if(d
-					return selectedObject.color;
+			if (self.attr("fill") !== "#e6e6e6") {
+				self.attr("fill", function(d) {
+					if (subArea(d.CNAEF, selectedObject.area))
+						return selectedObject.color;
 				});
 			}
 		});
-		*/
+
 });
+
+function subArea(a, b) {
+	var a_ = a.toString();
+	var b_ = b.toString();
+	if (b_.substring(1, 3) == "00")
+		return a_[0] == b_[0];
+	else if (b_[2] == "0")
+		return a_.substring(0, 2) == b_.substring(0, 2);
+	else
+		return a_ == b_;
+}
 
 //Receive event from view change in university/faculdade matrix view
 dispatch.on("selectUniversity", function(selected, dummy) {
