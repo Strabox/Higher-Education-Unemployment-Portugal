@@ -8,7 +8,8 @@
 /*
 	
 */
-var dispatch = d3.dispatch("selectCourse", "selectUniversity", "unselectUniversity");
+var dispatch = d3.dispatch("selectCourse", "selectUniversity", "unselectUniversity",
+							"selectArea");
 
 //#############################################################################
 //#             				 		                                      #
@@ -386,7 +387,7 @@ function generateUniversityVis() {
 
 	var xaxis = d3.axisTop().scale(xscale);
 	var yaxis = d3.axisLeft().scale(yscale).tickFormat(function(d) {
-		return getAcronym(d) + " +";
+		return getAcronym(d);
 	});
 
 	//Add yaxis label
@@ -472,7 +473,7 @@ drawSunburst("2007");
 
 function drawSunburst(year) {
 	var width = 550,
-		height = 550,
+		height = 520,
 		radius = (Math.min(width, height) / 2) - 10;
 
 	var formatNumber = d3.format(",d");
@@ -506,7 +507,6 @@ function drawSunburst(year) {
 		.attr("id", "sunburst")
 		.attr("width", width)
 		.attr("height", height)
-		.attr("class", "col-md-offset-3")
 		.append("g")
 		.attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
@@ -592,6 +592,12 @@ function drawSunburst(year) {
 
 
 	function click(d) {
+		//Send area selection
+		var sendObject = new Object();
+		sendObject.area = d.data.CNAEF;
+		sendObject.color = this.style.fill;
+		dispatch.call("selectArea",sendObject,sendObject);
+		
 		svg.transition()
 			.duration(750)
 			.tween("scale", function() {
@@ -637,7 +643,7 @@ genSlider();
 function genSlider() {
 	var Width = 400;
 	var Height = 100;
-	var svg = d3.select("#areaVis"),
+	var svg = d3.select("#areaSlider"),
 		margin = {
 			right: 50,
 			left: 50
@@ -866,6 +872,25 @@ d3.json("EntryGrades.json", function(data) {
 	generateScatterVis();
 });
 
+//Receive event from view change in the sunburst view (Area Selected)
+dispatch.on("selectArea", function(selectedObject, dummy) {
+	//TODO update scatter according with the received information!!!!
+	/* Important Code!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
+	d3.select("#courseScatterVis").select("svg")
+		.selectAll("circle")
+		.each(function(p, j) {
+			var self = d3.select(this);
+			if(self.attr("fill") !== "#e6e6e6"){
+				self.attr("fill",function(d){
+					if(d
+					return selectedObject.color;
+				});
+			}
+		});
+		*/
+});
+
 //Receive event from view change in university/faculdade matrix view
 dispatch.on("selectUniversity", function(selected, dummy) {
 	//University or college selected
@@ -878,11 +903,11 @@ dispatch.on("selectUniversity", function(selected, dummy) {
 			.each(function(p, j) {
 				d3.select(this)
 					.transition().duration(1000)
-					.attr("class", function(d) {
-						var res = "selectedDot";
+					.attr("fill", function(d) {
+						var res = "black";
 						for (var i = 0; i < selected.length; i++) {
 							if (!d.NomeFaculdade.includes(selected[i])) {
-								res = "unselectedDot";
+								res = "#e6e6e6";
 								break;
 							}
 						}
@@ -909,7 +934,7 @@ dispatch.on("selectUniversity", function(selected, dummy) {
 	else {
 		d3.select("#courseScatterVis").select("svg")
 			.selectAll("circle")
-			.attr("class", "dot");
+			.attr("fill", "black");
 	}
 });
 
