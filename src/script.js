@@ -473,7 +473,7 @@ drawSunburst("2007");
 
 function drawSunburst(year) {
 	var width = 550,
-		height = 520,
+		height = 550,
 		radius = (Math.min(width, height) / 2) - 10;
 
 	var formatNumber = d3.format(",d");
@@ -613,19 +613,17 @@ function drawSunburst(year) {
 
 }
 
-//Slider
+//Generate Slider
 genSlider();
 
 function genSlider() {
-	var Width = 400;
-	var Height = 100;
-	var svg = d3.select("svg"),
-		margin = {
+	var Width = 550;
+	var svg = d3.select("#areaSlider").append("svg").attr("width",Width);
+	var	margin = {
 			right: 50,
 			left: 50
 		},
-		width = +Width - margin.left - margin.right,
-		height = +Height;
+		width = Width - margin.left - margin.right;
 
 	var x = d3.scaleLinear()
 		.domain([2007, 2015])
@@ -634,7 +632,7 @@ function genSlider() {
 
 	var slider = svg.append("g")
 		.attr("class", "slider")
-		.attr("transform", "translate(" + margin.left + "," + height / 2 + ")");
+		.attr("transform", "translate(" + margin.left + "," + 10 + ")");
 
 	slider.append("line")
 		.attr("class", "track")
@@ -848,10 +846,8 @@ d3.json("EntryGrades.json", function(data) {
 });
 
 //Receive event from view change in the sunburst view (Area Selected)
-dispatch.on("selectArea", function(selectedObject, dummy) {
-	//TODO update scatter according with the received information!!!!
-
-
+dispatch.on("selectArea", function(selectedObject, dummy) {	
+	/*
 	d3.select("#courseScatterVis").select("svg")
 		.selectAll("circle")
 		.each(function(p, j) {
@@ -863,7 +859,7 @@ dispatch.on("selectArea", function(selectedObject, dummy) {
 				});
 			}
 		});
-
+	*/
 });
 
 function subArea(a, b) {
@@ -920,6 +916,7 @@ dispatch.on("selectUniversity", function(selected, dummy) {
 	else {
 		d3.select("#courseScatterVis").select("svg")
 			.selectAll("circle")
+			.transition().duration(1000)
 			.attr("fill", "black");
 	}
 });
@@ -951,7 +948,7 @@ function updateScatterVis(newCollection) {
 }
 
 function generateScatterVis() {
-	var height = 550;
+	var height = 580;
 	var width = 620;
 	var padding = {
 		"top": 10,

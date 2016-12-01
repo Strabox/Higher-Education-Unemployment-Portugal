@@ -11,17 +11,13 @@
 #universityBreadcrumb{
 	width: 100%;
 }
-
+#areaSlider{
+	width: 100%;
+	height: 3%;
+}
 #areaVis{
 	width: 100%;
 	height: 58%;
-}
-#areaSlider{
-	width: 100%;
-	height: 4%;
-}
-#slider{
-	width: 100%;
 }
 #courseScatterVis{
 	width: 100%;
