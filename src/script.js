@@ -9,7 +9,7 @@
 	
 */
 var dispatch = d3.dispatch("selectCourse", "selectUniversity", "unselectUniversity",
-							"selectArea");
+	"selectArea");
 
 //#############################################################################
 //#             				 		                                      #
@@ -485,7 +485,7 @@ function drawSunburst(year) {
 		.range([0, radius]);
 
 	var color1 = d3.scaleOrdinal(d3.schemeCategory10);
-	
+
 	var partition = d3.partition();
 
 	var arc = d3.arc()
@@ -532,21 +532,19 @@ function drawSunburst(year) {
 			.attr("class", "sunburst")
 			.style("fill",
 				function(d) {
-					
+
 					if (d.data.CNAEFNome == "Raíz")
 						return color1(0);
-					else {						
+					else {
 						var first = Math.floor(d.data.CNAEF / 100);
-						var code = d.data.CNAEF.toString();						
-						if (code[1]=="0"){
+						var code = d.data.CNAEF.toString();
+						if (code[1] == "0") {
 							return d3.rgb(color1(first))
-						}
-						else if (code[2]=="0"){
+						} else if (code[2] == "0") {
 							return d3.rgb(color1(first)).brighter(0.5);
-						}
-						else {
+						} else {
 							return d3.rgb(color1(first)).brighter(1);
-						}						
+						}
 					}
 
 
@@ -555,40 +553,17 @@ function drawSunburst(year) {
 		.on("click", click)
 			.append("title")
 			.text(function(d) {
-				if (d.data.CNAEFNome=="Raíz")
+				if (d.data.CNAEFNome == "Raíz")
 					return "Total Desempregados: " + d.value;
 				var res = d.data.CNAEFNome + "\nPercentagem Desemprego: " + d.data.PercentagemDesemprego + " %";
 				res += "\nTotal Desempregados: " + d.data.TotalDesempregados;
-				res += "\nTotal Dimplomados: " + d.data.TotalDiplomados;				
+				res += "\nTotal Dimplomados: " + d.data.TotalDiplomados;
 				return res;
 			});
 
 
 	});
 
-	function calcColor(i) {
-		console.log(i);
-		if (i == 1)
-			return color1(4);
-		if (i == 2){
-			alert("hueeh");
-			return color1(8);
-		}
-		if (i == 3)
-			return color1(12);
-		if (i == 4)
-			return color1(16);
-		if (i == 5)
-			return color2(0);
-		if (i == 6)
-			return color2(4);
-		if (i == 7)
-			return color2(8);
-		if (i == 8)
-			return color2(12);
-		if (i == 9)
-			return color2(16);
-	}
 
 
 	function click(d) {
@@ -596,8 +571,8 @@ function drawSunburst(year) {
 		var sendObject = new Object();
 		sendObject.area = d.data.CNAEF;
 		sendObject.color = this.style.fill;
-		dispatch.call("selectArea",sendObject,sendObject);
-		
+		dispatch.call("selectArea", sendObject, sendObject);
+
 		svg.transition()
 			.duration(750)
 			.tween("scale", function() {
@@ -643,7 +618,7 @@ genSlider();
 function genSlider() {
 	var Width = 400;
 	var Height = 100;
-	var svg = d3.select("#areaSlider"),
+	var svg = d3.select("svg"),
 		margin = {
 			right: 50,
 			left: 50
