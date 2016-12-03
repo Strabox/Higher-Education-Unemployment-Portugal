@@ -8,12 +8,12 @@
 
 /* Register events to use in inter-view communication:
 	selectCourse event - Select a course in the bertin matrix
-	selectUniversity event - Select an university/college in the bertin matrix
+	selectUniversity event - Select an university/college
 	selectArea event - Select an area in the sunburst
 	unselectUniversity event - TODO
 */
 var dispatch = d3.dispatch("selectCourse", "selectUniversity", 
-	"unselectUniversity", "selectArea");
+	"unselectUniversity", "selectArea","selectUniversityScatter");
 
 //Global Colors to the data representation
 var color1 = d3.scaleOrdinal(d3.schemeCategory10);
@@ -85,6 +85,9 @@ function drawBreadcrumbs(svg,nodeArray,dataKey,onBreadcrumbClick,breadcrumbColor
 //#             				       			                              #
 //#############################################################################
 
+
+
+
 //######################## Auxiliary functions ################################
 
 //Return the string to use in the breadcrumb
@@ -132,9 +135,9 @@ function getAcronym(name) {
 
 // Get the string to use in the tooltip of the circle
 function getBertinMatrixCircleTooltip(d) {
-	var res = "Percentagem Desemprego: " + d.PercentagemDesemprego.toFixed(2) + "%";
-	res += "\nTotal Desempregados: " + d.TotalDesempregados;
-	res += "\nTotal Dimplomados: " + d.TotalDiplomados;
+	var res = "% Unemployment: " + d.PercentagemDesemprego.toFixed(2) + "%";
+	res += "\nTotal Unemployeds: " + d.TotalDesempregados;
+	res += "\nTotal Graduates: " + d.TotalDiplomados;
 	return res;
 }
 
@@ -160,9 +163,32 @@ d3.json("CoursesPublic.json", function(publicCoursesData) {
 	generateUniversityVis(); //Generate the matrix Visualisation
 });
 
-//Receive event from view change in scatterplot when a user remove a filter (university)
-dispatch.on("unselectUniversity", function(selected, dummy) {
-	//TODO
+//Receive event a university/college was selected in other view
+dispatch.on("selectUniversityScatter", function(selected, dummy) {
+	//Reset the university/college current selecttion
+	universityVisObj.previousCollections = [fullPublicCourseDataset];
+	universityVisObj.currentCollIndex = 0;
+	for(var i = 0; i < universityVisObj.previousCollections[universityVisObj.currentCollIndex].values.length; i++){
+		if(universityVisObj.previousCollections[universityVisObj.currentCollIndex].values[i].key === selected[0]){
+			var universitySelectedCollection = new Object();
+			universitySelectedCollection.key = selected[0];
+			universitySelectedCollection.values = universityVisObj.previousCollections[universityVisObj.currentCollIndex].values[i].values;
+			universityVisObj.previousCollections.push(universitySelectedCollection);
+			universityVisObj.currentCollIndex++;		
+			for(var k = 0; k < universityVisObj.previousCollections[universityVisObj.currentCollIndex].values.length; k++) {
+				if(universityVisObj.previousCollections[universityVisObj.currentCollIndex].values[k].key.trim() === selected[1]){
+					var collegeSelectedCollection = new Object();
+					collegeSelectedCollection.key = selected[1];
+					collegeSelectedCollection.values = universityVisObj.previousCollections[universityVisObj.currentCollIndex].values[k].values;
+					universityVisObj.previousCollections.push(collegeSelectedCollection);
+					universityVisObj.currentCollIndex++;
+					updateUniversityVisualization(universityVisObj, universityVisObj.previousCollections[universityVisObj.currentCollIndex].values);
+					return;				
+				}
+			}
+		}
+	}
+	
 });
 
 /*######################## Breadcrumb Functions ########################*/
@@ -617,7 +643,7 @@ function drawSunburst(year) {
 		.attr("width", width)
 		.attr("height", height)
 		.append("g")
-		.attr("transform", "translate(" + width / 2 + "," + ((height) / 2) + ")");
+		.attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
 	d3.json("Areas" + year + ".json", function(error, root) {
 		if (error) throw error;
@@ -800,7 +826,8 @@ function genSlider() {
 
 	function dragEnd() {
 		handle.attr("cx", x(x.invert(value(d3.event.x, width))));
-		d3.select("#sunburst").remove();
+		d3.select("#sunburst").remove();						//Remove Sunburst
+		d3.select("#areaBreadcrumb").select("svg").remove();	//Remove breadcrumb
 		drawSunburst(year(d3.event.x, width));
 	}
 }
@@ -1023,10 +1050,10 @@ function filterScatterVis(){
 
 //Draw/update the scatter plot
 function updateScatterVis(newCollection) {
-	var dotRadius = 2.5;
+	var dotRadius = 3;
 
 	//Enter/update the data
-	d3.select("#courseScatterVis").select("svg")
+	var circles = d3.select("#courseScatterVis").select("svg")
 		.selectAll("circle")
 		.data(newCollection)
 		.enter().append("circle")
@@ -1042,14 +1069,27 @@ function updateScatterVis(newCollection) {
 		})
 		.attr("cy", function(d) {
 			return scatterVisObj.yscale(d.PercentagemDesemprego);
-		})
-		.append("title").text(function(d) {
+		});
+		
+	circles.append("title").text(function(d) {
 			return getScatterPlotTooltip(d);
 		});
+		
+	circles.on("click",function(d){
+		scatterVisObj.selectedUniversity = d.NomeFaculdade.split(" - ");
+		if(scatterVisObj.selectedUniversity.length == 1){
+			scatterVisObj.selectedUniversity.push(scatterVisObj.selectedUniversity[0]);
+		}
+		dispatch.call("selectUniversityScatter",scatterVisObj.selectedUniversity,scatterVisObj.selectedUniversity);
+		filterScatterVis();
+	})
+	.on("contextmenu",function(d){
+		console.log("Wow");
+	});
 }
 
 function generateScatterVis() {
-	var height = 580;
+	var height = 610;
 	var width = 620;
 	var padding = {
 		"top": 10,
