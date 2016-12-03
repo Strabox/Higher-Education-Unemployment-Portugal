@@ -493,12 +493,19 @@ function registerEventsUniversityVis() {
 
 /*###################### SUNBURST BREADCRUMB FUNCTIONS #######################*/
 
+var sunburstBreadcrumbDim = {
+		w: 160,
+		h: 30,
+		s: 3,
+		t: 10
+	};
+
 var breadcrumbObject = new Object();
 breadcrumbObject.clear = function(){
-	this.data = [{"currentAreaName" : "All Areas"}];
+	this.data = [{"currentAreaName" : "All Areas", "currentAreaCode" : 0}];
 };
-breadcrumbObject.addArea = function (areaName){
-	this.data.push(areaName);
+breadcrumbObject.addArea = function (areaName,areaCode){
+	this.data.push({"currentAreaName" : areaName, "currentAreaCode" : areaCode});
 };
 breadcrumbObject.goToArea = function (areaName){
 	
@@ -612,8 +619,6 @@ function drawSunburst(year) {
 		.append("g")
 		.attr("transform", "translate(" + width / 2 + "," + ((height) / 2) + ")");
 
-
-
 	d3.json("Areas" + year + ".json", function(error, root) {
 		if (error) throw error;
 
@@ -665,10 +670,10 @@ function drawSunburst(year) {
 		d3.select("#areaBreadcrumb")
 			.append("svg")
 			.attr("height",30)
-			.attr("width",300);
+			.attr("width",600);
 			
 		drawBreadcrumbs(d3.select("#areaBreadcrumb").select("svg"),
-			breadcrumbObject.data,"currentAreaName",null,rootDataColor,breadcrumbDim);
+			breadcrumbObject.data,"currentAreaName",null,rootDataColor,sunburstBreadcrumbDim);
 
 	});
 
@@ -679,6 +684,10 @@ function drawSunburst(year) {
 		sendObject.color = this.style.fill;
 		if (d.data.CNAEFNome === "Raíz"){
 			sendObject.area = 0;			//ROOT is 0
+			breadcrumbObject.clear();
+		}
+		else {
+			breadcrumbObject.addArea(d.data.CNAEFNome);
 		}
 		dispatch.call("selectArea", sendObject, sendObject);
 
@@ -701,7 +710,7 @@ function drawSunburst(year) {
 			});
 			
 		drawBreadcrumbs(d3.select("#areaBreadcrumb").select("svg"),
-			breadcrumbObject.data,"currentAreaName",null,this.style.fill,breadcrumbDim);
+			breadcrumbObject.data,"currentAreaName",null,this.style.fill,sunburstBreadcrumbDim);
 	}
 
 	d3.select(self.frameElement).style("height", height + "px");
