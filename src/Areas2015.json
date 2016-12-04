@@ -1,1 +1,702 @@
-{"CNAEF":200,"CNAEFNome":"Raíz","children":[{"CNAEF":100,"CNAEFNome":"Educação","PercentagemDesemprego":6.428450465707028,"TotalDiplomados":29525,"TotalDesempregados":1898,"children":[{"CNAEF":140,"CNAEFNome":"Formação de Professores\/Formadores e Ciências da Educação","PercentagemDesemprego":5.917262041945149,"TotalDiplomados":34712,"TotalDesempregados":2054,"children":[{"CNAEF":142,"CNAEFNome":"Ciências da Educação","PercentagemDesemprego":6.145665883516755,"TotalDiplomados":8087,"TotalDesempregados":497},{"CNAEF":143,"CNAEFNome":"Formação de Educadores de Infância","PercentagemDesemprego":6.518545721630555,"TotalDiplomados":5446,"TotalDesempregados":355},{"CNAEF":144,"CNAEFNome":"Formação de Professores do Ensino Básico (1.º e 2.º Ciclos)","PercentagemDesemprego":7.063562235976029,"TotalDiplomados":10179,"TotalDesempregados":719},{"CNAEF":145,"CNAEFNome":"Formação de Professores de Áreas Disciplinares Específicas","PercentagemDesemprego":5.536072144288577,"TotalDiplomados":3992,"TotalDesempregados":221},{"CNAEF":146,"CNAEFNome":"Formação de Professores e Formadores de Áreas Tecnológicas","PercentagemDesemprego":5.820977484898408,"TotalDiplomados":1821,"TotalDesempregados":106}]}]},{"CNAEF":200,"CNAEFNome":"Artes e Humanidades","PercentagemDesemprego":9.26031025349981,"TotalDiplomados":31716,"TotalDesempregados":2937,"children":[{"CNAEF":220,"CNAEFNome":"Humanidades","PercentagemDesemprego":7.1214779647022395,"TotalDiplomados":9689,"TotalDesempregados":690,"children":[{"CNAEF":221,"CNAEFNome":"Religião e Teologia","PercentagemDesemprego":1.6853932584269662,"TotalDiplomados":356,"TotalDesempregados":6},{"CNAEF":222,"CNAEFNome":"Línguas e Literaturas Estrangeiras","PercentagemDesemprego":7.023911187019642,"TotalDiplomados":4684,"TotalDesempregados":329},{"CNAEF":223,"CNAEFNome":"Língua e Literatura Materna","PercentagemDesemprego":7.175925925925926,"TotalDiplomados":1296,"TotalDesempregados":93},{"CNAEF":225,"CNAEFNome":"História e Arqueologia","PercentagemDesemprego":9.142270159219311,"TotalDiplomados":1947,"TotalDesempregados":178},{"CNAEF":226,"CNAEFNome":"Filosofia e Ética","PercentagemDesemprego":8.13953488372093,"TotalDiplomados":1032,"TotalDesempregados":84}]},{"CNAEF":210,"CNAEFNome":"Artes","PercentagemDesemprego":10.063483547925609,"TotalDiplomados":22368,"TotalDesempregados":2251,"children":[{"CNAEF":211,"CNAEFNome":"Belas-Artes","PercentagemDesemprego":10.33434650455927,"TotalDiplomados":3619,"TotalDesempregados":374},{"CNAEF":212,"CNAEFNome":"Artes do Espectáculo","PercentagemDesemprego":6.187624750499002,"TotalDiplomados":3507,"TotalDesempregados":217},{"CNAEF":213,"CNAEFNome":"Áudio-Visuais e Produção dos Media","PercentagemDesemprego":12.129133446608286,"TotalDiplomados":7651,"TotalDesempregados":928},{"CNAEF":214,"CNAEFNome":"Design","PercentagemDesemprego":10.076605774896876,"TotalDiplomados":6788,"TotalDesempregados":684},{"CNAEF":215,"CNAEFNome":"Artesanato","PercentagemDesemprego":4.098360655737705,"TotalDiplomados":732,"TotalDesempregados":30}]}]},{"CNAEF":300,"CNAEFNome":"Ciências Sociais, Comércio e Direito","PercentagemDesemprego":6.991025035427492,"TotalDiplomados":118552,"TotalDesempregados":8288,"children":[{"CNAEF":380,"CNAEFNome":"Direito","PercentagemDesemprego":6.198016634676903,"TotalDiplomados":12504,"TotalDesempregados":775},{"CNAEF":340,"CNAEFNome":"Ciências Empresariais","PercentagemDesemprego":6.985885622348984,"TotalDiplomados":54696,"TotalDesempregados":3821,"children":[{"CNAEF":341,"CNAEFNome":"Comércio","PercentagemDesemprego":5.097087378640777,"TotalDiplomados":824,"TotalDesempregados":42},{"CNAEF":342,"CNAEFNome":"Marketing e Publicidade","PercentagemDesemprego":8.400884303610907,"TotalDiplomados":10856,"TotalDesempregados":912},{"CNAEF":343,"CNAEFNome":"Finanças, Banca e Seguros","PercentagemDesemprego":7.841552142279709,"TotalDiplomados":2474,"TotalDesempregados":194},{"CNAEF":344,"CNAEFNome":"Contabilidade e Fiscalidade","PercentagemDesemprego":6.179473401397098,"TotalDiplomados":11166,"TotalDesempregados":690},{"CNAEF":345,"CNAEFNome":"Gestão e Administração","PercentagemDesemprego":6.644711352189074,"TotalDiplomados":25810,"TotalDesempregados":1715},{"CNAEF":346,"CNAEFNome":"Secretariado e Trabalho Administrativo","PercentagemDesemprego":7.61443661971831,"TotalDiplomados":2272,"TotalDesempregados":173},{"CNAEF":347,"CNAEFNome":"Enquadramento na Organização\/Empresa","PercentagemDesemprego":11.965811965811966,"TotalDiplomados":117,"TotalDesempregados":14},{"CNAEF":349,"CNAEFNome":"Ciências Empresariais - programas não classificados noutra área de formação","PercentagemDesemprego":7.774798927613941,"TotalDiplomados":373,"TotalDesempregados":29}]},{"CNAEF":320,"CNAEFNome":"Informação e Jornalismo","PercentagemDesemprego":9.213409290096406,"TotalDiplomados":9128,"TotalDesempregados":841,"children":[{"CNAEF":321,"CNAEFNome":"Jornalismo e Reportagem","PercentagemDesemprego":8.960483262018625,"TotalDiplomados":7946,"TotalDesempregados":712},{"CNAEF":322,"CNAEFNome":"Biblioteconomia, Arquivo e Documentação (BAD)","PercentagemDesemprego":7.2214580467675376,"TotalDiplomados":1454,"TotalDesempregados":105},{"CNAEF":329,"CNAEFNome":"Informação e Jornalismo - programas não classificados noutra área de formação","PercentagemDesemprego":12.580645161290322,"TotalDiplomados":310,"TotalDesempregados":39}]},{"CNAEF":310,"CNAEFNome":"Ciências Sociais e do Comportamento","PercentagemDesemprego":7.073825840299219,"TotalDiplomados":39837,"TotalDesempregados":2818,"children":[{"CNAEF":311,"CNAEFNome":"Psicologia","PercentagemDesemprego":7.34865155314467,"TotalDiplomados":19541,"TotalDesempregados":1436},{"CNAEF":312,"CNAEFNome":"Sociologia e Outros Estudos","PercentagemDesemprego":7.232253749880577,"TotalDiplomados":10467,"TotalDesempregados":757},{"CNAEF":313,"CNAEFNome":"Ciência Política e Cidadania","PercentagemDesemprego":7.68140589569161,"TotalDiplomados":3528,"TotalDesempregados":271},{"CNAEF":314,"CNAEFNome":"Economia","PercentagemDesemprego":4.73625140291807,"TotalDiplomados":8910,"TotalDesempregados":422}]}]},{"CNAEF":400,"CNAEFNome":"Ciências, Matemática e Informática","PercentagemDesemprego":4.995521256804245,"TotalDiplomados":29026,"TotalDesempregados":1450,"children":[{"CNAEF":480,"CNAEFNome":"Informática","PercentagemDesemprego":4.606807511737089,"TotalDiplomados":6816,"TotalDesempregados":314,"children":[{"CNAEF":481,"CNAEFNome":"Ciências Informáticas","PercentagemDesemprego":5.452793834296725,"TotalDiplomados":5190,"TotalDesempregados":283},{"CNAEF":482,"CNAEFNome":"Informática na Óptica do Utilizador","PercentagemDesemprego":7.6923076923076925,"TotalDiplomados":13,"TotalDesempregados":1},{"CNAEF":489,"CNAEFNome":"Informática - programas não classificados noutra área de formação","PercentagemDesemprego":9.236947791164658,"TotalDiplomados":249,"TotalDesempregados":23}]},{"CNAEF":460,"CNAEFNome":"Matemática e Estatística","PercentagemDesemprego":3.147163120567376,"TotalDiplomados":2256,"TotalDesempregados":71,"children":[{"CNAEF":461,"CNAEFNome":"Matemática","PercentagemDesemprego":2.973523421588595,"TotalDiplomados":2455,"TotalDesempregados":73},{"CNAEF":462,"CNAEFNome":"Estatística","PercentagemDesemprego":4.270462633451957,"TotalDiplomados":281,"TotalDesempregados":12}]},{"CNAEF":440,"CNAEFNome":"Ciências Físicas","PercentagemDesemprego":5.255626382203721,"TotalDiplomados":7687,"TotalDesempregados":404,"children":[{"CNAEF":441,"CNAEFNome":"Física","PercentagemDesemprego":3.064066852367688,"TotalDiplomados":1077,"TotalDesempregados":33},{"CNAEF":442,"CNAEFNome":"Química","PercentagemDesemprego":6.12987012987013,"TotalDiplomados":1925,"TotalDesempregados":118},{"CNAEF":443,"CNAEFNome":"Ciências da Terra","PercentagemDesemprego":5.0228310502283104,"TotalDiplomados":4599,"TotalDesempregados":231}]},{"CNAEF":420,"CNAEFNome":"Ciências da Vida","PercentagemDesemprego":5.346157178754008,"TotalDiplomados":11541,"TotalDesempregados":617,"children":[{"CNAEF":421,"CNAEFNome":"Biologia e Bioquímica","PercentagemDesemprego":4.80514262756127,"TotalDiplomados":12445,"TotalDesempregados":598},{"CNAEF":422,"CNAEFNome":"Ciências do Ambiente","PercentagemDesemprego":9.110169491525424,"TotalDiplomados":472,"TotalDesempregados":43},{"CNAEF":429,"CNAEFNome":"Ciências da Vida - programas não classificados noutra área de formação","PercentagemDesemprego":10.9375,"TotalDiplomados":320,"TotalDesempregados":35}]}]},{"CNAEF":500,"CNAEFNome":"Engenharia, Indústrias Transformadoras e Construção","PercentagemDesemprego":5.525941719971571,"TotalDiplomados":73164,"TotalDesempregados":4043,"children":[{"CNAEF":580,"CNAEFNome":"Arquitectura e Construção","PercentagemDesemprego":7.327951474064493,"TotalDiplomados":22421,"TotalDesempregados":1643,"children":[{"CNAEF":581,"CNAEFNome":"Arquitectura e Urbanismo","PercentagemDesemprego":8.079638847088784,"TotalDiplomados":8639,"TotalDesempregados":698},{"CNAEF":582,"CNAEFNome":"Construção Civil e Engenharia Civil","PercentagemDesemprego":6.920654911838791,"TotalDiplomados":15880,"TotalDesempregados":1099}]},{"CNAEF":540,"CNAEFNome":"Indústrias Transformadoras","PercentagemDesemprego":6.76043557168784,"TotalDiplomados":4408,"TotalDesempregados":298,"children":[{"CNAEF":541,"CNAEFNome":"Indústrias Alimentares","PercentagemDesemprego":7.2720946416144745,"TotalDiplomados":2874,"TotalDesempregados":209},{"CNAEF":542,"CNAEFNome":"Indústrias do Têxtil, Vestuário, Calçado e Couro","PercentagemDesemprego":5.797101449275362,"TotalDiplomados":138,"TotalDesempregados":8},{"CNAEF":543,"CNAEFNome":"Materiais (Indústrias da Madeira, Cortiça, Papel, Plástico, Vidro e outros)","PercentagemDesemprego":5.908419497784343,"TotalDiplomados":677,"TotalDesempregados":40},{"CNAEF":544,"CNAEFNome":"Indústrias Extractivas","PercentagemDesemprego":7.773109243697479,"TotalDiplomados":476,"TotalDesempregados":37},{"CNAEF":549,"CNAEFNome":"Indústrias Transformadoras - programas não classificados noutra área de formação","PercentagemDesemprego":12.5,"TotalDiplomados":8,"TotalDesempregados":1}]},{"CNAEF":520,"CNAEFNome":"Engenharia e Técnicas Afins","PercentagemDesemprego":4.6359278130569015,"TotalDiplomados":39841,"TotalDesempregados":1847,"children":[{"CNAEF":521,"CNAEFNome":"Metalurgia e Metalomecânica","PercentagemDesemprego":5.187074829931973,"TotalDiplomados":9408,"TotalDesempregados":488},{"CNAEF":522,"CNAEFNome":"Electricidade e Energia","PercentagemDesemprego":6.742556917688266,"TotalDiplomados":5710,"TotalDesempregados":385},{"CNAEF":523,"CNAEFNome":"Electrónica e Automação","PercentagemDesemprego":2.8658986436638103,"TotalDiplomados":17621,"TotalDesempregados":505},{"CNAEF":524,"CNAEFNome":"Tecnologia dos Processos Químicos","PercentagemDesemprego":5.963302752293578,"TotalDiplomados":6758,"TotalDesempregados":403},{"CNAEF":525,"CNAEFNome":"Construção e Reparação de Veículos a Motor","PercentagemDesemprego":1.9002375296912113,"TotalDiplomados":842,"TotalDesempregados":16},{"CNAEF":529,"CNAEFNome":"Engenharia e Técnicas Afins - programas não classificados noutra área de formação","PercentagemDesemprego":3.701911444471328,"TotalDiplomados":4133,"TotalDesempregados":153}]}]},{"CNAEF":600,"CNAEFNome":"Agricultura","PercentagemDesemprego":6.228796308861447,"TotalDiplomados":7369,"TotalDesempregados":459,"children":[{"CNAEF":640,"CNAEFNome":"Ciências Veterinárias","PercentagemDesemprego":6.424474187380497,"TotalDiplomados":2615,"TotalDesempregados":168},{"CNAEF":620,"CNAEFNome":"Agricultura, Silvicultura e Pescas","PercentagemDesemprego":6.206472757066776,"TotalDiplomados":4882,"TotalDesempregados":303,"children":[{"CNAEF":621,"CNAEFNome":"Produção Agrícola e Animal","PercentagemDesemprego":6.154220384334712,"TotalDiplomados":4111,"TotalDesempregados":253},{"CNAEF":622,"CNAEFNome":"Floricultura e Jardinagem","PercentagemDesemprego":20.0,"TotalDiplomados":5,"TotalDesempregados":1},{"CNAEF":623,"CNAEFNome":"Silvicultura e Caça","PercentagemDesemprego":5.612244897959184,"TotalDiplomados":588,"TotalDesempregados":33},{"CNAEF":624,"CNAEFNome":"Pescas","PercentagemDesemprego":8.0,"TotalDiplomados":50,"TotalDesempregados":4}]}]},{"CNAEF":700,"CNAEFNome":"Saúde e Protecção Social","PercentagemDesemprego":6.727873135682404,"TotalDiplomados":55114,"TotalDesempregados":3708,"children":[{"CNAEF":760,"CNAEFNome":"Serviços Sociais","PercentagemDesemprego":12.251472754050074,"TotalDiplomados":10864,"TotalDesempregados":1331,"children":[{"CNAEF":761,"CNAEFNome":"Serviços de Apoio a Crianças e Jovens","PercentagemDesemprego":-1.0,"TotalDiplomados":0,"TotalDesempregados":0},{"CNAEF":762,"CNAEFNome":"Trabalho Social e Orientação","PercentagemDesemprego":12.295312061382988,"TotalDiplomados":10687,"TotalDesempregados":1314}]},{"CNAEF":720,"CNAEFNome":"Saúde","PercentagemDesemprego":5.3862906666067945,"TotalDiplomados":44539,"TotalDesempregados":2399,"children":[{"CNAEF":721,"CNAEFNome":"Medicina","PercentagemDesemprego":0.4685059864653826,"TotalDiplomados":5763,"TotalDesempregados":27},{"CNAEF":723,"CNAEFNome":"Enfermagem","PercentagemDesemprego":4.497776285978015,"TotalDiplomados":11917,"TotalDesempregados":536},{"CNAEF":724,"CNAEFNome":"Ciências Dentárias","PercentagemDesemprego":3.8782523318605793,"TotalDiplomados":4074,"TotalDesempregados":158},{"CNAEF":725,"CNAEFNome":"Tecnologias de Diagnóstico e Terapêutica","PercentagemDesemprego":6.206014075495841,"TotalDiplomados":7815,"TotalDesempregados":485},{"CNAEF":726,"CNAEFNome":"Terapia e Reabilitação","PercentagemDesemprego":8.977063010809387,"TotalDiplomados":7586,"TotalDesempregados":681},{"CNAEF":727,"CNAEFNome":"Ciências Farmacêuticas","PercentagemDesemprego":6.9610675471178975,"TotalDiplomados":7269,"TotalDesempregados":506},{"CNAEF":729,"CNAEFNome":"Saúde - programas não classificados noutra área de formação","PercentagemDesemprego":33.333333333333336,"TotalDiplomados":3,"TotalDesempregados":1}]}]},{"CNAEF":800,"CNAEFNome":"Serviços","PercentagemDesemprego":7.784882885472051,"TotalDiplomados":27836,"TotalDesempregados":2167,"children":[{"CNAEF":860,"CNAEFNome":"Serviços de Segurança","PercentagemDesemprego":6.306990881458966,"TotalDiplomados":1316,"TotalDesempregados":83,"children":[{"CNAEF":861,"CNAEFNome":"Protecção de Pessoas e Bens","PercentagemDesemprego":0.5434782608695652,"TotalDiplomados":184,"TotalDesempregados":1},{"CNAEF":862,"CNAEFNome":"Segurança e Higiene no Trabalho","PercentagemDesemprego":8.130939809926083,"TotalDiplomados":947,"TotalDesempregados":77},{"CNAEF":863,"CNAEFNome":"Segurança Militar","PercentagemDesemprego":4.3478260869565215,"TotalDiplomados":92,"TotalDesempregados":4}]},{"CNAEF":850,"CNAEFNome":"Protecção do Ambiente","PercentagemDesemprego":8.773316471704078,"TotalDiplomados":6326,"TotalDesempregados":555,"children":[{"CNAEF":851,"CNAEFNome":"Tecnologia de Protecção do Ambiente","PercentagemDesemprego":8.823529411764707,"TotalDiplomados":4760,"TotalDesempregados":420},{"CNAEF":852,"CNAEFNome":"Ambientes Naturais e Vida Selvagem","PercentagemDesemprego":7.664233576642336,"TotalDiplomados":274,"TotalDesempregados":21},{"CNAEF":853,"CNAEFNome":"Serviços de Saúde Pública","PercentagemDesemprego":15.100671140939598,"TotalDiplomados":894,"TotalDesempregados":135}]},{"CNAEF":840,"CNAEFNome":"Serviços de Transporte","PercentagemDesemprego":5.854579792256846,"TotalDiplomados":3177,"TotalDesempregados":186},{"CNAEF":810,"CNAEFNome":"Serviços Pessoais","PercentagemDesemprego":7.161855022002999,"TotalDiplomados":20679,"TotalDesempregados":1481,"children":[{"CNAEF":811,"CNAEFNome":"Hotelaria e Restauração","PercentagemDesemprego":7.684210526315789,"TotalDiplomados":1900,"TotalDesempregados":146},{"CNAEF":812,"CNAEFNome":"Turismo e Lazer","PercentagemDesemprego":9.40926777502653,"TotalDiplomados":5654,"TotalDesempregados":532},{"CNAEF":813,"CNAEFNome":"Desporto","PercentagemDesemprego":6.421800947867299,"TotalDiplomados":12660,"TotalDesempregados":813},{"CNAEF":819,"CNAEFNome":"Serviços Pessoais - programas não classificados noutra área de formação","PercentagemDesemprego":4.6875,"TotalDiplomados":64,"TotalDesempregados":3}]}]}]}
+{
+	"CNAEF": 0,
+	"CNAEFNome": "Raíz",
+	"children": [{
+			"CNAEF": 100,
+			"CNAEFNome": "Educação",
+			"PercentagemDesemprego": 6.428450465707028,
+			"TotalDiplomados": 29525,
+			"TotalDesempregados": 1898,
+			"children": [{
+					"CNAEF": 140,
+					"CNAEFNome": "Formação de Professores\/Formadores e Ciências da Educação",
+					"PercentagemDesemprego": 5.917262041945149,
+					"TotalDiplomados": 34712,
+					"TotalDesempregados": 2054,
+					"children": [{
+							"CNAEF": 142,
+							"CNAEFNome": "Ciências da Educação",
+							"PercentagemDesemprego": 6.145665883516755,
+							"TotalDiplomados": 8087,
+							"TotalDesempregados": 497
+						}, {
+							"CNAEF": 143,
+							"CNAEFNome": "Formação de Educadores de Infância",
+							"PercentagemDesemprego": 6.518545721630555,
+							"TotalDiplomados": 5446,
+							"TotalDesempregados": 355
+						}, {
+							"CNAEF": 144,
+							"CNAEFNome": "Formação de Professores do Ensino Básico (1.º e 2.º Ciclos)",
+							"PercentagemDesemprego": 7.063562235976029,
+							"TotalDiplomados": 10179,
+							"TotalDesempregados": 719
+						}, {
+							"CNAEF": 145,
+							"CNAEFNome": "Formação de Professores de Áreas Disciplinares Específicas",
+							"PercentagemDesemprego": 5.536072144288577,
+							"TotalDiplomados": 3992,
+							"TotalDesempregados": 221
+						}, {
+							"CNAEF": 146,
+							"CNAEFNome": "Formação de Professores e Formadores de Áreas Tecnológicas",
+							"PercentagemDesemprego": 5.820977484898408,
+							"TotalDiplomados": 1821,
+							"TotalDesempregados": 106
+						}
+					]
+				}
+			]
+		}, {
+			"CNAEF": 200,
+			"CNAEFNome": "Artes e Humanidades",
+			"PercentagemDesemprego": 9.26031025349981,
+			"TotalDiplomados": 31716,
+			"TotalDesempregados": 2937,
+			"children": [{
+					"CNAEF": 220,
+					"CNAEFNome": "Humanidades",
+					"PercentagemDesemprego": 7.1214779647022395,
+					"TotalDiplomados": 9689,
+					"TotalDesempregados": 690,
+					"children": [{
+							"CNAEF": 221,
+							"CNAEFNome": "Religião e Teologia",
+							"PercentagemDesemprego": 1.6853932584269662,
+							"TotalDiplomados": 356,
+							"TotalDesempregados": 6
+						}, {
+							"CNAEF": 222,
+							"CNAEFNome": "Línguas e Literaturas Estrangeiras",
+							"PercentagemDesemprego": 7.023911187019642,
+							"TotalDiplomados": 4684,
+							"TotalDesempregados": 329
+						}, {
+							"CNAEF": 223,
+							"CNAEFNome": "Língua e Literatura Materna",
+							"PercentagemDesemprego": 7.175925925925926,
+							"TotalDiplomados": 1296,
+							"TotalDesempregados": 93
+						}, {
+							"CNAEF": 225,
+							"CNAEFNome": "História e Arqueologia",
+							"PercentagemDesemprego": 9.142270159219311,
+							"TotalDiplomados": 1947,
+							"TotalDesempregados": 178
+						}, {
+							"CNAEF": 226,
+							"CNAEFNome": "Filosofia e Ética",
+							"PercentagemDesemprego": 8.13953488372093,
+							"TotalDiplomados": 1032,
+							"TotalDesempregados": 84
+						}
+					]
+				}, {
+					"CNAEF": 210,
+					"CNAEFNome": "Artes",
+					"PercentagemDesemprego": 10.063483547925609,
+					"TotalDiplomados": 22368,
+					"TotalDesempregados": 2251,
+					"children": [{
+							"CNAEF": 211,
+							"CNAEFNome": "Belas-Artes",
+							"PercentagemDesemprego": 10.33434650455927,
+							"TotalDiplomados": 3619,
+							"TotalDesempregados": 374
+						}, {
+							"CNAEF": 212,
+							"CNAEFNome": "Artes do Espectáculo",
+							"PercentagemDesemprego": 6.187624750499002,
+							"TotalDiplomados": 3507,
+							"TotalDesempregados": 217
+						}, {
+							"CNAEF": 213,
+							"CNAEFNome": "Áudio-Visuais e Produção dos Media",
+							"PercentagemDesemprego": 12.129133446608286,
+							"TotalDiplomados": 7651,
+							"TotalDesempregados": 928
+						}, {
+							"CNAEF": 214,
+							"CNAEFNome": "Design",
+							"PercentagemDesemprego": 10.076605774896876,
+							"TotalDiplomados": 6788,
+							"TotalDesempregados": 684
+						}, {
+							"CNAEF": 215,
+							"CNAEFNome": "Artesanato",
+							"PercentagemDesemprego": 4.098360655737705,
+							"TotalDiplomados": 732,
+							"TotalDesempregados": 30
+						}
+					]
+				}
+			]
+		}, {
+			"CNAEF": 300,
+			"CNAEFNome": "Ciências Sociais, Comércio e Direito",
+			"PercentagemDesemprego": 6.991025035427492,
+			"TotalDiplomados": 118552,
+			"TotalDesempregados": 8288,
+			"children": [{
+					"CNAEF": 380,
+					"CNAEFNome": "Direito",
+					"PercentagemDesemprego": 6.198016634676903,
+					"TotalDiplomados": 12504,
+					"TotalDesempregados": 775
+				}, {
+					"CNAEF": 340,
+					"CNAEFNome": "Ciências Empresariais",
+					"PercentagemDesemprego": 6.985885622348984,
+					"TotalDiplomados": 54696,
+					"TotalDesempregados": 3821,
+					"children": [{
+							"CNAEF": 341,
+							"CNAEFNome": "Comércio",
+							"PercentagemDesemprego": 5.097087378640777,
+							"TotalDiplomados": 824,
+							"TotalDesempregados": 42
+						}, {
+							"CNAEF": 342,
+							"CNAEFNome": "Marketing e Publicidade",
+							"PercentagemDesemprego": 8.400884303610907,
+							"TotalDiplomados": 10856,
+							"TotalDesempregados": 912
+						}, {
+							"CNAEF": 343,
+							"CNAEFNome": "Finanças, Banca e Seguros",
+							"PercentagemDesemprego": 7.841552142279709,
+							"TotalDiplomados": 2474,
+							"TotalDesempregados": 194
+						}, {
+							"CNAEF": 344,
+							"CNAEFNome": "Contabilidade e Fiscalidade",
+							"PercentagemDesemprego": 6.179473401397098,
+							"TotalDiplomados": 11166,
+							"TotalDesempregados": 690
+						}, {
+							"CNAEF": 345,
+							"CNAEFNome": "Gestão e Administração",
+							"PercentagemDesemprego": 6.644711352189074,
+							"TotalDiplomados": 25810,
+							"TotalDesempregados": 1715
+						}, {
+							"CNAEF": 346,
+							"CNAEFNome": "Secretariado e Trabalho Administrativo",
+							"PercentagemDesemprego": 7.61443661971831,
+							"TotalDiplomados": 2272,
+							"TotalDesempregados": 173
+						}, {
+							"CNAEF": 347,
+							"CNAEFNome": "Enquadramento na Organização\/Empresa",
+							"PercentagemDesemprego": 11.965811965811966,
+							"TotalDiplomados": 117,
+							"TotalDesempregados": 14
+						}, {
+							"CNAEF": 349,
+							"CNAEFNome": "Ciências Empresariais - programas não classificados noutra área de formação",
+							"PercentagemDesemprego": 7.774798927613941,
+							"TotalDiplomados": 373,
+							"TotalDesempregados": 29
+						}
+					]
+				}, {
+					"CNAEF": 320,
+					"CNAEFNome": "Informação e Jornalismo",
+					"PercentagemDesemprego": 9.213409290096406,
+					"TotalDiplomados": 9128,
+					"TotalDesempregados": 841,
+					"children": [{
+							"CNAEF": 321,
+							"CNAEFNome": "Jornalismo e Reportagem",
+							"PercentagemDesemprego": 8.960483262018625,
+							"TotalDiplomados": 7946,
+							"TotalDesempregados": 712
+						}, {
+							"CNAEF": 322,
+							"CNAEFNome": "Biblioteconomia, Arquivo e Documentação (BAD)",
+							"PercentagemDesemprego": 7.2214580467675376,
+							"TotalDiplomados": 1454,
+							"TotalDesempregados": 105
+						}, {
+							"CNAEF": 329,
+							"CNAEFNome": "Informação e Jornalismo - programas não classificados noutra área de formação",
+							"PercentagemDesemprego": 12.580645161290322,
+							"TotalDiplomados": 310,
+							"TotalDesempregados": 39
+						}
+					]
+				}, {
+					"CNAEF": 310,
+					"CNAEFNome": "Ciências Sociais e do Comportamento",
+					"PercentagemDesemprego": 7.073825840299219,
+					"TotalDiplomados": 39837,
+					"TotalDesempregados": 2818,
+					"children": [{
+							"CNAEF": 311,
+							"CNAEFNome": "Psicologia",
+							"PercentagemDesemprego": 7.34865155314467,
+							"TotalDiplomados": 19541,
+							"TotalDesempregados": 1436
+						}, {
+							"CNAEF": 312,
+							"CNAEFNome": "Sociologia e Outros Estudos",
+							"PercentagemDesemprego": 7.232253749880577,
+							"TotalDiplomados": 10467,
+							"TotalDesempregados": 757
+						}, {
+							"CNAEF": 313,
+							"CNAEFNome": "Ciência Política e Cidadania",
+							"PercentagemDesemprego": 7.68140589569161,
+							"TotalDiplomados": 3528,
+							"TotalDesempregados": 271
+						}, {
+							"CNAEF": 314,
+							"CNAEFNome": "Economia",
+							"PercentagemDesemprego": 4.73625140291807,
+							"TotalDiplomados": 8910,
+							"TotalDesempregados": 422
+						}
+					]
+				}
+			]
+		}, {
+			"CNAEF": 400,
+			"CNAEFNome": "Ciências, Matemática e Informática",
+			"PercentagemDesemprego": 4.995521256804245,
+			"TotalDiplomados": 29026,
+			"TotalDesempregados": 1450,
+			"children": [{
+					"CNAEF": 480,
+					"CNAEFNome": "Informática",
+					"PercentagemDesemprego": 4.606807511737089,
+					"TotalDiplomados": 6816,
+					"TotalDesempregados": 314,
+					"children": [{
+							"CNAEF": 481,
+							"CNAEFNome": "Ciências Informáticas",
+							"PercentagemDesemprego": 5.452793834296725,
+							"TotalDiplomados": 5190,
+							"TotalDesempregados": 283
+						}, {
+							"CNAEF": 482,
+							"CNAEFNome": "Informática na Óptica do Utilizador",
+							"PercentagemDesemprego": 7.6923076923076925,
+							"TotalDiplomados": 13,
+							"TotalDesempregados": 1
+						}, {
+							"CNAEF": 489,
+							"CNAEFNome": "Informática - programas não classificados noutra área de formação",
+							"PercentagemDesemprego": 9.236947791164658,
+							"TotalDiplomados": 249,
+							"TotalDesempregados": 23
+						}
+					]
+				}, {
+					"CNAEF": 460,
+					"CNAEFNome": "Matemática e Estatística",
+					"PercentagemDesemprego": 3.147163120567376,
+					"TotalDiplomados": 2256,
+					"TotalDesempregados": 71,
+					"children": [{
+							"CNAEF": 461,
+							"CNAEFNome": "Matemática",
+							"PercentagemDesemprego": 2.973523421588595,
+							"TotalDiplomados": 2455,
+							"TotalDesempregados": 73
+						}, {
+							"CNAEF": 462,
+							"CNAEFNome": "Estatística",
+							"PercentagemDesemprego": 4.270462633451957,
+							"TotalDiplomados": 281,
+							"TotalDesempregados": 12
+						}
+					]
+				}, {
+					"CNAEF": 440,
+					"CNAEFNome": "Ciências Físicas",
+					"PercentagemDesemprego": 5.255626382203721,
+					"TotalDiplomados": 7687,
+					"TotalDesempregados": 404,
+					"children": [{
+							"CNAEF": 441,
+							"CNAEFNome": "Física",
+							"PercentagemDesemprego": 3.064066852367688,
+							"TotalDiplomados": 1077,
+							"TotalDesempregados": 33
+						}, {
+							"CNAEF": 442,
+							"CNAEFNome": "Química",
+							"PercentagemDesemprego": 6.12987012987013,
+							"TotalDiplomados": 1925,
+							"TotalDesempregados": 118
+						}, {
+							"CNAEF": 443,
+							"CNAEFNome": "Ciências da Terra",
+							"PercentagemDesemprego": 5.0228310502283104,
+							"TotalDiplomados": 4599,
+							"TotalDesempregados": 231
+						}
+					]
+				}, {
+					"CNAEF": 420,
+					"CNAEFNome": "Ciências da Vida",
+					"PercentagemDesemprego": 5.346157178754008,
+					"TotalDiplomados": 11541,
+					"TotalDesempregados": 617,
+					"children": [{
+							"CNAEF": 421,
+							"CNAEFNome": "Biologia e Bioquímica",
+							"PercentagemDesemprego": 4.80514262756127,
+							"TotalDiplomados": 12445,
+							"TotalDesempregados": 598
+						}, {
+							"CNAEF": 422,
+							"CNAEFNome": "Ciências do Ambiente",
+							"PercentagemDesemprego": 9.110169491525424,
+							"TotalDiplomados": 472,
+							"TotalDesempregados": 43
+						}, {
+							"CNAEF": 429,
+							"CNAEFNome": "Ciências da Vida - programas não classificados noutra área de formação",
+							"PercentagemDesemprego": 10.9375,
+							"TotalDiplomados": 320,
+							"TotalDesempregados": 35
+						}
+					]
+				}
+			]
+		}, {
+			"CNAEF": 500,
+			"CNAEFNome": "Engenharia, Indústrias Transformadoras e Construção",
+			"PercentagemDesemprego": 5.525941719971571,
+			"TotalDiplomados": 73164,
+			"TotalDesempregados": 4043,
+			"children": [{
+					"CNAEF": 580,
+					"CNAEFNome": "Arquitectura e Construção",
+					"PercentagemDesemprego": 7.327951474064493,
+					"TotalDiplomados": 22421,
+					"TotalDesempregados": 1643,
+					"children": [{
+							"CNAEF": 581,
+							"CNAEFNome": "Arquitectura e Urbanismo",
+							"PercentagemDesemprego": 8.079638847088784,
+							"TotalDiplomados": 8639,
+							"TotalDesempregados": 698
+						}, {
+							"CNAEF": 582,
+							"CNAEFNome": "Construção Civil e Engenharia Civil",
+							"PercentagemDesemprego": 6.920654911838791,
+							"TotalDiplomados": 15880,
+							"TotalDesempregados": 1099
+						}
+					]
+				}, {
+					"CNAEF": 540,
+					"CNAEFNome": "Indústrias Transformadoras",
+					"PercentagemDesemprego": 6.76043557168784,
+					"TotalDiplomados": 4408,
+					"TotalDesempregados": 298,
+					"children": [{
+							"CNAEF": 541,
+							"CNAEFNome": "Indústrias Alimentares",
+							"PercentagemDesemprego": 7.2720946416144745,
+							"TotalDiplomados": 2874,
+							"TotalDesempregados": 209
+						}, {
+							"CNAEF": 542,
+							"CNAEFNome": "Indústrias do Têxtil, Vestuário, Calçado e Couro",
+							"PercentagemDesemprego": 5.797101449275362,
+							"TotalDiplomados": 138,
+							"TotalDesempregados": 8
+						}, {
+							"CNAEF": 543,
+							"CNAEFNome": "Materiais (Indústrias da Madeira, Cortiça, Papel, Plástico, Vidro e outros)",
+							"PercentagemDesemprego": 5.908419497784343,
+							"TotalDiplomados": 677,
+							"TotalDesempregados": 40
+						}, {
+							"CNAEF": 544,
+							"CNAEFNome": "Indústrias Extractivas",
+							"PercentagemDesemprego": 7.773109243697479,
+							"TotalDiplomados": 476,
+							"TotalDesempregados": 37
+						}, {
+							"CNAEF": 549,
+							"CNAEFNome": "Indústrias Transformadoras - programas não classificados noutra área de formação",
+							"PercentagemDesemprego": 12.5,
+							"TotalDiplomados": 8,
+							"TotalDesempregados": 1
+						}
+					]
+				}, {
+					"CNAEF": 520,
+					"CNAEFNome": "Engenharia e Técnicas Afins",
+					"PercentagemDesemprego": 4.6359278130569015,
+					"TotalDiplomados": 39841,
+					"TotalDesempregados": 1847,
+					"children": [{
+							"CNAEF": 521,
+							"CNAEFNome": "Metalurgia e Metalomecânica",
+							"PercentagemDesemprego": 5.187074829931973,
+							"TotalDiplomados": 9408,
+							"TotalDesempregados": 488
+						}, {
+							"CNAEF": 522,
+							"CNAEFNome": "Electricidade e Energia",
+							"PercentagemDesemprego": 6.742556917688266,
+							"TotalDiplomados": 5710,
+							"TotalDesempregados": 385
+						}, {
+							"CNAEF": 523,
+							"CNAEFNome": "Electrónica e Automação",
+							"PercentagemDesemprego": 2.8658986436638103,
+							"TotalDiplomados": 17621,
+							"TotalDesempregados": 505
+						}, {
+							"CNAEF": 524,
+							"CNAEFNome": "Tecnologia dos Processos Químicos",
+							"PercentagemDesemprego": 5.963302752293578,
+							"TotalDiplomados": 6758,
+							"TotalDesempregados": 403
+						}, {
+							"CNAEF": 525,
+							"CNAEFNome": "Construção e Reparação de Veículos a Motor",
+							"PercentagemDesemprego": 1.9002375296912113,
+							"TotalDiplomados": 842,
+							"TotalDesempregados": 16
+						}, {
+							"CNAEF": 529,
+							"CNAEFNome": "Engenharia e Técnicas Afins - programas não classificados noutra área de formação",
+							"PercentagemDesemprego": 3.701911444471328,
+							"TotalDiplomados": 4133,
+							"TotalDesempregados": 153
+						}
+					]
+				}
+			]
+		}, {
+			"CNAEF": 600,
+			"CNAEFNome": "Agricultura",
+			"PercentagemDesemprego": 6.228796308861447,
+			"TotalDiplomados": 7369,
+			"TotalDesempregados": 459,
+			"children": [{
+					"CNAEF": 640,
+					"CNAEFNome": "Ciências Veterinárias",
+					"PercentagemDesemprego": 6.424474187380497,
+					"TotalDiplomados": 2615,
+					"TotalDesempregados": 168
+				}, {
+					"CNAEF": 620,
+					"CNAEFNome": "Agricultura, Silvicultura e Pescas",
+					"PercentagemDesemprego": 6.206472757066776,
+					"TotalDiplomados": 4882,
+					"TotalDesempregados": 303,
+					"children": [{
+							"CNAEF": 621,
+							"CNAEFNome": "Produção Agrícola e Animal",
+							"PercentagemDesemprego": 6.154220384334712,
+							"TotalDiplomados": 4111,
+							"TotalDesempregados": 253
+						}, {
+							"CNAEF": 622,
+							"CNAEFNome": "Floricultura e Jardinagem",
+							"PercentagemDesemprego": 20.0,
+							"TotalDiplomados": 5,
+							"TotalDesempregados": 1
+						}, {
+							"CNAEF": 623,
+							"CNAEFNome": "Silvicultura e Caça",
+							"PercentagemDesemprego": 5.612244897959184,
+							"TotalDiplomados": 588,
+							"TotalDesempregados": 33
+						}, {
+							"CNAEF": 624,
+							"CNAEFNome": "Pescas",
+							"PercentagemDesemprego": 8.0,
+							"TotalDiplomados": 50,
+							"TotalDesempregados": 4
+						}
+					]
+				}
+			]
+		}, {
+			"CNAEF": 700,
+			"CNAEFNome": "Saúde e Protecção Social",
+			"PercentagemDesemprego": 6.727873135682404,
+			"TotalDiplomados": 55114,
+			"TotalDesempregados": 3708,
+			"children": [{
+					"CNAEF": 760,
+					"CNAEFNome": "Serviços Sociais",
+					"PercentagemDesemprego": 12.251472754050074,
+					"TotalDiplomados": 10864,
+					"TotalDesempregados": 1331,
+					"children": [{
+							"CNAEF": 761,
+							"CNAEFNome": "Serviços de Apoio a Crianças e Jovens",
+							"PercentagemDesemprego": -1.0,
+							"TotalDiplomados": 0,
+							"TotalDesempregados": 0
+						}, {
+							"CNAEF": 762,
+							"CNAEFNome": "Trabalho Social e Orientação",
+							"PercentagemDesemprego": 12.295312061382988,
+							"TotalDiplomados": 10687,
+							"TotalDesempregados": 1314
+						}
+					]
+				}, {
+					"CNAEF": 720,
+					"CNAEFNome": "Saúde",
+					"PercentagemDesemprego": 5.3862906666067945,
+					"TotalDiplomados": 44539,
+					"TotalDesempregados": 2399,
+					"children": [{
+							"CNAEF": 721,
+							"CNAEFNome": "Medicina",
+							"PercentagemDesemprego": 0.4685059864653826,
+							"TotalDiplomados": 5763,
+							"TotalDesempregados": 27
+						}, {
+							"CNAEF": 723,
+							"CNAEFNome": "Enfermagem",
+							"PercentagemDesemprego": 4.497776285978015,
+							"TotalDiplomados": 11917,
+							"TotalDesempregados": 536
+						}, {
+							"CNAEF": 724,
+							"CNAEFNome": "Ciências Dentárias",
+							"PercentagemDesemprego": 3.8782523318605793,
+							"TotalDiplomados": 4074,
+							"TotalDesempregados": 158
+						}, {
+							"CNAEF": 725,
+							"CNAEFNome": "Tecnologias de Diagnóstico e Terapêutica",
+							"PercentagemDesemprego": 6.206014075495841,
+							"TotalDiplomados": 7815,
+							"TotalDesempregados": 485
+						}, {
+							"CNAEF": 726,
+							"CNAEFNome": "Terapia e Reabilitação",
+							"PercentagemDesemprego": 8.977063010809387,
+							"TotalDiplomados": 7586,
+							"TotalDesempregados": 681
+						}, {
+							"CNAEF": 727,
+							"CNAEFNome": "Ciências Farmacêuticas",
+							"PercentagemDesemprego": 6.9610675471178975,
+							"TotalDiplomados": 7269,
+							"TotalDesempregados": 506
+						}, {
+							"CNAEF": 729,
+							"CNAEFNome": "Saúde - programas não classificados noutra área de formação",
+							"PercentagemDesemprego": 33.333333333333336,
+							"TotalDiplomados": 3,
+							"TotalDesempregados": 1
+						}
+					]
+				}
+			]
+		}, {
+			"CNAEF": 800,
+			"CNAEFNome": "Serviços",
+			"PercentagemDesemprego": 7.784882885472051,
+			"TotalDiplomados": 27836,
+			"TotalDesempregados": 2167,
+			"children": [{
+					"CNAEF": 860,
+					"CNAEFNome": "Serviços de Segurança",
+					"PercentagemDesemprego": 6.306990881458966,
+					"TotalDiplomados": 1316,
+					"TotalDesempregados": 83,
+					"children": [{
+							"CNAEF": 861,
+							"CNAEFNome": "Protecção de Pessoas e Bens",
+							"PercentagemDesemprego": 0.5434782608695652,
+							"TotalDiplomados": 184,
+							"TotalDesempregados": 1
+						}, {
+							"CNAEF": 862,
+							"CNAEFNome": "Segurança e Higiene no Trabalho",
+							"PercentagemDesemprego": 8.130939809926083,
+							"TotalDiplomados": 947,
+							"TotalDesempregados": 77
+						}, {
+							"CNAEF": 863,
+							"CNAEFNome": "Segurança Militar",
+							"PercentagemDesemprego": 4.3478260869565215,
+							"TotalDiplomados": 92,
+							"TotalDesempregados": 4
+						}
+					]
+				}, {
+					"CNAEF": 850,
+					"CNAEFNome": "Protecção do Ambiente",
+					"PercentagemDesemprego": 8.773316471704078,
+					"TotalDiplomados": 6326,
+					"TotalDesempregados": 555,
+					"children": [{
+							"CNAEF": 851,
+							"CNAEFNome": "Tecnologia de Protecção do Ambiente",
+							"PercentagemDesemprego": 8.823529411764707,
+							"TotalDiplomados": 4760,
+							"TotalDesempregados": 420
+						}, {
+							"CNAEF": 852,
+							"CNAEFNome": "Ambientes Naturais e Vida Selvagem",
+							"PercentagemDesemprego": 7.664233576642336,
+							"TotalDiplomados": 274,
+							"TotalDesempregados": 21
+						}, {
+							"CNAEF": 853,
+							"CNAEFNome": "Serviços de Saúde Pública",
+							"PercentagemDesemprego": 15.100671140939598,
+							"TotalDiplomados": 894,
+							"TotalDesempregados": 135
+						}
+					]
+				}, {
+					"CNAEF": 840,
+					"CNAEFNome": "Serviços de Transporte",
+					"PercentagemDesemprego": 5.854579792256846,
+					"TotalDiplomados": 3177,
+					"TotalDesempregados": 186
+				}, {
+					"CNAEF": 810,
+					"CNAEFNome": "Serviços Pessoais",
+					"PercentagemDesemprego": 7.161855022002999,
+					"TotalDiplomados": 20679,
+					"TotalDesempregados": 1481,
+					"children": [{
+							"CNAEF": 811,
+							"CNAEFNome": "Hotelaria e Restauração",
+							"PercentagemDesemprego": 7.684210526315789,
+							"TotalDiplomados": 1900,
+							"TotalDesempregados": 146
+						}, {
+							"CNAEF": 812,
+							"CNAEFNome": "Turismo e Lazer",
+							"PercentagemDesemprego": 9.40926777502653,
+							"TotalDiplomados": 5654,
+							"TotalDesempregados": 532
+						}, {
+							"CNAEF": 813,
+							"CNAEFNome": "Desporto",
+							"PercentagemDesemprego": 6.421800947867299,
+							"TotalDiplomados": 12660,
+							"TotalDesempregados": 813
+						}, {
+							"CNAEF": 819,
+							"CNAEFNome": "Serviços Pessoais - programas não classificados noutra área de formação",
+							"PercentagemDesemprego": 4.6875,
+							"TotalDiplomados": 64,
+							"TotalDesempregados": 3
+						}
+					]
+				}
+			]
+		}
+	]
+}

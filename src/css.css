@@ -28,6 +28,12 @@
 	height: 20%;
 }
 
+/* Background color of the visualization */
+.background{
+	background-color: #f2f2f2;
+}
+
+/* Axis labels */
 .axisLabel{
 	font-size: 12pt;
 }

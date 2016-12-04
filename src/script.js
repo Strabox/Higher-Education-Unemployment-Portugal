@@ -9,6 +9,7 @@
 /* Register events to use in inter-view communication:
 	selectCourse event - Select a course in the bertin matrix
 	selectUniversity event - Select an university/college
+	selectUniversityScatter event - Select an university/college in the scatter
 	selectArea event - Select an area in the sunburst
 	unselectUniversity event - TODO
 */
@@ -29,7 +30,7 @@ var breadcrumbDim = {
 	};
 	
 //Draw/update breadcrumbs
-function drawBreadcrumbs(svg,nodeArray,dataKey,onBreadcrumbClick,breadcrumbColor,breadcrumbDimensions) {
+function drawBreadcrumbs(svg,nodeArray,dataKey,colorObject,onBreadcrumbClick,breadcrumbDimensions) {
 	//Dimensions of breadcrumb
 	var breadcrumbDim = breadcrumbDimensions;
 	
@@ -63,7 +64,7 @@ function drawBreadcrumbs(svg,nodeArray,dataKey,onBreadcrumbClick,breadcrumbColor
 		.transition().duration(750)
 		.attr("points", breadcrumbPoints)
 		.attr("class", "breadcrumbItem")
-		.style("fill", breadcrumbColor);
+		.style("fill", function(d) { return colorObject.getColor(d[dataKey]); });
 
 	entering.append("text")
 		.on("click", onBreadcrumbClick)
@@ -147,6 +148,9 @@ var fullPublicCourseDataset; 	//All the public courses dataset
 var fullPrivateCourseDataset; 	//All the private courses dataset
 
 var universityVisObj = new Object();
+
+var breadCrumbColorObject = new Object();
+breadCrumbColorObject.getColor = function(dataKey) { return rootDataColor; };
 
 // Load all the course data!
 d3.json("CoursesPublic.json", function(publicCoursesData) {
@@ -389,7 +393,7 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 	dispatch.call("selectUniversity", currentSelection, currentSelection);
 
 	drawBreadcrumbs(d3.select("#universityBreadcrumb").select("svg"),
-		universityVisObj.previousCollections,"key",matrixBreadcrumbClick,rootDataColor,breadcrumbDim);
+		universityVisObj.previousCollections,"key",breadCrumbColorObject,matrixBreadcrumbClick,breadcrumbDim);
 
 	updateBertinMatrixYaxisLabel(newHeight);
 
@@ -520,96 +524,35 @@ function registerEventsUniversityVis() {
 /*###################### SUNBURST BREADCRUMB FUNCTIONS #######################*/
 
 var sunburstBreadcrumbDim = {
-		w: 160,
+		w: 152,
 		h: 30,
 		s: 3,
 		t: 10
-	};
-
-var breadcrumbObject = new Object();
-breadcrumbObject.clear = function(){
-	this.data = [{"currentAreaName" : "All Areas", "currentAreaCode" : 0}];
 };
-breadcrumbObject.addArea = function (areaName,areaCode){
-	this.data.push({"currentAreaName" : areaName, "currentAreaCode" : areaCode});
-};
-breadcrumbObject.goToArea = function (areaName){
-	
-};
-breadcrumbObject.clear();
 
 /*########################### SUNBURST FUNCTIONS #############################*/
 
-/* DONT DELETE IT YET  
+var areasData = new Array(9);
 
-function updateSunburst(year) {
-	var sendObject = { "area": 0, "color": color1(0) };
-	dispatch.call("selectArea", sendObject, sendObject);
-	
-	d3.json("Areas" + year + ".json", function(error, root) {
-		if (error) throw error;
+loadAreasData(2007);
 
-		root = d3.hierarchy(root);
-		root.sum(function(d) {
-			if (d.CNAEFNome == "Raíz")
-				return 0;
-			var n = d.CNAEF.toString();
-			if (n.endsWith("0")) {
-				return 0;
-			} else
-				return d.TotalDesempregados;
+//Load all the areas data into areasData object
+function loadAreasData(year){
+	if(areasData[year - 2007] == null) {
+		d3.json("Areas" + year + ".json", function(data) {
+			areasData[year - 2007] = data;
+			drawSunburst(data);
 		});
-
-		
-		d3.select("#sunburst").select("g").selectAll("path")
-			.data(partition(root).descendants(),function(d){ return d.data.CNAEFNome; })
-			.transition().duration(2000)
-			.attr("d", arc)
-			.attr("class", "sunburst")
-			.style("fill",
-				function(d) {
-					if (d.data.CNAEFNome == "Raíz")
-						return color1(0);
-					else {
-						var first = Math.floor(d.data.CNAEF / 100);
-						var code = d.data.CNAEF.toString();
-						if (code[1] == "0") {
-							return d3.rgb(color1(first))
-						} else if (code[2] == "0") {
-							return d3.rgb(color1(first)).brighter(0.5);
-						} else {
-							return d3.rgb(color1(first)).brighter(1);
-						}
-					}
-
-
-				});
-		
-		d3.select("#sunburst").select("g").selectAll("path").on("click", click)
-			.select("title")
-			.text(function(d) {
-				if (d.data.CNAEFNome == "Raíz")
-					return "Total Unemployed (All Areas): " + d.value;
-				var res = "Area: "+ d.data.CNAEFNome;
-				res += "\nUnemployment %: " + d.data.PercentagemDesemprego + " %";
-				res += "\nTotal Unemployed: " + d.data.TotalDesempregados;
-				res += "\nTotal Graduates: " + d.data.TotalDiplomados;
-				return res;
-			});
-
-				
-	});
-	d3.select(self.frameElement).style("height", height + "px");
+	} else{
+		drawSunburst(areasData[year - 2007]);
+	}
 }
-*/
 
-drawSunburst("2007");
-
-function drawSunburst(year) {
+function drawSunburst(data) {
 	var sendObject = { "area": 0, "color": color1(0) };
 	dispatch.call("selectArea", sendObject, sendObject);
 	
-	var width = 540,
+	var width = 600,
 		height = 540,
 		radius = (Math.min(width, height) / 2) - 10;
 
@@ -645,44 +588,41 @@ function drawSunburst(year) {
 		.append("g")
 		.attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
-	d3.json("Areas" + year + ".json", function(error, root) {
-		if (error) throw error;
-
-		root = d3.hierarchy(root);
-		root.sum(function(d) {
-			if (d.CNAEFNome == "Raíz")
-				return 0;
-			var n = d.CNAEF.toString();
-			if (n.endsWith("0")) {
-				return 0;
-			} else
-				return d.TotalDesempregados;
-		});
-		svg.selectAll("path")
-			.data(partition(root).descendants())
-			.enter().append("path")
-			.attr("d", arc)
-			.attr("class", "sunburst")
-			.style("fill",
-				function(d) {
-					if (d.data.CNAEFNome == "Raíz")
-						return color1(0);
-					else {
-						var first = Math.floor(d.data.CNAEF / 100);
-						var code = d.data.CNAEF.toString();
-						if (code[1] == "0") {
-							return d3.rgb(color1(first))
-						} else if (code[2] == "0") {
-							return d3.rgb(color1(first)).brighter(0.5);
-						} else {
-							return d3.rgb(color1(first)).brighter(1);
-						}
+	data = d3.hierarchy(data);
+	data.sum(function(d) {
+		if (d.CNAEFNome == "Raíz")
+			return 0;
+		var n = d.CNAEF.toString();
+		if (n.endsWith("0")) {
+			return 0;
+		} else
+			return d.TotalDesempregados;
+	});
+		
+	svg.selectAll("path")
+		.data(partition(data).descendants())
+		.enter().append("path")
+		.attr("d", arc)
+		.attr("class", "sunburst")
+		.attr("id", function(d) { return "AreaCode" + d.data.CNAEF; })
+		.attr("fill",
+			function(d) {
+				if (d.data.CNAEFNome == "Raíz")
+					return color1(0);
+				else {
+					var first = Math.floor(d.data.CNAEF / 100);
+					var code = d.data.CNAEF.toString();
+					if (code[1] == "0") {
+						return d3.rgb(color1(first))
+					} else if (code[2] == "0") {
+						return d3.rgb(color1(first)).brighter(0.5);
+					} else {
+						return d3.rgb(color1(first)).brighter(1);
 					}
+				}
 
 
-				})
-
-		.on("click", click)
+		}).on("click", click)
 			.append("title")
 			.text(function(d) {
 				if (d.data.CNAEFNome == "Raíz")
@@ -693,30 +633,46 @@ function drawSunburst(year) {
 				return res;
 			});
 		
-		d3.select("#areaBreadcrumb")
-			.append("svg")
-			.attr("height",30)
-			.attr("width",600);
-			
-		drawBreadcrumbs(d3.select("#areaBreadcrumb").select("svg"),
-			breadcrumbObject.data,"currentAreaName",null,rootDataColor,sunburstBreadcrumbDim);
-
-	});
-
+	//Add the space for areaBreadcrumb
+	d3.select("#areaBreadcrumb")
+		.append("svg")
+		.attr("height",30)
+		.attr("width",630);
+		
+	//Draw the breadcrumbs
+	drawBreadcrumbs(d3.select("#areaBreadcrumb").select("svg"),
+		[{"currentAreaName" : "All Areas", "CNAEF": 0}],"currentAreaName",breadCrumbColorObject,
+		sunburstBreadcrumbClick,sunburstBreadcrumbDim);
+	
+	
+	function sunburstBreadcrumbClick(datum){
+		var sunburstSection = d3.select("#"+"AreaCode"+datum.CNAEF);
+		click(sunburstSection.datum());
+	}
+	
 	function click(d) {
-		//Send area selection
+		//Obtain the information and update suburst breadcrumbs
+		var currentData = d;
+		var areasTrail = [];
+		var breadcrumbColor = new Object();
+		breadcrumbColor.getColor = function(dataKey) {
+			return this[dataKey];
+		};
+		while(currentData != null){
+			breadcrumbColor[currentData.data.CNAEFNome] = d3.select("#"+"AreaCode"+currentData.data.CNAEF).attr("fill");
+			areasTrail.unshift({"currentAreaName": currentData.data.CNAEFNome, "CNAEF": currentData.data.CNAEF });
+			currentData = currentData.parent;
+		}
+		drawBreadcrumbs(d3.select("#areaBreadcrumb").select("svg"),
+			areasTrail,"currentAreaName",breadcrumbColor,sunburstBreadcrumbClick,sunburstBreadcrumbDim)
+			
+		//Send area selected int sunburst to other views
 		var sendObject = new Object();
 		sendObject.area = d.data.CNAEF;
-		sendObject.color = this.style.fill;
-		if (d.data.CNAEFNome === "Raíz"){
-			sendObject.area = 0;			//ROOT is 0
-			breadcrumbObject.clear();
-		}
-		else {
-			breadcrumbObject.addArea(d.data.CNAEFNome);
-		}
+		sendObject.color =  d3.select("#"+"AreaCode"+d.data.CNAEF).attr("fill");
 		dispatch.call("selectArea", sendObject, sendObject);
 
+		//Update the suburst visualization
 		svg.transition()
 			.duration(750)
 			.tween("scale", function() {
@@ -734,9 +690,6 @@ function drawSunburst(year) {
 					return arc(d);
 				};
 			});
-			
-		drawBreadcrumbs(d3.select("#areaBreadcrumb").select("svg"),
-			breadcrumbObject.data,"currentAreaName",null,this.style.fill,sunburstBreadcrumbDim);
 	}
 
 	d3.select(self.frameElement).style("height", height + "px");
@@ -763,7 +716,7 @@ function drawSunburst(year) {
 genSlider();
 
 function genSlider() {
-	var Width = 550;
+	var Width = 600;
 	var svg = d3.select("#areaSlider").append("svg").attr("width",Width);
 	var	margin = {
 			right: 50,
@@ -828,7 +781,7 @@ function genSlider() {
 		handle.attr("cx", x(x.invert(value(d3.event.x, width))));
 		d3.select("#sunburst").remove();						//Remove Sunburst
 		d3.select("#areaBreadcrumb").select("svg").remove();	//Remove breadcrumb
-		drawSunburst(year(d3.event.x, width));
+		loadAreasData(year(d3.event.x, width));					//Load data and draw sunburst
 	}
 }
 
@@ -996,6 +949,8 @@ function subArea(a, b) {
 var fullScatterDataset; 			//All the data from the entry grades file
 
 var scatterVisObj = new Object();	//Scatter plot vis object
+scatterVisObj.selectedUniversity = ["Ensino Público"];
+scatterVisObj.selectedArea = 0;
 
 //Load the Scatter Plot Courses data and prepare it to be used in visualization
 d3.json("EntryGrades.json", function(data) {
@@ -1075,7 +1030,7 @@ function updateScatterVis(newCollection) {
 			return getScatterPlotTooltip(d);
 		});
 		
-	circles.on("click",function(d){
+	circles.on("click",function(d){		//One click filter all the courses with same college
 		scatterVisObj.selectedUniversity = d.NomeFaculdade.split(" - ");
 		if(scatterVisObj.selectedUniversity.length == 1){
 			scatterVisObj.selectedUniversity.push(scatterVisObj.selectedUniversity[0]);
@@ -1084,7 +1039,7 @@ function updateScatterVis(newCollection) {
 		filterScatterVis();
 	})
 	.on("contextmenu",function(d){
-		console.log("Wow");
+		//TODO
 	});
 }
 
