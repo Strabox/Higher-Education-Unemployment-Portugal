@@ -11,10 +11,10 @@
 	selectUniversity event - Select an university/college
 	selectUniversityScatter event - Select an university/college in the scatter
 	selectArea event - Select an area in the sunburst
-	unselectUniversity event - TODO
+	selectAreaScatter event - Select an area in the scatter from a course
 */
 var dispatch = d3.dispatch("selectCourse", "selectUniversity", 
-	"unselectUniversity", "selectArea","selectUniversityScatter");
+	"selectAreaScatter", "selectArea","selectUniversityScatter");
 
 //Global Colors to the data representation
 var color1 = d3.scaleOrdinal(d3.schemeCategory10);
@@ -28,6 +28,30 @@ var breadcrumbDim = {
 		s: 3,
 		t: 10
 	};
+	
+//Return the abreviation of string to use in the breadcrumb
+function getBreadcrumbString(string) {
+	var res = "";
+	var tokens = string.split(" ");
+	var cleanTokens = [];
+	for (var i = 0; i < tokens.length; i++) {
+		if (tokens[i][0] != null && tokens[i][0].match(/[A-Z]|É|-/)) {
+			cleanTokens.push(tokens[i]);
+		}
+	}
+	for (var i = 0; i < cleanTokens.length; i++) {
+		if (cleanTokens.length <= 2) {
+			res += cleanTokens[i] + " ";
+		} else if (cleanTokens.length == 3) {
+			res += cleanTokens[i].substring(0, 6) + ". ";
+		} else if (cleanTokens.length == 4) {
+			res += cleanTokens[i].substring(0, 4) + ". ";
+		} else {
+			res += cleanTokens[i].substring(0, 3) + ". ";
+		}
+	}
+	return res;
+}
 	
 //Draw/update breadcrumbs
 function drawBreadcrumbs(svg,nodeArray,dataKey,colorObject,onBreadcrumbClick,breadcrumbDimensions) {
@@ -79,6 +103,58 @@ function drawBreadcrumbs(svg,nodeArray,dataKey,colorObject,onBreadcrumbClick,bre
 
 	g.exit().transition().duration(750).remove()
 }	
+
+//Draw a context menu according with the parameters
+function drawContextMenu(svg,x, y,containerWidth, containerHeight, menuItems, clickCallback) {
+	var menuItemHeight = 25;
+	var menuItemWidth = 210;
+	//Remove the current menu if we open it in other place	
+	d3.select('.context-menu').remove();
+	// Draw the menu
+	svg.append('g').attr('class', 'context-menu')
+		.selectAll('tmp')
+		.data(menuItems).enter()
+		.append('g')
+		.attr('class', 'menu-entry')
+		.on("click", clickCallback);
+
+	//See if the menu isn't cropped in the container
+	if(x + menuItemWidth > containerWidth){
+		x = x - menuItemWidth;
+	} 
+	if(y + (menuItems.length * menuItemHeight) > containerHeight){
+		y = y - (menuItems.length * menuItemHeight);
+	}
+	
+	//Draw the context menu
+	d3.selectAll('.menu-entry')
+		.append('rect')
+		.attr('x', x)
+		.attr('y', function(d, i) {
+			return y + (i * menuItemHeight);
+		})
+		.attr('width', menuItemWidth)
+		.attr('height', menuItemHeight);
+
+	d3.selectAll(".menu-entry")
+		.append("text")
+		.text(function(d) {
+			return d;
+		})
+		.attr("class", "menu-entry text")
+		.attr("x", x)
+		.attr("y", function(d, i) {
+			return y + (i * menuItemHeight);
+		})
+		.attr("dy", menuItemHeight - 5 / 2)
+		.attr("dx", 5);
+
+	// Other interactions remove the menu ex:Clicking elsewhere!!
+	d3.select("body")
+		.on("click", function() {
+			d3.select(".context-menu").remove();
+		});
+}
 	
 //#############################################################################
 //#             				 		                                      #
@@ -86,57 +162,11 @@ function drawBreadcrumbs(svg,nodeArray,dataKey,colorObject,onBreadcrumbClick,bre
 //#             				       			                              #
 //#############################################################################
 
-
-
-
 //######################## Auxiliary functions ################################
-
-//Return the string to use in the breadcrumb
-function getBreadcrumbString(text) {
-	var res = "";
-	var tokens = text.split(" ");
-	var cleanTokens = [];
-	for (var i = 0; i < tokens.length; i++) {
-		if (tokens[i][0] != null && tokens[i][0].match(/[A-Z]|É|-/)) {
-			cleanTokens.push(tokens[i]);
-		}
-	}
-	for (var i = 0; i < cleanTokens.length; i++) {
-		if (cleanTokens.length <= 2) {
-			res += cleanTokens[i] + " ";
-		} else if (cleanTokens.length == 3) {
-			res += cleanTokens[i].substring(0, 6) + ". ";
-		} else if (cleanTokens.length == 4) {
-			res += cleanTokens[i].substring(0, 4) + ". ";
-		} else {
-			res += cleanTokens[i].substring(0, 3) + ". ";
-		}
-	}
-	return res;
-}
-
-//Return the acronym of the name
-function getAcronym(name) {
-	var res = "";
-	var tokens = name.split(" ");
-	var cleanTokens = [];
-	for (var i = 0; i < tokens.length; i++) {
-		if (tokens[i][0] != null && tokens[i][0].match(/[A-Z]|É|-/)) {
-			res += tokens[i][0];
-			cleanTokens.push(tokens[i]);
-		}
-	}
-	if (res.length == 1) {
-		res = cleanTokens[0].substring(0, 6);
-	} else if (res.length == 2) {
-		res = cleanTokens[0].substring(0, 3) + cleanTokens[1].substring(0, 3);
-	}
-	return res;
-}
 
 // Get the string to use in the tooltip of the circle
 function getBertinMatrixCircleTooltip(d) {
-	var res = "% Unemployment: " + d.PercentagemDesemprego.toFixed(2) + "%";
+	var res = "Unemployment %: " + d.PercentagemDesemprego.toFixed(2) + "%";
 	res += "\nTotal Unemployeds: " + d.TotalDesempregados;
 	res += "\nTotal Graduates: " + d.TotalDiplomados;
 	return res;
@@ -211,86 +241,46 @@ function matrixBreadcrumbClick(d, i) {
 var menuItems = ["Back", "Private Courses", "Sort Unemployment Ascending", "Sort Unemployment Descending",
 					"Sort Alphabetical [A-Z]", "Sort Alphabetical [Z-A]"];
 
-function drawContextMenu(x, y, menuItems) {
-	var menuItemHeight = 25;
-	var menuItemWidth = 210;
-	//Remove the current menu if we open it in other place	
-	d3.select('.context-menu').remove();
-	// Draw the menu
-	universityVisObj.svg
-		.append('g').attr('class', 'context-menu')
-		.selectAll('tmp')
-		.data(menuItems).enter()
-		.append('g')
-		.attr('class', 'menu-entry')
-		.on("click", function() { 			//Context menu click actions
-			if (d3.select(this).select("text").text() === "Sort Unemployment Ascending") {
-				universityVisObj.previousCollections[universityVisObj.currentCollIndex].values.sort(function(d1, d2) {
-					return d1.MediaDesemprego - d2.MediaDesemprego;
-				});
-			} else if (d3.select(this).select("text").text() === "Sort Unemployment Descending") {
-				universityVisObj.previousCollections[universityVisObj.currentCollIndex].values.sort(function(d1, d2) {
-					return d2.MediaDesemprego - d1.MediaDesemprego;
-				});
-			} else if (d3.select(this).select("text").text() === "Sort Alphabetical [Z-A]") {
-				universityVisObj.previousCollections[universityVisObj.currentCollIndex].values.sort(function(d1, d2) {
-					return d2.key.toLowerCase().localeCompare(d1.key);
-				});
-			} else if (d3.select(this).select("text").text() === "Sort Alphabetical [A-Z]") {
-				universityVisObj.previousCollections[universityVisObj.currentCollIndex].values.sort(function(d1, d2) {
-					return d1.key.toLowerCase().localeCompare(d2.key);
-				});
-			} else if (d3.select(this).select("text").text() === "Public Courses" ||
-				d3.select(this).select("text").text() === "Private Courses") {
-				if (universityVisObj.publicUniversities) {
-					universityVisObj.publicUniversities = false;
-					menuItems[1] = "Public Courses";
-					universityVisObj.previousCollections = [fullPrivateCourseDataset];
-					universityVisObj.currentCollIndex = 0;
-				} else {
-					universityVisObj.publicUniversities = true;
-					menuItems[1] = "Private Courses";
-					universityVisObj.previousCollections = [fullPublicCourseDataset];
-					universityVisObj.currentCollIndex = 0;
-				}
-			} else {
-				if (universityVisObj.currentCollIndex > 0) {
-					universityVisObj.previousCollections.pop();
-					universityVisObj.currentCollIndex--;
-				} else {
-					return;
-				}
-			}
-			updateUniversityVisualization(universityVisObj, universityVisObj.previousCollections[universityVisObj.currentCollIndex].values);
+
+function clickBertinMatrixContextMenu() { 			//Context menu click actions
+	if (d3.select(this).select("text").text() === "Sort Unemployment Ascending") {
+		universityVisObj.previousCollections[universityVisObj.currentCollIndex].values.sort(function(d1, d2) {
+			return d1.MediaDesemprego - d2.MediaDesemprego;
 		});
-
-	d3.selectAll('.menu-entry')
-		.append('rect')
-		.attr('x', x)
-		.attr('y', function(d, i) {
-			return y + (i * menuItemHeight);
-		})
-		.attr('width', menuItemWidth)
-		.attr('height', menuItemHeight);
-
-	d3.selectAll(".menu-entry")
-		.append("text")
-		.text(function(d) {
-			return d;
-		})
-		.attr("class", "menu-entry text")
-		.attr("x", x)
-		.attr("y", function(d, i) {
-			return y + (i * menuItemHeight);
-		})
-		.attr("dy", menuItemHeight - 5 / 2)
-		.attr("dx", 5);
-
-	// Other interactions remove the menu ex:Clicking elsewhere!!
-	d3.select("body")
-		.on("click", function() {
-			d3.select(".context-menu").remove();
+	} else if (d3.select(this).select("text").text() === "Sort Unemployment Descending") {
+		universityVisObj.previousCollections[universityVisObj.currentCollIndex].values.sort(function(d1, d2) {
+			return d2.MediaDesemprego - d1.MediaDesemprego;
 		});
+	} else if (d3.select(this).select("text").text() === "Sort Alphabetical [Z-A]") {
+		universityVisObj.previousCollections[universityVisObj.currentCollIndex].values.sort(function(d1, d2) {
+			return d2.key.toLowerCase().localeCompare(d1.key);
+		});
+	} else if (d3.select(this).select("text").text() === "Sort Alphabetical [A-Z]") {
+		universityVisObj.previousCollections[universityVisObj.currentCollIndex].values.sort(function(d1, d2) {
+			return d1.key.toLowerCase().localeCompare(d2.key);
+		});
+	} else if (d3.select(this).select("text").text() === "Public Courses" ||
+		d3.select(this).select("text").text() === "Private Courses") {
+		if (universityVisObj.publicUniversities) {
+			universityVisObj.publicUniversities = false;
+			menuItems[1] = "Public Courses";
+			universityVisObj.previousCollections = [fullPrivateCourseDataset];
+			universityVisObj.currentCollIndex = 0;
+		} else {
+			universityVisObj.publicUniversities = true;
+			menuItems[1] = "Private Courses";
+			universityVisObj.previousCollections = [fullPublicCourseDataset];
+			universityVisObj.currentCollIndex = 0;
+		}
+	} else {
+		if (universityVisObj.currentCollIndex > 0) {
+			universityVisObj.previousCollections.pop();
+			universityVisObj.currentCollIndex--;
+		} else {
+			return;
+		}
+	}
+	updateUniversityVisualization(universityVisObj, universityVisObj.previousCollections[universityVisObj.currentCollIndex].values);
 }
 
 //Update the bertin matrix y-axis label according to the quantity of data presented.
@@ -358,7 +348,8 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 		.enter().append("circle")
 		.on("contextmenu", function() {
 			d3.event.preventDefault();
-			drawContextMenu(d3.mouse(this)[0], d3.mouse(this)[1],menuItems);
+			drawContextMenu(universityVisObj.svg,d3.mouse(this)[0], d3.mouse(this)[1],
+				universityVisObj.width,universityVisObj.height,menuItems,clickBertinMatrixContextMenu);
 		})
 		.transition(transition)
 		.attr("r", function(dy) {
@@ -406,14 +397,14 @@ function generateUniversityVis() {
 	var paddingObj = {
 		"top": 40,
 		"bottom": 20,
-		"left": 70,
+		"left": 165,
 		"right": 20
 	}
-	var matrixLineHeight = 19;
-	var width = 500;
+	var matrixLineHeight = 22;
+	var width = 575;
 	var breadcrumbWidth = 600, breadcrumbHeight = 30;
 	var height = fullPublicCourseDataset.values.length * matrixLineHeight;
-	var maximumCircleRadius = 120;
+	var maximumCircleRadius = 140;
 	var years = [2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015];
 
 	//Create matrix visualization space
@@ -423,7 +414,7 @@ function generateUniversityVis() {
 		.attr("height", height)
 		.on("contextmenu", function() {
 			d3.event.preventDefault();
-			drawContextMenu(d3.mouse(this)[0], d3.mouse(this)[1],menuItems);
+			drawContextMenu(svg,d3.mouse(this)[0], d3.mouse(this)[1],universityVisObj.width,universityVisObj.height,menuItems,clickBertinMatrixContextMenu);
 		});
 
 	//Creat breadcrumb space
@@ -440,7 +431,7 @@ function generateUniversityVis() {
 
 	var xaxis = d3.axisTop().scale(xscale);
 	var yaxis = d3.axisLeft().scale(yscale).tickFormat(function(d) {
-		return getAcronym(d);
+		return getBreadcrumbString(d);
 	});
 
 	//Add yaxis label
@@ -453,6 +444,7 @@ function generateUniversityVis() {
 	});
 
 	universityVisObj.width = width;
+	universityVisObj.height = height;
 	universityVisObj.publicUniversities = true;
 	universityVisObj.matrixLineHeight = matrixLineHeight;
 	universityVisObj.paddingObj = paddingObj;
@@ -521,7 +513,7 @@ function registerEventsUniversityVis() {
 //#             				       			                              #
 //#############################################################################
 
-/*###################### SUNBURST BREADCRUMB FUNCTIONS #######################*/
+/*###################### SUNBURST BREADCRUMB FUNCTIONS ######################*/
 
 var sunburstBreadcrumbDim = {
 		w: 152,
@@ -530,22 +522,27 @@ var sunburstBreadcrumbDim = {
 		t: 10
 };
 
-/*########################### SUNBURST FUNCTIONS #############################*/
+/*########################### SUNBURST FUNCTIONS ############################*/
 
+//All the data to visualize sunburst [2007-2015]
 var areasData = new Array(9);
 
-loadAreasData(2007);
+loadAreasData();
 
-//Load all the areas data into areasData object
-function loadAreasData(year){
-	if(areasData[year - 2007] == null) {
-		d3.json("Areas" + year + ".json", function(data) {
-			areasData[year - 2007] = data;
-			drawSunburst(data);
-		});
-	} else{
-		drawSunburst(areasData[year - 2007]);
+// Load all the data from files to memory and draw the first year
+function loadAreasData(){
+	var loadDataQueue = d3.queue();
+	for(var year = 2007; year <= 2015; year++){
+		loadDataQueue.defer(function (year,callback){
+			d3.json("Areas" + year + ".json", function(data) {
+				areasData[year - 2007] = data;
+				if(year == 2007){
+					drawSunburst(areasData[year - 2007]);
+				}
+			});
+		},year);
 	}
+	loadDataQueue.awaitAll(function(){});
 }
 
 function drawSunburst(data) {
@@ -590,7 +587,7 @@ function drawSunburst(data) {
 
 	data = d3.hierarchy(data);
 	data.sum(function(d) {
-		if (d.CNAEFNome == "Raíz")
+		if (d.CNAEFNome == "All")
 			return 0;
 		var n = d.CNAEF.toString();
 		if (n.endsWith("0")) {
@@ -607,7 +604,7 @@ function drawSunburst(data) {
 		.attr("id", function(d) { return "AreaCode" + d.data.CNAEF; })
 		.attr("fill",
 			function(d) {
-				if (d.data.CNAEFNome == "Raíz")
+				if (d.data.CNAEFNome == "All")
 					return color1(0);
 				else {
 					var first = Math.floor(d.data.CNAEF / 100);
@@ -625,7 +622,7 @@ function drawSunburst(data) {
 		}).on("click", click)
 			.append("title")
 			.text(function(d) {
-				if (d.data.CNAEFNome == "Raíz")
+				if (d.data.CNAEFNome == "All")
 					return "Total Desempregados: " + d.value;
 				var res = d.data.CNAEFNome + "\nPercentagem Desemprego: " + d.data.PercentagemDesemprego + " %";
 				res += "\nTotal Desempregados: " + d.data.TotalDesempregados;
@@ -641,13 +638,16 @@ function drawSunburst(data) {
 		
 	//Draw the breadcrumbs
 	drawBreadcrumbs(d3.select("#areaBreadcrumb").select("svg"),
-		[{"currentAreaName" : "All Areas", "CNAEF": 0}],"currentAreaName",breadCrumbColorObject,
+		[{"currentAreaName" : "All", "CNAEF": 0}],"currentAreaName",breadCrumbColorObject,
 		sunburstBreadcrumbClick,sunburstBreadcrumbDim);
 	
+	//Receive event from view change in scatter plot an area was selected
+	dispatch.on("selectAreaScatter", function(selected, dummy) {
+		click(d3.select("#"+"AreaCode"+selected).datum());
+	});
 	
 	function sunburstBreadcrumbClick(datum){
-		var sunburstSection = d3.select("#"+"AreaCode"+datum.CNAEF);
-		click(sunburstSection.datum());
+		click(d3.select("#"+"AreaCode"+datum.CNAEF).datum());
 	}
 	
 	function click(d) {
@@ -774,14 +774,13 @@ function genSlider() {
 
 	function drag() {
 		handle.attr("cx", x(x.invert(d3.event.x)));
-
 	}
 
 	function dragEnd() {
 		handle.attr("cx", x(x.invert(value(d3.event.x, width))));
 		d3.select("#sunburst").remove();						//Remove Sunburst
 		d3.select("#areaBreadcrumb").select("svg").remove();	//Remove breadcrumb
-		loadAreasData(year(d3.event.x, width));					//Load data and draw sunburst
+		drawSunburst(areasData[year(d3.event.x, width) - 2007]);//Load data and draw sunburst
 	}
 }
 
@@ -848,8 +847,18 @@ dispatch.on("selectCourse", function(d) {
 	updateLineChartVis(d);
 });
 
+//Draw a label to advise the user about the line chart
+function turnOnOffEmptyLineChart(on){
+	if(on){
+		d3.select("#lineChartWarning").attr("visibility","visible");
+	} else {
+		d3.select("#lineChartWarning").attr("visibility","hidden");
+	}
+}
+
 //Update the line chart visualization with new data
 function updateLineChartVis(collection) {
+	turnOnOffEmptyLineChart(false);
 	var line = d3.line()
 		.x(function(d) {
 			return lineChartObj.xscale(d.Ano);
@@ -858,7 +867,7 @@ function updateLineChartVis(collection) {
 			return lineChartObj.yscale(d.PercentagemDesemprego);
 		});
 
-	//Add the new data
+	//Add/update with the new data
 	d3.select("#lineChartVis").select("svg")
 		.append("path")
 		.datum(collection)
@@ -873,7 +882,7 @@ function updateLineChartVis(collection) {
 		});
 }
 
-//Initialize the Line Chart Visualization
+//Generate the Line Chart Visualization
 function generateLineChartVis() {
 	var height = 235;
 	var width = 1250;
@@ -899,7 +908,18 @@ function generateLineChartVis() {
 
 	lineChartObj.xscale = xscale;
 	lineChartObj.yscale = yscale;
-
+	lineChartObj.width = width;
+	lineChartObj.height = height;
+	lineChartObj.empty = true;
+	
+	//Draw the empty line chart warning label
+	svg.append("text")
+		.attr("id","lineChartWarning")
+		.attr("x", (width - 300)  / 2)
+		.attr("y", height / 2)
+		.text("Select multiple courses in the matrix to compare here");
+	turnOnOffEmptyLineChart(true);
+	
 	svg.append("text")
 		.attr("class", "axisLabel")
 		.attr("x", -(height + 80) / 2)
@@ -945,6 +965,24 @@ function subArea(a, b) {
 		return a_ == b_;
 	}
 }
+/*############################# SCATTER PLOT CONTEXT MENU #####################################*/
+
+var scatterPlotContextMenuItems = ["Select Equal College","Select Equal Area"];
+var selectedDatum;
+
+function clickScatterPlotContextMenu() { 			//Context menu click actions
+	if (d3.select(this).select("text").text() === "Select Equal College") {
+		scatterVisObj.selectedUniversity = selectedDatum.NomeFaculdade.split(" - ");
+		if(scatterVisObj.selectedUniversity.length == 1){
+			scatterVisObj.selectedUniversity.push(scatterVisObj.selectedUniversity[0]);
+		}
+		dispatch.call("selectUniversityScatter",scatterVisObj.selectedUniversity,scatterVisObj.selectedUniversity);
+	} else if (d3.select(this).select("text").text() === "Select Equal Area") {
+		dispatch.call("selectAreaScatter",selectedDatum.CNAEF,selectedDatum.CNAEF);
+	}
+}
+
+/*########################## SCATTER PLOT VISUALIZATION CODE #################################*/
 
 var fullScatterDataset; 			//All the data from the entry grades file
 
@@ -973,18 +1011,35 @@ dispatch.on("selectUniversity", function(selected, dummy) {
 // Update the scatter plot info according with external filtering events
 function filterScatterVis(){
 	var allUniversitiesData = scatterVisObj.selectedUniversity[0] === "Ensino Público";
+	if(allUniversitiesData){
+		d3.select(".universitySelected").attr("visibility","hidden");
+	}
+	else{
+		d3.select(".universitySelected").attr("visibility","visible");
+		d3.select(".universitySelected").attr("visibility","visible");
+		d3.select(".universitySelected").select("text").transition().duration(1000).text(scatterVisObj.selectedUniversity[0]+"");
+	}
+	if(scatterVisObj.selectedArea.area == 0){
+		d3.select(".areaSelected").attr("visibility","hidden");
+	} 
+	else {
+		d3.select(".areaSelected").attr("visibility","visible");
+		d3.select(".areaSelected").select("rect").transition().duration(1000).attr("fill",scatterVisObj.selectedArea.color);
+		d3.select(".areaSelected").select("text").transition().duration(1000).text(scatterVisObj.selectedArea.area+"");
+	}
+	
 	d3.select("#courseScatterVis").select("svg")
 		.selectAll("circle")
 		.each(function(p, j) {
 			d3.select(this)
 				.transition().duration(1000)
+				.attr("class","scatterPlotDot")
 				.attr("fill", function(d) {
 					var res = "#e6e6e6";		//Not accepted by filter
 					if(allUniversitiesData){	//All Universities Data
 						if (subArea(d.CNAEF,scatterVisObj.selectedArea.area)) {
 							res = scatterVisObj.selectedArea.color;
 						}
-						return res;						
 					}
 					else {						//University/College selected
 						var university = true;
@@ -1030,17 +1085,12 @@ function updateScatterVis(newCollection) {
 			return getScatterPlotTooltip(d);
 		});
 		
-	circles.on("click",function(d){		//One click filter all the courses with same college
-		scatterVisObj.selectedUniversity = d.NomeFaculdade.split(" - ");
-		if(scatterVisObj.selectedUniversity.length == 1){
-			scatterVisObj.selectedUniversity.push(scatterVisObj.selectedUniversity[0]);
-		}
-		dispatch.call("selectUniversityScatter",scatterVisObj.selectedUniversity,scatterVisObj.selectedUniversity);
-		filterScatterVis();
+	circles.on("contextmenu",function(d){		//Draw the scatter plot context menu
+		d3.event.preventDefault();
+		selectedDatum = d;
+		drawContextMenu(d3.select("#courseScatterVis").select("svg"),d3.mouse(this)[0], d3.mouse(this)[1],scatterVisObj.width, scatterVisObj.height,
+			scatterPlotContextMenuItems, clickScatterPlotContextMenu);
 	})
-	.on("contextmenu",function(d){
-		//TODO
-	});
 }
 
 function generateScatterVis() {
@@ -1075,6 +1125,35 @@ function generateScatterVis() {
 	var yaxis = d3.axisLeft().scale(yscale);
 	svg.append("g").attr("class", "xaxis").attr("transform", "translate(0," + (height - padding.bottom) + ")").call(xaxis);
 	svg.append("g").attr("class", "yaxis").attr("transform", "translate(" + padding.left + ",0)").call(yaxis);
+	
+	var g = svg.append("g").attr("class","universitySelected");
+	g.append("rect")
+		.attr("x",300)
+		.attr("y",0)
+		.attr("width",300)
+		.attr("height",30)
+		.attr("fill",rootDataColor);
+	g.append("text")
+		.attr("class","universitySelectedText")
+		.attr("x",300)
+		.attr("y",20)
+		.text("Ensino Público");
+	g.attr("visibility","hidden");	
+	
+	g = svg.append("g").attr("class","areaSelected");
+	g.append("rect")
+		.attr("x",300)
+		.attr("y",35)
+		.attr("width",300)
+		.attr("height",30)
+		.attr("fill",rootDataColor);
+	g.append("text")
+		.attr("class","areaSelectedText")
+		.attr("x",300)
+		.attr("y",55)
+		.text("All");
+	g.attr("visibility","hidden");	
+	
 	svg.append("text")
 		.attr("class", "axisLabel")
 		.attr("x", -height / 2)

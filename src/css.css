@@ -142,3 +142,6 @@ path.sunburst {
 #             Scatterplot View                #
 #############################################*/
 
+.scatterPlotDot{
+	cursor: pointer;
+}

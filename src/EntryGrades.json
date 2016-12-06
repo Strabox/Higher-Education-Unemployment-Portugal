@@ -4176,7 +4176,7 @@
 			"Grau": "L1",
 			"CodigoCurso": "A006"
 		}, {
-			"NomeFaculdade": "Universidade de Lisboa - Instituto Superior Técnico (Alameda)",
+			"NomeFaculdade": "Universidade Técnica de Lisboa - Instituto Superior Técnico (Alameda)",
 			"CodigoFaculdade": 1518,
 			"CNAEF": 543,
 			"NomeCurso": "Engenharia de Materiais",
@@ -4188,7 +4188,7 @@
 			"Grau": "L1",
 			"CodigoCurso": "9096"
 		}, {
-			"NomeFaculdade": "Universidade de Lisboa - Instituto Superior Técnico (Alameda)",
+			"NomeFaculdade": "Universidade Técnica de Lisboa - Instituto Superior Técnico (Alameda)",
 			"CodigoFaculdade": 1518,
 			"CNAEF": 525,
 			"NomeCurso": "Engenharia Aeroespacial",
@@ -4200,7 +4200,7 @@
 			"Grau": "M",
 			"CodigoCurso": "9357"
 		}, {
-			"NomeFaculdade": "Universidade de Lisboa - Instituto Superior Técnico (Alameda)",
+			"NomeFaculdade": "Universidade Técnica de Lisboa - Instituto Superior Técnico (Alameda)",
 			"CodigoFaculdade": 1518,
 			"CNAEF": 524,
 			"NomeCurso": "Engenharia Biomédica",
@@ -4212,7 +4212,7 @@
 			"Grau": "M",
 			"CodigoCurso": "9359"
 		}, {
-			"NomeFaculdade": "Universidade de Lisboa - Instituto Superior Técnico (Alameda)",
+			"NomeFaculdade": "Universidade Técnica de Lisboa - Instituto Superior Técnico (Alameda)",
 			"CodigoFaculdade": 1518,
 			"CNAEF": 582,
 			"NomeCurso": "Engenharia Civil",
@@ -4224,7 +4224,7 @@
 			"Grau": "M",
 			"CodigoCurso": "9360"
 		}, {
-			"NomeFaculdade": "Universidade de Lisboa - Instituto Superior Técnico (Alameda)",
+			"NomeFaculdade": "Universidade Técnica de Lisboa - Instituto Superior Técnico (Alameda)",
 			"CodigoFaculdade": 1518,
 			"CNAEF": 521,
 			"NomeCurso": "Engenharia Mecânica",
@@ -4236,7 +4236,7 @@
 			"Grau": "M",
 			"CodigoCurso": "9369"
 		}, {
-			"NomeFaculdade": "Universidade de Lisboa - Instituto Superior Técnico (Alameda)",
+			"NomeFaculdade": "Universidade Técnica de Lisboa - Instituto Superior Técnico (Alameda)",
 			"CodigoFaculdade": 1518,
 			"CNAEF": 524,
 			"NomeCurso": "Engenharia Química",
@@ -4248,7 +4248,7 @@
 			"Grau": "M",
 			"CodigoCurso": "9461"
 		}, {
-			"NomeFaculdade": "Universidade de Lisboa - Instituto Superior Técnico (Taguspark)",
+			"NomeFaculdade": "Universidade Técnica de Lisboa - Instituto Superior Técnico (Taguspark)",
 			"CodigoFaculdade": 1519,
 			"CNAEF": 529,
 			"NomeCurso": "Engenharia e Gestão Industrial",
@@ -4260,7 +4260,7 @@
 			"Grau": "L1",
 			"CodigoCurso": "9104"
 		}, {
-			"NomeFaculdade": "Universidade de Lisboa - Instituto Superior Técnico (Taguspark)",
+			"NomeFaculdade": "Universidade Técnica de Lisboa - Instituto Superior Técnico (Taguspark)",
 			"CodigoFaculdade": 1519,
 			"CNAEF": 523,
 			"NomeCurso": "Engenharia Electrónica",
@@ -6348,7 +6348,7 @@
 			"Grau": "L1",
 			"CodigoCurso": "9126"
 		}, {
-			"NomeFaculdade": "Instituto Politécnico de Portalegre - Escola Superior de Educação  e Ciências Sociais",
+			"NomeFaculdade": "Instituto Politécnico de Portalegre - Escola Superior de Educação e Ciências Sociais",
 			"CodigoFaculdade": 3121,
 			"CNAEF": 762,
 			"NomeCurso": "Serviço Social",
@@ -6360,7 +6360,7 @@
 			"Grau": "L1",
 			"CodigoCurso": "9238"
 		}, {
-			"NomeFaculdade": "Instituto Politécnico de Portalegre - Escola Superior de Educação  e Ciências Sociais",
+			"NomeFaculdade": "Instituto Politécnico de Portalegre - Escola Superior de Educação e Ciências Sociais",
 			"CodigoFaculdade": 3121,
 			"CNAEF": 812,
 			"NomeCurso": "Turismo",
@@ -6372,7 +6372,7 @@
 			"Grau": "L1",
 			"CodigoCurso": "9254"
 		}, {
-			"NomeFaculdade": "Instituto Politécnico de Portalegre - Escola Superior de Educação  e Ciências Sociais",
+			"NomeFaculdade": "Instituto Politécnico de Portalegre - Escola Superior de Educação e Ciências Sociais",
 			"CodigoFaculdade": 3121,
 			"CNAEF": 321,
 			"NomeCurso": "Jornalismo e Comunicação",
@@ -6384,7 +6384,7 @@
 			"Grau": "L1",
 			"CodigoCurso": "9773"
 		}, {
-			"NomeFaculdade": "Instituto Politécnico de Portalegre - Escola Superior de Educação  e Ciências Sociais",
+			"NomeFaculdade": "Instituto Politécnico de Portalegre - Escola Superior de Educação e Ciências Sociais",
 			"CodigoFaculdade": 3121,
 			"CNAEF": 144,
 			"NomeCurso": "Educação Básica",
