@@ -690,7 +690,7 @@ function drawSunburst(data) {
 		text.transition().style("opacity", 0);
 		//console.log(text.transition().toString());
 		//d3.selectAll("text")
-//d3.select("areaVis").select("text").remove();
+		//d3.select("areaVis").select("text").remove();
 		//Obtain the information and update suburst breadcrumbs
 		var currentData = d;
 		var areasTrail = [];
@@ -734,8 +734,9 @@ function drawSunburst(data) {
 				};
 			})
 			.on("end", function(e, i) {
-				// check if the animated element's data e lies within the visible angle span given in d				
-				if(subArea(e.data.CNAEF,d.data.CNAEF)){//if (e.x0 >= d.x0 && e.x0 < (d.x0 + d.x1)) {
+				// check if the animated element's data e lies within the visible angle span given in d	
+				console.log(d.data.CNAEF);
+				if (nextArea(e.data.CNAEF, d.data.CNAEF)) { //if (e.x0 >= d.x0 && e.x0 < (d.x0 + d.x1)) {
 					// get a selection of the associated text element
 					var arcText = d3.select(this.parentNode).select("text");
 					// fade in the text element and recalculate positions
@@ -744,7 +745,7 @@ function drawSunburst(data) {
 						.attr("transform", function() {
 							return "rotate(" + computeTextRotation(e) + ")"
 						})
-						.attr("x", function(d) {							
+						.attr("x", function(d) {
 							return y(d.y0);
 						});
 				}
@@ -1032,6 +1033,21 @@ function subArea(a, b) {
 	} else {
 		return a_ == b_;
 	}
+}
+/*Return true if a is b or children*/
+function nextArea(a, b) {
+	var a_ = a.toString();
+	var b_ = b.toString();
+	if (b == 0) {
+		return a_.substring(1, 3) == "00";
+	} else if (a_ == b_) {
+		return true;
+	} else if (b_.substring(1, 3) == "00") {
+		return a_[1] != "0" && a_[2] == "0" && a_[0] == b_[0];
+	} else if (b_[2] == "0") {
+		return a_[2] != "0" && a_.substring(0, 2) == b_.substring(0, 2);
+	}
+	return false;
 }
 /*############################# SCATTER PLOT CONTEXT MENU #####################################*/
 
