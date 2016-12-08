@@ -687,9 +687,10 @@ function drawSunburst(data) {
 	}
 
 	function click(d) {
-		//text.transition().attr("opacity", 0);
-
-
+		text.transition().style("opacity", 0);
+		//console.log(text.transition().toString());
+		//d3.selectAll("text")
+//d3.select("areaVis").select("text").remove();
 		//Obtain the information and update suburst breadcrumbs
 		var currentData = d;
 		var areasTrail = [];
@@ -733,18 +734,17 @@ function drawSunburst(data) {
 				};
 			})
 			.on("end", function(e, i) {
-				// check if the animated element's data e lies within the visible angle span given in d
-				if (e.x0 >= d.x0 && e.x0 < (d.x0 + d.x1)) {
+				// check if the animated element's data e lies within the visible angle span given in d				
+				if(subArea(e.data.CNAEF,d.data.CNAEF)){//if (e.x0 >= d.x0 && e.x0 < (d.x0 + d.x1)) {
 					// get a selection of the associated text element
 					var arcText = d3.select(this.parentNode).select("text");
 					// fade in the text element and recalculate positions
 					arcText.transition().duration(750)
-						.attr("opacity", 1)
+						.style("opacity", 1)
 						.attr("transform", function() {
 							return "rotate(" + computeTextRotation(e) + ")"
 						})
-						.attr("x", function(d) {
-							console.log("z<<");
+						.attr("x", function(d) {							
 							return y(d.y0);
 						});
 				}
