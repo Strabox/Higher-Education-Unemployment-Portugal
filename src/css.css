@@ -32,9 +32,9 @@
 	font: 8.5pt sans-serif;
 }
 
-/* Background color of the visualization */
+/* Background color of the visualization #f2f2f2*/
 .background{
-	background-color: #f2f2f2;
+	background-color : #f2f2f2;
 }
 
 /* Axis labels */

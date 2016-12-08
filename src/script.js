@@ -550,7 +550,7 @@ function drawSunburst(data) {
 	dispatch.call("selectArea", sendObject, sendObject);
 	
 	var width = 600,
-		height = 540,
+		height = 550,
 		radius = (Math.min(width, height) / 2) - 10;
 
 	var formatNumber = d3.format(",d");
@@ -558,7 +558,7 @@ function drawSunburst(data) {
 	var x = d3.scaleLinear()
 		.range([0, 2 * Math.PI]);
 
-	var y = d3.scaleSqrt()
+	var y = d3.scaleLinear()
 		.range([0, radius]);
 
 	var partition = d3.partition();
