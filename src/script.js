@@ -558,9 +558,12 @@ function shortText(t) {
 	return t;
 }
 
-///Not working
-function hideLabels(){
-		d3.select("#sunburstLabel").attr("visibility","hidden");
+
+function hideLabels(){	
+		d3.selectAll(".sunburstLabel").attr("visibility","hidden");
+}
+function shownLabels(){	
+		d3.selectAll(".sunburstLabel").attr("visibility","visible");
 }
 
 function drawSunburst(data) {
@@ -664,8 +667,7 @@ function drawSunburst(data) {
 		.attr("x", function(d) {
 			return y(d.y0);
 		})
-		.attr("class", "sunburstLabel")
-		.attr("id","sunburstLabel")
+		.attr("class", "sunburstLabel")		
 		.attr("dx", "6") // margin
 		.attr("dy", ".35em") // vertical-align
 		.text(function(d) {
