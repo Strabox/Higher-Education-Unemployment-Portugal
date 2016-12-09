@@ -542,8 +542,9 @@ function loadAreasData() {
 		loadDataQueue.defer(function(year, callback) {
 			d3.json("Areas" + year + ".json", function(data) {
 				areasData[year - 2007] = data;
-				if (year == 2007) {
+				if (year == 2015) {
 					drawSunburst(areasData[year - 2007]);
+					genSlider();
 				}
 			});
 		}, year);
@@ -626,6 +627,7 @@ function drawSunburst(data) {
 				if (d.data.CNAEFNome == "All")
 					return color1(0);
 				else {
+					return nextColor("#ff0000");
 					var first = Math.floor(d.data.CNAEF / 100);
 					var code = d.data.CNAEF.toString();
 					if (code[1] == "0") {
@@ -660,7 +662,12 @@ function drawSunburst(data) {
 		.attr("dy", ".35em") // vertical-align
 		.text(function(d) {
 			return shortText(d.data.CNAEFNome);
-		});
+		})
+		.style("opacity", function(d) {
+			return nextArea(d.data.CNAEF, 0) ? 1 : 0;
+		})
+
+	;
 
 
 
@@ -688,9 +695,7 @@ function drawSunburst(data) {
 
 	function click(d) {
 		text.transition().style("opacity", 0);
-		//console.log(text.transition().toString());
-		//d3.selectAll("text")
-		//d3.select("areaVis").select("text").remove();
+		
 		//Obtain the information and update suburst breadcrumbs
 		var currentData = d;
 		var areasTrail = [];
@@ -734,8 +739,7 @@ function drawSunburst(data) {
 				};
 			})
 			.on("end", function(e, i) {
-				// check if the animated element's data e lies within the visible angle span given in d	
-				console.log(d.data.CNAEF);
+				// check if the animated element's data e lies within the visible angle span given in d					
 				if (nextArea(e.data.CNAEF, d.data.CNAEF)) { //if (e.x0 >= d.x0 && e.x0 < (d.x0 + d.x1)) {
 					// get a selection of the associated text element
 					var arcText = d3.select(this.parentNode).select("text");
@@ -780,10 +784,16 @@ function drawSunburst(data) {
 		return d.colour || "#fff";
 	}
 
+	function nextColor(c){
+		var current = d3.hsl(c);
+		console.log(current.h);
+		return d3.hsl(current.h+359,current.s,current.l);
+	}
+
 }
 
 //Generate Slider
-genSlider();
+//genSlider();
 
 
 
@@ -854,6 +864,10 @@ function genSlider() {
 		d3.select("#areaBreadcrumb").select("svg").remove(); //Remove breadcrumb
 		drawSunburst(areasData[year(d3.event.x, width) - 2007]); //Load data and draw sunburst
 	}
+handle.attr("cx", x(x.invert(9999)));
+d3.select("#sunburst").remove(); //Remove Sunburst
+		d3.select("#areaBreadcrumb").select("svg").remove(); //Remove breadcrumb
+		drawSunburst(areasData[8]);
 }
 
 function value(x, w) {
