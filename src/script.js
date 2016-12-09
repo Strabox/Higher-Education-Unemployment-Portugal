@@ -17,8 +17,8 @@ var dispatch = d3.dispatch("selectCourse", "selectUniversity",
 	"selectAreaScatter", "selectArea", "selectUniversityScatter");
 
 //Global Colors to the data representation
-var color1 = d3.scaleOrdinal(d3.schemeCategory10);
-var rootDataColor = color1(0);
+var colors = d3.schemeCategory10;
+var rootDataColor = colors[0];
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$ GLOBAL FUNCTIONS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$	
 
@@ -558,10 +558,15 @@ function shortText(t) {
 	return t;
 }
 
+///Not working
+function hideLabels(){
+		d3.select("#sunburstLabel").attr("visibility","hidden");
+}
+
 function drawSunburst(data) {
 	var sendObject = {
 		"area": 0,
-		"color": color1(0)
+		"color": rootDataColor
 	};
 	dispatch.call("selectArea", sendObject, sendObject);
 
@@ -624,18 +629,19 @@ function drawSunburst(data) {
 		})
 		.attr("fill",
 			function(d) {
-				if (d.data.CNAEFNome == "All")
-					return color1(0);
+				if (d.data.CNAEFNome == "All"){					
+					return rootDataColor;
+				}
 				else {
-					return nextColor("#ff0000");
-					var first = Math.floor(d.data.CNAEF / 100);
+					var colorIndex = Math.floor(d.data.CNAEF / 100);
 					var code = d.data.CNAEF.toString();
+					colorIndex+=(colorIndex>=3)?1:0; // used to skip red 													
 					if (code[1] == "0") {
-						return d3.rgb(color1(first))
+						return d3.rgb(colors[colorIndex])
 					} else if (code[2] == "0") {
-						return d3.rgb(color1(first)).brighter(0.5);
+						return d3.rgb(colors[colorIndex]).brighter(0.5);
 					} else {
-						return d3.rgb(color1(first)).brighter(1);
+						return d3.rgb(colors[colorIndex]).brighter(1);
 					}
 				}
 
@@ -658,6 +664,8 @@ function drawSunburst(data) {
 		.attr("x", function(d) {
 			return y(d.y0);
 		})
+		.attr("class", "sunburstLabel")
+		.attr("id","sunburstLabel")
 		.attr("dx", "6") // margin
 		.attr("dy", ".35em") // vertical-align
 		.text(function(d) {
@@ -666,6 +674,7 @@ function drawSunburst(data) {
 		.style("opacity", function(d) {
 			return nextArea(d.data.CNAEF, 0) ? 1 : 0;
 		})
+		.on("click", click)
 
 	;
 
@@ -695,7 +704,7 @@ function drawSunburst(data) {
 
 	function click(d) {
 		text.transition().style("opacity", 0);
-		
+
 		//Obtain the information and update suburst breadcrumbs
 		var currentData = d;
 		var areasTrail = [];
@@ -771,30 +780,8 @@ function drawSunburst(data) {
 		//return (thetaDeg > 90) ? thetaDeg - 180 : thetaDeg;
 		return thetaDeg;
 	}
-
-	function colour(d) {
-		if (d.children) {
-			// There is a maximum of two children!
-			var colours = d.children.map(colour),
-				a = d3.hsl(colours[0]),
-				b = d3.hsl(colours[1]);
-			// L*a*b* might be better here...
-			return d3.hsl((a.h + b.h) / 2, a.s * 1.2, a.l / 1.2);
-		}
-		return d.colour || "#fff";
-	}
-
-	function nextColor(c){
-		var current = d3.hsl(c);
-		console.log(current.h);
-		return d3.hsl(current.h+359,current.s,current.l);
-	}
-
+	
 }
-
-//Generate Slider
-//genSlider();
-
 
 
 function genSlider() {
@@ -856,6 +843,7 @@ function genSlider() {
 
 	function drag() {
 		handle.attr("cx", x(x.invert(d3.event.x)));
+		//handle.attr("class",".track-overlay-grabbing");
 	}
 
 	function dragEnd() {
@@ -864,10 +852,10 @@ function genSlider() {
 		d3.select("#areaBreadcrumb").select("svg").remove(); //Remove breadcrumb
 		drawSunburst(areasData[year(d3.event.x, width) - 2007]); //Load data and draw sunburst
 	}
-handle.attr("cx", x(x.invert(9999)));
-d3.select("#sunburst").remove(); //Remove Sunburst
-		d3.select("#areaBreadcrumb").select("svg").remove(); //Remove breadcrumb
-		drawSunburst(areasData[8]);
+	handle.attr("cx", x(x.invert(9999)));
+	d3.select("#sunburst").remove(); //Remove Sunburst
+	d3.select("#areaBreadcrumb").select("svg").remove(); //Remove breadcrumb
+	drawSunburst(areasData[8]);
 }
 
 function value(x, w) {
@@ -1214,7 +1202,7 @@ function generateScatterVis() {
 	scatterVisObj.selectedUniversity = ["Ensino Público"];
 	scatterVisObj.selectedArea = {
 		"area": 0,
-		"color": color1(0)
+		"color": rootDataColor
 	};
 
 	updateScatterVis(fullScatterDataset);

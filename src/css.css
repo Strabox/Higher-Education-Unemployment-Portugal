@@ -86,8 +86,12 @@
 
 .sunburst{
 	cursor: pointer;
+	
 }
-
+.sunburstLabel{
+	cursor: default;
+	color: red;
+}
 path.sunburst {
   stroke: #fff;
 }
@@ -116,7 +120,13 @@ path.sunburst {
 .track-overlay {
   pointer-events: stroke;
   stroke-width: 50px;
-  cursor: pointer;
+  cursor: grab;
+}
+
+.track-overlay-grabbing {
+  pointer-events: stroke;
+  stroke-width: 50px;
+  cursor: grabbing;
 }
 
 .handle {
