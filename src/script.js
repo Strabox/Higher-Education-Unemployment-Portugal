@@ -4,7 +4,24 @@
 //#             				       			                              #
 //#############################################################################
 
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$ OBJECT DEFINITIONS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$ BETTER LATE THAN NOTHING $$$$$$$$$$$$$$$$$$$$$$$$$
+
+//Constructor for a hover course object
+function HoverCourse(universityName,collegeName,courseName) {
+	this.universityName = universityName;
+	this.courseName = courseName;
+	if(collegeName == null){
+		this.collegeName = universityName
+	}
+	else{
+		this.collegeName = collegeName;
+	}
+}
+
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$ GLOBAL VARIABLES $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//YEA WE KNOW IT SUCKS GLOBAL VARIABLES GIVE A BREAK...
 
 /* Register events to use in inter-view communication:
 	selectCourse event - Select a course in the bertin matrix
@@ -14,7 +31,8 @@
 	selectAreaScatter event - Select an area in the scatter from a course
 */
 var dispatch = d3.dispatch("selectCourse", "selectUniversity",
-	"selectAreaScatter", "selectArea", "selectUniversityScatter");
+	"selectAreaScatter", "selectArea", "selectUniversityScatter",
+	"hoverCourseInScatter","hoverCourseInLine");
 
 //Global Colors to the data representation
 var colors = d3.schemeCategory10;
@@ -201,6 +219,28 @@ d3.json("CoursesPublic.json", function(publicCoursesData) {
 	generateUniversityVis(); //Generate the matrix Visualisation
 });
 
+function hoveCourseMatrixCallback(hoverCourse, originIdom) {
+	console.log(hoverCourse);
+	if(hoverCourse != null) {
+		if(universityVisObj.currentCollIndex == 0){
+			d3.selectAll("[id='"+hoverCourse.universityName+"']").classed("matrixLine",false).classed("matrixLine-hover",true);
+		}
+		else if(universityVisObj.currentCollIndex == 1){
+			d3.selectAll("[id='"+hoverCourse.collegeName+"']").classed("matrixLine",false).classed("matrixLine-hover",true);
+		}
+		else if(universityVisObj.currentCollIndex == 2){
+			d3.selectAll("[id='"+hoverCourse.courseName+"']").classed("matrixLine",false).classed("matrixLine-hover",true);
+		}
+	}
+	else{
+		d3.selectAll(".matrixLine-hover").classed("matrixLine-hover",false).classed("matrixLine",true);
+	}
+}
+
+//Receive event when a course is mouseover in other view
+dispatch.on("hoverCourseInScatter",hoveCourseMatrixCallback);
+dispatch.on("hoverCourseInLine",hoveCourseMatrixCallback);
+
 //Receive event a university/college was selected in other view
 dispatch.on("selectUniversityScatter", function(selected, dummy) {
 	//Reset the university/college current selecttion
@@ -214,7 +254,7 @@ dispatch.on("selectUniversityScatter", function(selected, dummy) {
 			universityVisObj.previousCollections.push(universitySelectedCollection);
 			universityVisObj.currentCollIndex++;
 			for (var k = 0; k < universityVisObj.previousCollections[universityVisObj.currentCollIndex].values.length; k++) {
-				if (universityVisObj.previousCollections[universityVisObj.currentCollIndex].values[k].key.trim() === selected[1]) {
+				if (universityVisObj.previousCollections[universityVisObj.currentCollIndex].values[k].key === selected[1]) {
 					var collegeSelectedCollection = new Object();
 					collegeSelectedCollection.key = selected[1];
 					collegeSelectedCollection.values = universityVisObj.previousCollections[universityVisObj.currentCollIndex].values[k].values;
@@ -349,24 +389,30 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 	groupLine.selectAll("circle")
 		.data(function(d) {
 			return d.data;
-		})
-		.enter().append("circle")
-		.on("contextmenu", function() {
-			d3.event.preventDefault();
-			drawContextMenu(universityVisObj.svg, d3.mouse(this)[0], d3.mouse(this)[1],
-				universityVisObj.width, universityVisObj.height, menuItems, clickBertinMatrixContextMenu);
-		})
-		.transition(transition)
-		.attr("r", function(dy) {
-			return Math.sqrt(universityVisObj.circleScale(dy.PercentagemDesemprego));
-		})
-		.attr("cy", function(dy) {
-			return universityVisObj.yaxis.scale()(dy.key);
-		})
-		.attr("cx", function(dy) {
-			return universityVisObj.xaxis.scale()(dy.Ano);
-		})
-		.attr("fill", rootDataColor);
+		}).enter()
+		.append("circle")
+			.on("contextmenu", function() {
+				d3.event.preventDefault();
+				drawContextMenu(universityVisObj.svg, d3.mouse(this)[0], d3.mouse(this)[1],
+					universityVisObj.width, universityVisObj.height, menuItems, clickBertinMatrixContextMenu);
+			})
+			.transition(transition)
+			.attr("r", function(dy) {
+				return Math.sqrt(universityVisObj.circleScale(dy.PercentagemDesemprego));
+			})
+			.attr("cy", function(dy) {
+				return universityVisObj.yaxis.scale()(dy.key);
+			})
+			.attr("cx", function(dy) {
+				return universityVisObj.xaxis.scale()(dy.Ano);
+			})
+			.attr("fill", function(d){
+				var color = rootDataColor;
+				if(universityVisObj.currentCollIndex == 2){
+					color = d3.select("#AreaCode"+d.CodigoArea).attr("fill");
+				}
+				return color;
+			});
 
 	universityVisObj.svg
 		.selectAll("g.data")
@@ -676,11 +722,7 @@ function drawSunburst(data) {
 		.style("opacity", function(d) {
 			return nextArea(d.data.CNAEF, 0) ? 1 : 0;
 		})
-		.on("click", click)
-
-	;
-
-
+		.on("click", click);
 
 	//Add the space for areaBreadcrumb
 	d3.select("#areaBreadcrumb")
@@ -697,11 +739,11 @@ function drawSunburst(data) {
 
 	//Receive event from view change in scatter plot an area was selected
 	dispatch.on("selectAreaScatter", function(selected, dummy) {
-		click(d3.select("#" + "AreaCode" + selected).datum());
+		click(d3.select("#AreaCode" + selected).datum());
 	});
 
 	function sunburstBreadcrumbClick(datum) {
-		click(d3.select("#" + "AreaCode" + datum.CNAEF).datum());
+		click(d3.select("#AreaCode" + datum.CNAEF).datum());
 	}
 
 	function click(d) {
@@ -715,7 +757,7 @@ function drawSunburst(data) {
 			return this[dataKey];
 		};
 		while (currentData != null) {
-			breadcrumbColor[currentData.data.CNAEFNome] = d3.select("#" + "AreaCode" + currentData.data.CNAEF).attr("fill");
+			breadcrumbColor[currentData.data.CNAEFNome] = d3.select("#AreaCode" + currentData.data.CNAEF).attr("fill");
 			areasTrail.unshift({
 				"currentAreaName": currentData.data.CNAEFNome,
 				"CNAEF": currentData.data.CNAEF
@@ -728,7 +770,7 @@ function drawSunburst(data) {
 		//Send area selected int sunburst to other views
 		var sendObject = new Object();
 		sendObject.area = d.data.CNAEF;
-		sendObject.color = d3.select("#" + "AreaCode" + d.data.CNAEF).attr("fill");
+		sendObject.color = d3.select("#AreaCode" + d.data.CNAEF).attr("fill");
 		dispatch.call("selectArea", sendObject, sendObject);
 
 		//Update the suburst visualization
@@ -949,6 +991,17 @@ function updateLineChartVis(collection) {
 		.datum(collection)
 		.attr("class", "line")
 		.attr("d", line)
+		.attr("stroke",function(d){
+			return d3.select("#AreaCode"+d[0].CodigoArea).attr("fill");
+		})
+		.on("mouseover",function(d){
+			var hoverCourse = new HoverCourse(d[0].NomeUniversidade,d[0].NomeFaculdade,d[0].key);
+			dispatch.call("hoverCourseInLine", hoverCourse, hoverCourse);
+			console.log(hoverCourse);
+		})
+		.on("mouseout",function(d){
+			dispatch.call("hoverCourseInLine", null, null);
+		})
 		.append("title").text(function(d) {
 			var res = "";
 			res += "University: " + d[0].NomeUniversidade;
@@ -960,11 +1013,11 @@ function updateLineChartVis(collection) {
 
 //Generate the Line Chart Visualization
 function generateLineChartVis() {
-	var height = 235;
-	var width = 1250;
+	var height = 225;
+	var width = 950;
 	var padding = {
 		"top": 4,
-		"bottom": 40,
+		"bottom": 20,
 		"left": 40,
 		"right": 15
 	};
@@ -1002,11 +1055,6 @@ function generateLineChartVis() {
 		.attr("y", padding.right)
 		.attr("transform", "rotate(-90)")
 		.text("Unemployment %");
-	svg.append("text")
-		.attr("class", "axisLabel")
-		.attr("x", width / 2)
-		.attr("y", height - padding.top)
-		.text("Year");
 }
 
 //#############################################################################
@@ -1096,6 +1144,17 @@ dispatch.on("selectUniversity", function(selected, dummy) {
 	filterScatterVis();
 });
 
+//Receive event from the other views hoverCOurse
+dispatch.on("hoverCourseInLine",function(hoverCourse, originIdom) {
+	if(hoverCourse != null) {
+		var course = hoverCourse.universityName + hoverCourse.collegeName + hoverCourse.courseName;
+		d3.selectAll("[id='"+course+"']").classed("scatterPlotDotHigh",true);
+	}
+	else{
+		d3.selectAll("[id='"+course+"']").classed("scatterPlotDotHigh",false);
+	}
+});
+
 // Update the scatter plot info according with external filtering events
 function filterScatterVis() {
 	var allUniversitiesData = scatterVisObj.selectedUniversity[0] === "Ensino Público";
@@ -1113,7 +1172,8 @@ function filterScatterVis() {
 		d3.select(".areaSelected").select("rect").transition().duration(1000).attr("fill", scatterVisObj.selectedArea.color);
 		d3.select(".areaSelected").select("text").transition().duration(1000).text(scatterVisObj.selectedArea.area + "");
 	}
-
+	
+	//Filter the dots using the color encoding
 	d3.select("#courseScatterVis").select("svg")
 		.selectAll("circle")
 		.each(function(p, j) {
@@ -1121,8 +1181,8 @@ function filterScatterVis() {
 				.transition().duration(1000)
 				.attr("class", "scatterPlotDot")
 				.attr("fill", function(d) {
-					var res = "#e6e6e6"; //Not accepted by filter
-					if (allUniversitiesData) { //All Universities Data
+					var res = "#e6e6e6"; 		//Not accepted by filter
+					if (allUniversitiesData) { 	//All Universities Data
 						if (subArea(d.CNAEF, scatterVisObj.selectedArea.area)) {
 							res = scatterVisObj.selectedArea.color;
 						}
@@ -1141,6 +1201,18 @@ function filterScatterVis() {
 					return res;
 				});
 		});
+	
+	//Add events to the dots
+	d3.select("#courseScatterVis").select("svg")
+		.selectAll("circle")
+		.on("mouseover",function(d){
+			var tokens = d.NomeFaculdade.split(" - ");
+			var hoverCourse = new HoverCourse(tokens[0],tokens[1],d.NomeCurso);
+			dispatch.apply("hoverCourseInScatter",this,[hoverCourse,"scatter"]);
+		})
+		.on("mouseout",function(){
+			dispatch.call("hoverCourseInScatter",null,null);
+		});
 }
 
 //Draw/update the scatter plot
@@ -1158,6 +1230,10 @@ function updateScatterVis(newCollection) {
 			} else {
 				return dotRadius;
 			}
+		})
+		.attr("id",function(d) {
+			var tokens = d.NomeFaculdade.split(" - ");
+			return tokens[0] + tokens[1] + d.NomeCurso;
 		})
 		.attr("cx", function(d) {
 			return scatterVisObj.xscale(d.Nota / 10);
