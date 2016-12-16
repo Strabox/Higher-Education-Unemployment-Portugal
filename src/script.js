@@ -594,7 +594,7 @@ function loadAreasData() {
 	loadDataQueue.awaitAll(function() {});
 }
 
-function shortText(t) {
+function shortText(t, i) {
 	if (t.includes(" "))
 		return t.split(" ")[0] + "...";
 	return t;
@@ -602,10 +602,16 @@ function shortText(t) {
 
 
 function changeLabels() {
-	if (d3.selectAll(".sunburstLabel").attr("visibility") == "hidden")
+	if (d3.selectAll(".sunburstLabel").attr("visibility") == "hidden"){
 		d3.selectAll(".sunburstLabel").attr("visibility", "visible");
-	else
+		d3.selectAll(".labelsText").text("Hide labels");
+	}
+	
+	else{
 		d3.selectAll(".sunburstLabel").attr("visibility", "hidden");
+		d3.selectAll(".labelsText").text("Show labels");
+	}
+	
 }
 
 
@@ -696,7 +702,7 @@ function drawSunburst(data) {
 		.text(function(d) {
 			if (d.data.CNAEFNome == "All")
 				return "Total Desempregados: " + d.value;
-			var res = d.data.CNAEFNome + "\nPercentagem Desemprego: " + d.data.PercentagemDesemprego + " %";
+			var res = d.data.CNAEFNome + "\nPercentagem Desemprego: " + d.data.PercentagemDesemprego.toFixed(2) + " %";
 			res += "\nTotal Desempregados: " + d.data.TotalDesempregados;
 			res += "\nTotal Dimplomados: " + d.data.TotalDiplomados;
 			return res;
@@ -713,7 +719,7 @@ function drawSunburst(data) {
 		.attr("dx", "6") // margin
 		.attr("dy", ".35em") // vertical-align
 		.text(function(d) {
-			return shortText(d.data.CNAEFNome);
+			return shortText(d.data.CNAEFNome, d.data.CNAEF);
 		})
 		.style("opacity", function(d) {
 			return nextArea(d.data.CNAEF, 0) ? 1 : 0;
@@ -737,6 +743,23 @@ function drawSunburst(data) {
 	dispatch.on("selectAreaScatter", function(selected, dummy) {
 		click(d3.select("#AreaCode" + selected).datum());
 	});
+
+	var showLabelsContainer = d3.select("#areaVis").select("svg").append("g");
+
+	showLabelsContainer.append("rect")
+		.attr("width", 80)
+		.attr("height", 20)
+		.attr("x", 500)
+		.attr("y", 500)
+		.attr("fill", rootDataColor)
+
+
+	showLabelsContainer.append("text")
+		.text("Hide labels")
+		.attr("class","labelsText")
+		.attr("x", 503)
+		.attr("y", 515)
+		.on("click", changeLabels);
 
 
 
@@ -790,11 +813,9 @@ function drawSunburst(data) {
 				};
 			})
 			.on("end", function(e, i) {
-				// check if the animated element's data e lies within the visible angle span given in d					
-				if (nextArea(e.data.CNAEF, d.data.CNAEF)) { //if (e.x0 >= d.x0 && e.x0 < (d.x0 + d.x1)) {
-					// get a selection of the associated text element
+				if ((nextArea(e.data.CNAEF, d.data.CNAEF) && d.data.CNAEFNome == "All") || (subArea(e.data.CNAEF, d.data.CNAEF) && d.data.CNAEFNome != "All")) {
+
 					var arcText = d3.select(this.parentNode).select("text");
-					// fade in the text element and recalculate positions
 					arcText.transition().duration(750)
 						.style("opacity", 1)
 						.attr("transform", function() {
@@ -845,20 +866,7 @@ function genSlider() {
 		.attr("transform", "translate(" + margin.left + "," + 9 + ")");
 
 	//on/off labels
-	svg.append("g").append("rect")
-		.attr("width", 50)
-		.attr("height", 20)
-		.attr("fill", "white")
-		.attr("x", 0)
-		.attr("y", 0)
-		.text("+")
-		.on("click", changeLabels);
 
-	slider.append("text")
-		.attr("x", 10)
-		.attr("y", 10)		
-		.on("click", changeLabels)
-		.text("+");
 
 
 	slider.append("line")

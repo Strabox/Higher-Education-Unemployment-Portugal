@@ -34,7 +34,7 @@
 
 /* Background color of the visualization #f2f2f2*/
 .background{
-	background-color : #d9d9d9;
+	background-color : white;
 }
 
 /* Axis labels */
@@ -94,8 +94,12 @@
 	
 }
 .sunburstLabel{
-	cursor: default;
-	color: red;
+	cursor: pointer;
+	
+}
+.labelsText{
+	cursor: pointer;
+	
 }
 path.sunburst {
   stroke: #fff;
