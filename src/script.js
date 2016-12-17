@@ -767,7 +767,7 @@ function drawSunburst(data) {
 			return nextArea(d.data.CNAEF, 0) ? 1 : 0;
 		})
 		.on("click", click)
-		.append("title").text(sunburstAreaToolTip);
+		
 
 	//Add the space for areaBreadcrumb
 	d3.select("#areaBreadcrumb")
@@ -801,8 +801,8 @@ function drawSunburst(data) {
 	//Receive event from view change where an area was selected
 	dispatch.on("selectArea.sunburst", function(area, dummy) {
 		var d = d3.select("#AreaCode" + area.code).datum();
+		path.select(".sunburstLabel").transition().style("opacity", 0);
 		
-		text.transition().style("opacity", 0);
 
 		//Obtain the information and update suburst breadcrumbs
 		var currentData = d;
