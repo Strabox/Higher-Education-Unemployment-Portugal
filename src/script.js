@@ -767,7 +767,7 @@ function drawSunburst(data) {
 			return nextArea(d.data.CNAEF, 0) ? 1 : 0;
 		})
 		.on("click", click)
-		
+		.append("title").text(sunburstAreaToolTip);
 
 	//Add the space for areaBreadcrumb
 	d3.select("#areaBreadcrumb")
