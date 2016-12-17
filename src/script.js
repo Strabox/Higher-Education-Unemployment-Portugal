@@ -681,7 +681,6 @@ function changeLabels() {
 		d3.selectAll(".sunburstLabel").attr("visibility", "visible");
 		d3.selectAll(".labelsText").text("Hide labels");
 	}
-	
 	else{
 		d3.selectAll(".sunburstLabel").attr("visibility", "hidden");
 		d3.selectAll(".labelsText").text("Show labels");
@@ -787,7 +786,7 @@ function drawSunburst(data) {
 	dispatch.on("mouseOverCourse.sunburst", function(course, dummy) {
 		if(course != null) {
 			var actualColor = d3.select("#AreaCode"+course.courseAreaCode).attr("fill");
-			var overedColor = d3.rgb(actualColor).darker(1.3);
+			var overedColor = d3.rgb(actualColor).darker(1.25);
 			d3.select("#AreaCode"+course.courseAreaCode).attr("fill",overedColor).classed("sunburstAreaOvered",true);
 		}
 		else{
@@ -799,9 +798,8 @@ function drawSunburst(data) {
 		}
 	});
 		
-	//Receive event from view change in scatter plot an area was selected
+	//Receive event from view change where an area was selected
 	dispatch.on("selectArea.sunburst", function(area, dummy) {
-		console.log(area);
 		var d = d3.select("#AreaCode" + area.code).datum();
 		
 		text.transition().style("opacity", 0);
@@ -844,7 +842,6 @@ function drawSunburst(data) {
 			})
 			.on("end", function(e, i) {
 				if ((nextArea(e.data.CNAEF, d.data.CNAEF) && d.data.CNAEFNome == "All") || (subArea(e.data.CNAEF, d.data.CNAEF) && d.data.CNAEFNome != "All")) {
-
 					var arcText = d3.select(this.parentNode).select("text");
 					arcText.transition().duration(750)
 						.style("opacity", 1)
@@ -865,8 +862,7 @@ function drawSunburst(data) {
 		.attr("height", 20)
 		.attr("x", 480)
 		.attr("y", 570)
-		.attr("fill", rootDataColor)
-
+		.attr("fill", rootDataColor);
 
 	showLabelsContainer.append("text")
 		.text("Hide labels")
