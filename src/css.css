@@ -3,85 +3,84 @@
 	text-align: center;
 }
 
-#universityVis{
+#universityVis {
 	width: 100%;
 	height: 88%;
 	overflow-y: scroll;
 }
-#universityBreadcrumb{
+#universityBreadcrumb {
 	width: 100%;
 }
-#areaSlider{
+#areaSlider {
 	width: 100%;
 	height: 5%;
 }
-#areaVis{
+#areaVis {
 	width: 100%;
 	height: 55%;
 }
-#courseScatterVis{
+#courseScatterVis {
 	width: 100%;
 	height: 20%;
 }
-#lineChartVis{
+#lineChartVis {
 	width: 100%;
 	height: 20%;
 }
 
-.tick > text{
+.tick > text {
 	font: 8.5pt sans-serif;
 }
 
 /* Background color of the visualization #f2f2f2*/
-.background{
+.background {
 	background-color : white;
 }
 
 /* Axis labels */
-.axisLabel{
+.axisLabel {
 	font-size: 12pt;
 }
 
 /*#############################################
 #             Courses Matrix View             #
 #############################################*/
-.text{
+
+.text {
 	fill: white;
 }
 
-.matrixLine{
+.matrixLine {
 	fill-opacity: 0;
 	cursor: pointer;
 }
 
-.matrixLine-hover{
+.matrixLine-hover {
 	fill: steelblue;
 	fill-opacity: 0.2;
-}
-
-.matrixLine:hover{
-	fill: steelblue;
-	fill-opacity: 0.2;
-}
-
-.breadcrumbItem{
 	cursor: pointer;
 }
 
-.yaxis{
+.breadcrumbItem {
+	cursor: pointer;
+}
+
+.yaxis {
 	cursor: pointer;
 }
 
 /*############ CONTEXT MENU ################ */
 
-.menu-entry{
+.menu-entry {
 	fill: steelblue;
 	cursor: pointer;
 }
-.menu-entry:hover{
+
+.menu-entry:hover {
 	fill: red;
 }
-.menu-entry.text{
+
+.menu-entry.text {
 	fill: black;
 }
 
@@ -89,15 +88,15 @@
 #               Sunburst View                 #
 #############################################*/
 
-.sunburst{
+.sunburst {
 	cursor: pointer;
 	
 }
-.sunburstLabel{
+.sunburstLabel {
 	cursor: pointer;
 	
 }
-.labelsText{
+.labelsText {
 	cursor: pointer;
 	
 }
@@ -163,15 +162,22 @@ path.sunburst {
   stroke-width: 4.5pt;
 }
 
-
 /*#############################################
 #             Scatterplot View                #
 #############################################*/
 
-.scatterPlotDotHigh{
+.universitySelected {
+	cursor: pointer;
+}
+
+.areaSelected {
+	cursor: pointer;
+}
+
+.scatterPlotDotHigh {
 	fill : grey;
 }
 
-.scatterPlotDot{
+.scatterPlotDot {
 	cursor: pointer;
 }
