@@ -700,10 +700,45 @@ function getColorToArea(areaName,areaCode){
 	}
 }
 
-function shortText(t, i) {
-	if (t.includes(" "))
-		return t.split(" ")[0] + "...";
-	return t;
+//level = clicked level
+function shortenArea(t, level) {
+	if (!t.includes(" "))
+		return t;
+	var limite=0;
+	limite = (level==0)?10:limite;
+	limite = (level==1)?10:limite;
+	limite = (level==2)?15:limite;
+	limite = (level==3)?35:limite;
+		
+	var list = t.split(" ");
+	var result = "";
+	for (var i = 0; i < list.length; i++) {
+		if (result.length + list[i].length > limite) {
+			if(i==0){
+				result = list[i].substring(0,limite-5)+". ...";
+				return result;
+			}
+			result += "...";
+			return result;
+		}
+		result +=" "+ list[i];
+	}
+
+	return result;
+}
+
+function levelArea(a) {		
+	if (a==0){		
+		return 0;
+	}
+	var a_ = a.toString();
+	if (a_.substring(1, 3) == "00")
+		return 1;
+	if (a_[2] == "0")
+		return 2;
+
+	return 3;
+
 }
 
 function changeLabels() {
@@ -791,7 +826,7 @@ function drawSunburst(data) {
 		.attr("dx", "6") // margin
 		.attr("dy", ".35em") // vertical-align
 		.text(function(d) {
-			return shortText(d.data.CNAEFNome, d.data.CNAEF);
+			return shortenArea(d.data.CNAEFNome, 0);
 		})
 		.style("opacity", function(d) {
 			return nextArea(d.data.CNAEF, 0) ? 1 : 0;
@@ -871,6 +906,7 @@ function drawSunburst(data) {
 				};
 			})
 			.on("end", function(e, i) {
+				var clicked = d.data.CNAEF;						
 				if ((nextArea(e.data.CNAEF, d.data.CNAEF) && d.data.CNAEFNome == "All") || (subArea(e.data.CNAEF, d.data.CNAEF) && d.data.CNAEFNome != "All")) {
 					var arcText = d3.select(this.parentNode).select("text");
 					arcText.transition().duration(750)
@@ -880,6 +916,9 @@ function drawSunburst(data) {
 						})
 						.attr("x", function(d) {
 							return y(d.y0);
+						})
+						.text(function(d) {																							
+							return shortenArea(d.data.CNAEFNome, levelArea(clicked));
 						});
 				}
 			});
