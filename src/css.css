@@ -28,27 +28,28 @@
 	height: 20%;
 }
 
+h1,h4,text {
+	font: sans-serif;
+}
+
+/* Axis and selectors label ticks */
 .tick > text {
-	font: 8.5pt sans-serif;
+	font-size: 9pt;
 }
 
-/* Background color of the visualization #f2f2f2*/
-.background {
-	background-color : white;
-}
-
-/* Axis labels */
+/* Axis description labels */
 .axisLabel {
 	font-size: 12pt;
+}
+
+/* Background color of the visualization */
+.background {
+	background-color : white;
 }
 
 /*#############################################
 #             Courses Matrix View             #
 #############################################*/
-
-.text {
-	fill: white;
-}
 
 .matrixLine {
 	fill-opacity: 0;
@@ -61,11 +62,7 @@
 	cursor: pointer;
 }
 
-.breadcrumbItem {
-	cursor: pointer;
-}
-
-.yaxis {
+.breadcrumbItem, .yaxis {
 	cursor: pointer;
 }
 
@@ -88,24 +85,13 @@
 #               Sunburst View                 #
 #############################################*/
 
-.sunburst {
+.sunburst, .sunburstLabel, .labelsText {
 	cursor: pointer;
 	
-}
-.sunburstLabel {
-	cursor: pointer;
-	
-}
-.labelsText {
-	cursor: pointer;
-	
-}
-path.sunburst {
-  stroke: #fff;
 }
 
-.ticks {
-	font: 9pt sans-serif;
+path.sunburst {
+  stroke: #fff;
 }
 
 .track,
@@ -129,12 +115,6 @@ path.sunburst {
   pointer-events: stroke;
   stroke-width: 50px;
   cursor: grab;
-}
-
-.track-overlay-grabbing {
-  pointer-events: stroke;
-  stroke-width: 50px;
-  cursor: grabbing;
 }
 
 .handle {
@@ -166,18 +146,14 @@ path.sunburst {
 #             Scatterplot View                #
 #############################################*/
 
-.universitySelected {
+.universitySelected, .areaSelected, .scatterPlotDot {
 	cursor: pointer;
 }
 
-.areaSelected {
-	cursor: pointer;
+#lineChartWarning {
+	font-size: 12pt;
 }
 
 .scatterPlotDotHigh {
 	fill : grey;
-}
-
-.scatterPlotDot {
-	cursor: pointer;
 }

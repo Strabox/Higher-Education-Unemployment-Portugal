@@ -53,7 +53,7 @@ var dispatch = d3.dispatch("selectCourse","selectCourseScatter", "selectUniversi
 	
 //Global Colors to the data representation
 var colors = d3.schemeCategory10;
-var rootDataColor = colors[0];
+var rootDataColor = d3.rgb(colors[0]).brighter(0.3);
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$ GLOBAL FUNCTIONS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$	
 
@@ -87,9 +87,10 @@ function getBreadcrumbString(string) {
 			cleanTokens.push(tokens[i]);
 		}
 	}
+	
 	for (var i = 0; i < cleanTokens.length; i++) {
-		if(cleanTokens[i].length > 10) {
-			cleanTokens[i] = cleanTokens[i].substring(0, 10) + ".";
+		if(cleanTokens[i].length > 11) {
+			cleanTokens[i] = cleanTokens[i].substring(0, 11) + ".";
 		}
 		
 		if (cleanTokens.length <= 2) {
@@ -239,6 +240,39 @@ function getCourseDegreeStringDescription(degreeAcronym){
 			return "PhD";
 	}
 	return "Not Listed";
+}
+
+//Get a short string from university/college/course to use in matrix
+function getShotStringUniCollCourse(string){
+	var res = "";
+	var tokens = string.split(" ");
+	var cleanTokens = [];
+	for (var i = 0; i < tokens.length; i++) {
+		if (tokens[i][0] != null && tokens[i][0].match(/[A-Z]|É|-/)) {
+			cleanTokens.push(tokens[i]);
+		}
+	}
+	for (var i = 0; i < cleanTokens.length; i++) {
+		if(cleanTokens[i].length > 12) {
+			cleanTokens[i] = cleanTokens[i].substring(0, 8) + ".";
+		}
+		
+		if (cleanTokens.length <= 2) {
+			res += cleanTokens[i] + " ";
+		} else if (cleanTokens.length == 3) {
+			res += cleanTokens[i] + " ";
+		} else if (cleanTokens.length == 4) {
+			res += cleanTokens[i].substring(0, 5) + ". ";
+		} else if (cleanTokens.length == 5) {
+			res += cleanTokens[i].substring(0, 4) + ". ";
+		} else {
+			if(i == 5) {
+				break;
+			}
+			res += cleanTokens[i].substring(0, 3) + ". ";
+		}
+	}
+	return res;
 }
 
 // Get the string to use in the tooltip of the circle
@@ -408,8 +442,8 @@ function clickBertinMatrixContextMenu() { //Context menu click actions
 }
 
 //Update the bertin matrix y-axis label according to the quantity of data presented.
-function updateBertinMatrixYaxisLabel(newHeight) {
-	var labelWidth = 60;
+function updateBertinMatrixYaxisLabel(collectionHeight) {
+	var labelWidth = 90;
 	var label = "";
 	if (universityVisObj.currentCollIndex == 0) {
 		label = "Universities";
@@ -418,26 +452,38 @@ function updateBertinMatrixYaxisLabel(newHeight) {
 	} else if (universityVisObj.currentCollIndex == 2) {
 		label = "Courses";
 	}
+	console.log(collectionHeight);
+	var x;
+	if(collectionHeight > 120){
+		x = -(collectionHeight + labelWidth) / 2;
+	}else{
+		x = -100;
+	}
+	
 	universityVisObj.svg.select(".yaxisLabelMatrix")
 		.transition()
 		.duration(1000)
 		.attr("y", 20)
-		.attr("x", -(newHeight + labelWidth) / 2)
+		.attr("x", x)
 		.attr("transform", "rotate(-90)")
 		.text(label);
 }
 
 //Call to update university (Bertin Matrix) visualization with new data
 function updateUniversityVisualization(universityVisObj, newCollection) {
-	var minimumHeight = 300;
-	var newHeight = newCollection.length * universityVisObj.matrixLineHeight;
-	newHeight = (newHeight < minimumHeight) ? minimumHeight : newHeight;
+	var minimumHeight = 900;
+	var currentMatrixLineHeight = universityVisObj.matrixLineHeight;
+	if (universityVisObj.currentCollIndex != 0 && newCollection.length < 32){
+		currentMatrixLineHeight = 33;
+	}
+	var newCollectionHeight = newCollection.length * currentMatrixLineHeight;
+	universityVisObj.height = (newCollectionHeight < minimumHeight) ? minimumHeight : newCollectionHeight;
 
 	universityVisObj.yaxis.scale().domain(newCollection.map(function(d) {
 			return d.key;
 		}))
-		.range([universityVisObj.paddingObj.top, newHeight - universityVisObj.paddingObj.bottom]);
-	universityVisObj.svg.attr("height", newHeight);
+		.range([universityVisObj.paddingObj.top, newCollectionHeight]);
+	universityVisObj.svg.attr("height", universityVisObj.height);
 
 	var transition = d3.transition().duration(1000);
 
@@ -478,10 +524,10 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 		})
 		.attr("x", universityVisObj.paddingObj.left)
 		.attr("y", function(d) {
-			return universityVisObj.yaxis.scale()(d.key) - (universityVisObj.matrixLineHeight / 2);
+			return universityVisObj.yaxis.scale()(d.key) - (currentMatrixLineHeight / 2);
 		})
 		.attr("width", universityVisObj.width - universityVisObj.paddingObj.right)
-		.attr("height", universityVisObj.matrixLineHeight);
+		.attr("height", currentMatrixLineHeight);
 
 	groupLine.selectAll("circle")
 		.data(function(d) {
@@ -534,7 +580,7 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 	drawBreadcrumbs(d3.select("#universityBreadcrumb").select("svg"),
 		universityVisObj.previousCollections, "key", breadCrumbColorObject, matrixBreadcrumbClick, breadcrumbDim);
 
-	updateBertinMatrixYaxisLabel(newHeight);
+	updateBertinMatrixYaxisLabel(newCollectionHeight);
 
 	//Register Interaction events to the new elements!!
 	registerEventsUniversityVis();
@@ -545,7 +591,7 @@ function generateUniversityVis() {
 	var paddingObj = {
 		"top": 40,
 		"bottom": 20,
-		"left": 180,
+		"left": 220,
 		"right": 20
 	}
 	var matrixLineHeight = 23;
@@ -580,7 +626,7 @@ function generateUniversityVis() {
 
 	var xaxis = d3.axisTop().scale(xscale);
 	var yaxis = d3.axisLeft().scale(yscale).tickFormat(function(d) {
-		return getBreadcrumbString(d);
+		return getShotStringUniCollCourse(d);
 	});
 
 	//Add yaxis label
@@ -1038,7 +1084,7 @@ function genSlider() {
 			}));
 
 	slider.insert("g", ".track-overlay")
-		.attr("class", "ticks")
+		.attr("class", "tick")
 		.attr("transform", "translate(0," + 18 + ")")
 		.selectAll("text")
 		.data(x.ticks(10))
@@ -1140,6 +1186,9 @@ lineChartObj.removeCourse = function(course) {
 lineChartObj.emptyCourses = function() {
 	return this.currentCourses.length == 0;
 };
+lineChartObj.fullCourses = function() {
+	return this.currentCourses.length == 5;
+};
 
 generateLineChartVis();
 
@@ -1155,11 +1204,13 @@ dispatch.on("selectCourse", function(d) {
 		updateLineChartVis(d);
 	}
 	else {
-		d3.select("#lineFullWarning")
-		.attr("visibility","visible")
-		.transition()
-		.delay(3000)
-		.style("opacity",0);
+		var warning = d3.select("#lineFullWarning")
+			.attr("visibility","visible");
+		
+		warning.transition()
+			.duration(1000)
+			.delay(2000)
+			.attr("visibility","hidden");
 	}
 });
 
@@ -1302,7 +1353,7 @@ function generateLineChartVis() {
 	var height = 280;
 	var width = 1250;
 	var padding = {
-		"top": 4,
+		"top": 5,
 		"bottom": 20,
 		"left": 40,
 		"right": 300
@@ -1330,7 +1381,7 @@ function generateLineChartVis() {
 	//Draw the empty line chart warning label
 	svg.append("text")
 		.attr("id", "lineChartWarning")
-		.attr("x", ((width - padding.right) - 400) / 2)
+		.attr("x", ((width - padding.right) - 450) / 2)
 		.attr("y", height / 2)
 		.text("Select multiple courses in the table or scatter to compare here (Up to 5)");
 		
@@ -1339,7 +1390,7 @@ function generateLineChartVis() {
 	svg.append("text")
 		.attr("class", "axisLabel")
 		.attr("x", -(height + 80) / 2)
-		.attr("y", 15)
+		.attr("y", 12)
 		.attr("transform", "rotate(-90)")
 		.text("Unemployment %");
 		
@@ -1358,6 +1409,23 @@ function generateLineChartVis() {
 //#                      COURSE SCATTER PLOT CHART VIEW                       #
 //#             				       			                              #
 //#############################################################################
+
+/* Get a short string of the area name to draw */
+function getAreaNameDigest(string){
+	var res = "";
+	var cleanTokens = string.split(" ");
+	
+	var tokensLength = (cleanTokens.length < 7) ? cleanTokens.length : 6;
+	if(tokensLength == 6){
+		tokensLength++;
+		cleanTokens[6] = "...";
+	}
+	
+	for (var i = 0; i < tokensLength; i++) {
+		res += cleanTokens[i] + " ";
+	}
+	return res;
+}
 
 /* Return the string to show in tooltip */
 function getScatterPlotTooltip(datum) {
@@ -1479,14 +1547,16 @@ function filterScatterVis() {
 		d3.select(".universitySelected").attr("visibility", "hidden");
 	} else {
 		d3.select(".universitySelected").attr("visibility", "visible");
-		d3.select(".universitySelected").select("text").transition().duration(1000).text(scatterVisObj.selectedUniversity[0] + "");
+		d3.select(".universitySelected").select("text").text(getAreaNameDigest(scatterVisObj.selectedUniversity[0]));
+		d3.select(".universitySelected").select("title").text(scatterVisObj.selectedUniversity[0]);
 	}
 	if (scatterVisObj.selectedArea.code == 0) {
 		d3.select(".areaSelected").attr("visibility", "hidden");
 	} else {
 		d3.select(".areaSelected").attr("visibility", "visible");
 		d3.select(".areaSelected").select("rect").transition().duration(1000).attr("fill", scatterVisObj.selectedArea.color);
-		d3.select(".areaSelected").select("text").transition().duration(1000).text(scatterVisObj.selectedArea.name + "");
+		d3.select(".areaSelected").select("text").text(getAreaNameDigest(scatterVisObj.selectedArea.name));
+		d3.select(".areaSelected").select("title").text(scatterVisObj.selectedArea.name);
 	}
 
 	//Filter the dots using the color encoding
@@ -1615,22 +1685,23 @@ function generateScatterVis() {
 
 	var g = svg.append("g").attr("class", "universitySelected");
 	g.append("rect")
-		.attr("x", 250)
+		.attr("x", 220)
 		.attr("y", 0)
-		.attr("width", 350)
+		.attr("width", 380)
 		.attr("height", 30)
 		.attr("fill", rootDataColor);
 	g.append("text")
 		.attr("class", "universitySelectedText")
-		.attr("x", 250)
+		.attr("x", 222)
 		.attr("y", 20)
 		.text("Public Courses");
 	g.append("image")
 		.attr("width",crossImageSize)
 		.attr("height",crossImageSize)
-		.attr("x", 575)
+		.attr("x", 578)
 		.attr("y", 5)
 		.attr("xlink:href","deleteCross.png");
+	g.append("title").text("Public Courses");
 	g.attr("visibility", "hidden")
 		.on("click", function() {
 			dispatch.call("clearMatrix");
@@ -1638,22 +1709,23 @@ function generateScatterVis() {
 
 	g = svg.append("g").attr("class", "areaSelected");
 	g.append("rect")
-		.attr("x", 250)
+		.attr("x", 220)
 		.attr("y", 35)
-		.attr("width", 350)
+		.attr("width", 380)
 		.attr("height", 30)
 		.attr("fill", rootDataColor);
 	g.append("text")
 		.attr("class", "areaSelectedText")
-		.attr("x", 250)
+		.attr("x", 222)
 		.attr("y", 55)
 		.text("All");
 	g.append("image")
 		.attr("width",crossImageSize)
 		.attr("height",crossImageSize)
-		.attr("x", 575)
+		.attr("x", 578)
 		.attr("y", 40)
 		.attr("xlink:href","deleteCross.png");
+		g.append("title").text("All");
 	g.attr("visibility", "hidden")
 		.on("click", function() {
 			var area = new CourseArea("All",0,rootDataColor);
