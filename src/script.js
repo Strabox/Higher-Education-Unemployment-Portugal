@@ -89,7 +89,7 @@ function getBreadcrumbString(string) {
 	}
 	
 	for (var i = 0; i < cleanTokens.length; i++) {
-		if(cleanTokens[i].length > 11) {
+		if(cleanTokens[i].length > 12) {
 			cleanTokens[i] = cleanTokens[i].substring(0, 11) + ".";
 		}
 		
