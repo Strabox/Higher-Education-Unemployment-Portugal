@@ -478,7 +478,7 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 		currentMatrixLineHeight = 33;
 	}
 	var newCollectionHeight = newCollection.length * currentMatrixLineHeight;
-	universityVisObj.height = (newCollectionHeight < minimumHeight) ? minimumHeight : newCollectionHeight;
+	universityVisObj.height = (newCollectionHeight < minimumHeight) ? minimumHeight : newCollectionHeight + 10;
 
 	universityVisObj.yaxis.scale().domain(newCollection.map(function(d) {
 			return d.key;
