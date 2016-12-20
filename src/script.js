@@ -19,21 +19,20 @@ function Course(universityName, collegeName, courseName, courseAreaCode) {
 		this.collegeName = collegeName;
 	}
 	//Equals function to compare Courses
-	this.equals = function(object){
-		var equalUniversity = this.universityName === object.universityName ;
-		var equalCollege = this.collegeName === object.collegeName;
-		var equalCourseName = this.courseName == object.courseName;
-		return equalUniversity && equalCollege && equalCourseName;
-	}
-	//Get an unique id for the course
-	this.getId = function(){
-		return this.universityName.hashCode() + this.collegeName.hashCode()
-			+ this.courseName.hashCode();
+	this.equals = function(object) {
+			var equalUniversity = this.universityName === object.universityName;
+			var equalCollege = this.collegeName === object.collegeName;
+			var equalCourseName = this.courseName == object.courseName;
+			return equalUniversity && equalCollege && equalCourseName;
+		}
+		//Get an unique id for the course
+	this.getId = function() {
+		return this.universityName.hashCode() + this.collegeName.hashCode() + this.courseName.hashCode();
 	}
 }
 
 //Constructor for area object
-function CourseArea(areaName,areaCode,areaColor) {
+function CourseArea(areaName, areaCode, areaColor) {
 	this.code = areaCode;
 	this.name = areaName;
 	this.color = areaColor;
@@ -48,9 +47,9 @@ function CourseArea(areaName,areaCode,areaColor) {
 	selectUniversityScatter event - Select an university/college in the scatter
 	selectArea event - Select an area
 */
-var dispatch = d3.dispatch("selectCourse","selectCourseScatter", "selectUniversity", 
+var dispatch = d3.dispatch("selectCourse", "selectCourseScatter", "selectUniversity",
 	"selectArea", "selectUniversityScatter", "mouseOverCourse", "clearMatrix");
-	
+
 //Global Colors to the data representation
 var colors = d3.schemeCategory10;
 var rootDataColor = d3.rgb(colors[0]).brighter(0.3);
@@ -66,12 +65,12 @@ var breadcrumbDim = {
 
 /*Simple function to hash a string into a integer
   Used to create simple ids */
-String.prototype.hashCode = function(){
+String.prototype.hashCode = function() {
 	var hash = 0;
 	if (this.length == 0) return hash;
 	for (i = 0; i < this.length; i++) {
 		char = this.charCodeAt(i);
-		hash = ((hash<<5)-hash)+char;
+		hash = ((hash << 5) - hash) + char;
 		hash = hash & hash; // Convert to 32bit integer
 	}
 	return hash;
@@ -87,12 +86,12 @@ function getBreadcrumbString(string) {
 			cleanTokens.push(tokens[i]);
 		}
 	}
-	
+
 	for (var i = 0; i < cleanTokens.length; i++) {
-		if(cleanTokens[i].length > 12) {
+		if (cleanTokens[i].length > 12) {
 			cleanTokens[i] = cleanTokens[i].substring(0, 11) + ".";
 		}
-		
+
 		if (cleanTokens.length <= 2) {
 			res += cleanTokens[i] + " ";
 		} else if (cleanTokens.length == 3) {
@@ -101,7 +100,7 @@ function getBreadcrumbString(string) {
 			res += cleanTokens[i].substring(0, 4) + ". ";
 		} else {
 			res += cleanTokens[i].substring(0, 4) + ". ";
-			if(i == 3) {
+			if (i == 3) {
 				break;
 			}
 		}
@@ -138,9 +137,11 @@ function drawBreadcrumbs(svg, nodeArray, dataKey, colorObject, onBreadcrumbClick
 		.attr("transform", function(d, i) {
 			return "translate(" + i * (breadcrumbDim.w + breadcrumbDim.s) + ", 0)";
 		});
-		
+
 	entering.append("title")
-		.text(function(d) { return d[dataKey];} );
+		.text(function(d) {
+			return d[dataKey];
+		});
 
 	entering.append("polygon")
 		.on("click", onBreadcrumbClick)
@@ -226,8 +227,8 @@ function drawContextMenu(svg, x, y, containerWidth, containerHeight, menuItems, 
 //######################## Auxiliary functions ################################
 
 // Get the string to the course degree from the acronym
-function getCourseDegreeStringDescription(degreeAcronym){
-	switch(degreeAcronym) {
+function getCourseDegreeStringDescription(degreeAcronym) {
+	switch (degreeAcronym) {
 		case "L1":
 			return "Graduation";
 		case "L":
@@ -243,7 +244,7 @@ function getCourseDegreeStringDescription(degreeAcronym){
 }
 
 //Get a short string from university/college/course to use in matrix
-function getShotStringUniCollCourse(string){
+function getShotStringUniCollCourse(string) {
 	var res = "";
 	var tokens = string.split(" ");
 	var cleanTokens = [];
@@ -253,10 +254,10 @@ function getShotStringUniCollCourse(string){
 		}
 	}
 	for (var i = 0; i < cleanTokens.length; i++) {
-		if(cleanTokens[i].length > 12) {
+		if (cleanTokens[i].length > 12) {
 			cleanTokens[i] = cleanTokens[i].substring(0, 8) + ".";
 		}
-		
+
 		if (cleanTokens.length <= 2) {
 			res += cleanTokens[i] + " ";
 		} else if (cleanTokens.length == 3) {
@@ -266,7 +267,7 @@ function getShotStringUniCollCourse(string){
 		} else if (cleanTokens.length == 5) {
 			res += cleanTokens[i].substring(0, 4) + ". ";
 		} else {
-			if(i == 5) {
+			if (i == 5) {
 				break;
 			}
 			res += cleanTokens[i].substring(0, 3) + ". ";
@@ -276,10 +277,10 @@ function getShotStringUniCollCourse(string){
 }
 
 // Get the string to use in the tooltip of the circle
-function getBertinMatrixCircleTooltip(datum,course) {
+function getBertinMatrixCircleTooltip(datum, course) {
 	var res = "";
-	if(course) {
-		res += "Degree Level: " + getCourseDegreeStringDescription(datum.Grau) + "\n"; 
+	if (course) {
+		res += "Degree Level: " + getCourseDegreeStringDescription(datum.Grau) + "\n";
 	}
 	res += "Unemployment %: " + datum.PercentagemDesemprego.toFixed(2) + "%";
 	res += "\nTotal Unemployeds: " + datum.TotalDesempregados;
@@ -289,8 +290,8 @@ function getBertinMatrixCircleTooltip(datum,course) {
 
 //######################## Visualization Functions #########################
 
-var fullPublicCourseDataset; 	//All the public courses dataset
-var fullPrivateCourseDataset; 	//All the private courses dataset
+var fullPublicCourseDataset; //All the public courses dataset
+var fullPrivateCourseDataset; //All the private courses dataset
 
 var universityVisObj = new Object();
 
@@ -330,23 +331,23 @@ dispatch.on("mouseOverCourse.matrix", function mouseOverCourseMatrixCallback(ove
 });
 
 //Receive event to clear the matrix
-dispatch.on("clearMatrix",function() {
+dispatch.on("clearMatrix", function() {
 	universityVisObj.previousCollections = [universityVisObj.previousCollections[0]];
 	universityVisObj.currentCollIndex = 0;
 	updateUniversityVisualization(universityVisObj, universityVisObj.previousCollections[universityVisObj.currentCollIndex].values);
 });
 
 //Receive event from a course selected in scatter plot
-dispatch.on("selectCourseScatter", function(course,dummy) {
+dispatch.on("selectCourseScatter", function(course, dummy) {
 	var publicCourseDataset = fullPublicCourseDataset.values;
-	for(var u = 0; u < publicCourseDataset.length; u++){
-		if(publicCourseDataset[u].key === course.universityName){
-			for(var c = 0; c < publicCourseDataset[u].values.length; c++) {
-				if(publicCourseDataset[u].values[c].key === course.collegeName){
-					for(var co = 0; co < publicCourseDataset[u].values[c].values.length; co++) {
-						if(publicCourseDataset[u].values[c].values[co].key === course.courseName){
-							course.data = publicCourseDataset[u].values[c].values[co].data; 
-							dispatch.call("selectCourse",course,course);
+	for (var u = 0; u < publicCourseDataset.length; u++) {
+		if (publicCourseDataset[u].key === course.universityName) {
+			for (var c = 0; c < publicCourseDataset[u].values.length; c++) {
+				if (publicCourseDataset[u].values[c].key === course.collegeName) {
+					for (var co = 0; co < publicCourseDataset[u].values[c].values.length; co++) {
+						if (publicCourseDataset[u].values[c].values[co].key === course.courseName) {
+							course.data = publicCourseDataset[u].values[c].values[co].data;
+							dispatch.call("selectCourse", course, course);
 							return;
 						}
 					}
@@ -454,12 +455,12 @@ function updateBertinMatrixYaxisLabel(collectionHeight) {
 	}
 	console.log(collectionHeight);
 	var x;
-	if(collectionHeight > 120){
+	if (collectionHeight > 120) {
 		x = -(collectionHeight + labelWidth) / 2;
-	}else{
+	} else {
 		x = -100;
 	}
-	
+
 	universityVisObj.svg.select(".yaxisLabelMatrix")
 		.transition()
 		.duration(1000)
@@ -473,7 +474,7 @@ function updateBertinMatrixYaxisLabel(collectionHeight) {
 function updateUniversityVisualization(universityVisObj, newCollection) {
 	var minimumHeight = 900;
 	var currentMatrixLineHeight = universityVisObj.matrixLineHeight;
-	if (universityVisObj.currentCollIndex != 0 && newCollection.length < 32){
+	if (universityVisObj.currentCollIndex != 0 && newCollection.length < 32) {
 		currentMatrixLineHeight = 33;
 	}
 	var newCollectionHeight = newCollection.length * currentMatrixLineHeight;
@@ -498,19 +499,18 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 		.attr("y", function(d) {
 			return universityVisObj.yaxis.scale()(d.key);
 		})
-		.on("mouseover", function(d) { 
-			if(universityVisObj.currentCollIndex == 2) {
+		.on("mouseover", function(d) {
+			if (universityVisObj.currentCollIndex == 2) {
 				var courseUniversity = universityVisObj.previousCollections[1].key;
 				var courseCollege = universityVisObj.previousCollections[2].key;
-				var mouseOveredCourse = new Course(courseUniversity,courseCollege,d.key,d.CodigoArea);
-				dispatch.call("mouseOverCourse",mouseOveredCourse,mouseOveredCourse);
-			}
-			else{
-				if (universityVisObj.currentCollIndex == 0) {	
+				var mouseOveredCourse = new Course(courseUniversity, courseCollege, d.key, d.CodigoArea);
+				dispatch.call("mouseOverCourse", mouseOveredCourse, mouseOveredCourse);
+			} else {
+				if (universityVisObj.currentCollIndex == 0) {
 					d3.selectAll("[id='" + d.key + "']").classed("matrixLine", false).classed("matrixLine-hover", true);
 				} else if (universityVisObj.currentCollIndex == 1) {
 					d3.selectAll("[id='" + d.key + "']").classed("matrixLine", false).classed("matrixLine-hover", true);
-				} 
+				}
 			}
 		})
 		.on("mouseout", function(d) {
@@ -561,7 +561,7 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 		.selectAll("g.data")
 		.selectAll("circle")
 		.append("title").text(function(dy) {
-			return getBertinMatrixCircleTooltip(dy,universityVisObj.currentCollIndex == 2);
+			return getBertinMatrixCircleTooltip(dy, universityVisObj.currentCollIndex == 2);
 		});
 
 	//Update yaxis labels due to new elements
@@ -694,7 +694,7 @@ function registerEventsUniversityVis() {
 					var collegeName = currentCollection.key;
 					var courseName = currentCollection.values[i].NomeCurso;
 					var courseAreaCode = currentCollection.values[i].CodigoArea;
-					var selectedCourse = new Course(universityName,collegeName,courseName,courseAreaCode);
+					var selectedCourse = new Course(universityName, collegeName, courseName, courseAreaCode);
 					selectedCourse.data = currentCollection.values[i].data;
 					dispatch.call("selectCourse", selectedCourse, selectedCourse);
 					break;
@@ -749,14 +749,14 @@ function loadAreasData() {
 function sunburstAreaToolTip(datum) {
 	if (datum.data.CNAEFNome == "All")
 		return "Total Unemployeds: " + datum.value;
-	var res = "Area: " + datum.data.CNAEFNome; 
+	var res = "Area: " + datum.data.CNAEFNome;
 	res += "\nUnemployment %: " + datum.data.PercentagemDesemprego.toFixed(2) + " %";
 	res += "\nTotal Unemployeds: " + datum.data.TotalDesempregados;
 	res += "\nTotal Graduates: " + datum.data.TotalDiplomados;
 	return res;
 }
 
-function getColorToArea(areaName,areaCode){
+function getColorToArea(areaName, areaCode) {
 	if (areaName === "All") {
 		return rootDataColor;
 	} else {
@@ -777,31 +777,31 @@ function getColorToArea(areaName,areaCode){
 function shortenArea(t, level) {
 	if (!t.includes(" "))
 		return t;
-	var limite=0;
-	limite = (level==0)?10:limite;
-	limite = (level==1)?10:limite;
-	limite = (level==2)?15:limite;
-	limite = (level==3)?35:limite;
-		
+	var limite = 0;
+	limite = (level == 0) ? 10 : limite;
+	limite = (level == 1) ? 10 : limite;
+	limite = (level == 2) ? 15 : limite;
+	limite = (level == 3) ? 35 : limite;
+
 	var list = t.split(" ");
 	var result = "";
 	for (var i = 0; i < list.length; i++) {
 		if (result.length + list[i].length > limite) {
-			if(i==0){
-				result = list[i].substring(0,limite-5)+". ...";
+			if (i == 0) {
+				result = list[i].substring(0, limite - 5) + ". ...";
 				return result;
 			}
 			result += "...";
 			return result;
 		}
-		result +=" "+ list[i];
+		result += " " + list[i];
 	}
 
 	return result;
 }
 
-function levelArea(a) {		
-	if (a==0){		
+function levelArea(a) {
+	if (a == 0) {
 		return 0;
 	}
 	var a_ = a.toString();
@@ -814,14 +814,18 @@ function levelArea(a) {
 
 }
 
+var labelsVisibility = true;
+
 function changeLabels() {
-	if (d3.selectAll(".sunburstLabel").attr("visibility") == "hidden"){
-		d3.selectAll(".sunburstLabel").attr("visibility", "visible");
-		d3.selectAll(".labelsText").text("Hide labels");
+	if(labelsVisibility){
+		d3.selectAll(".sunburstLabel").style("display", "none");
+		d3.selectAll(".labelsText").text("Show labels");
+		labelsVisibility=false;
 	}
 	else{
-		d3.selectAll(".sunburstLabel").attr("visibility", "hidden");
-		d3.selectAll(".labelsText").text("Show labels");
+		d3.selectAll(".sunburstLabel").style("display", "inline");
+		d3.selectAll(".labelsText").text("Hide labels");
+		labelsVisibility=true;
 	}
 	
 }
@@ -879,14 +883,16 @@ function drawSunburst(data) {
 		.enter().append("g");
 
 	path.append("title").text(sunburstAreaToolTip);
-		
+
 	path.append("path")
 		.attr("d", arc)
 		.attr("class", "sunburst")
 		.attr("id", function(d) {
 			return "AreaCode" + d.data.CNAEF;
 		})
-		.attr("fill",function(d) { return getColorToArea(d.data.CNAEFNome,d.data.CNAEF);} )
+		.attr("fill", function(d) {
+			return getColorToArea(d.data.CNAEFNome, d.data.CNAEF);
+		})
 		.on("click", click);
 
 	var text = path.append("text")
@@ -902,8 +908,8 @@ function drawSunburst(data) {
 		.text(function(d) {
 			return shortenArea(d.data.CNAEFNome, 0);
 		})
-		.style("opacity", function(d) {
-			return nextArea(d.data.CNAEF, 0) ? 1 : 0;
+		.style("visibility", function(d) {
+			return nextArea(d.data.CNAEF, 0) ? "visible" : "hidden";
 		})
 		.on("click", click);
 
@@ -922,25 +928,26 @@ function drawSunburst(data) {
 
 	//Receive event from overing a course in other views
 	dispatch.on("mouseOverCourse.sunburst", function(course, dummy) {
-		if(course != null) {
-			var actualColor = d3.select("#AreaCode"+course.courseAreaCode).attr("fill");
+		if (course != null) {
+			var actualColor = d3.select("#AreaCode" + course.courseAreaCode).attr("fill");
 			var overedColor = d3.rgb(actualColor).darker(1.25);
-			d3.select("#AreaCode"+course.courseAreaCode).attr("fill",overedColor).classed("sunburstAreaOvered",true);
-		}
-		else{
+			d3.select("#AreaCode" + course.courseAreaCode).attr("fill", overedColor).classed("sunburstAreaOvered", true);
+		} else {
 			d3.select("#areaVis")
 				.select("svg")
 				.selectAll(".sunburstAreaOvered")
-				.attr("fill",function(d) { return getColorToArea(d.data.CNAEFNome,d.data.CNAEF); })
-				.classed("sunburstAreaOvered",false);
+				.attr("fill", function(d) {
+					return getColorToArea(d.data.CNAEFNome, d.data.CNAEF);
+				})
+				.classed("sunburstAreaOvered", false);
 		}
 	});
-		
+
 	//Receive event from view change where an area was selected
 	dispatch.on("selectArea.sunburst", function(area, dummy) {
 		var d = d3.select("#AreaCode" + area.code).datum();
-		path.select(".sunburstLabel").transition().style("opacity", 0);
-		
+		path.select(".sunburstLabel").transition().style("visibility", "hidden");
+
 
 		//Obtain the information and update suburst breadcrumbs
 		var currentData = d;
@@ -979,18 +986,18 @@ function drawSunburst(data) {
 				};
 			})
 			.on("end", function(e, i) {
-				var clicked = d.data.CNAEF;						
+				var clicked = d.data.CNAEF;
 				if ((nextArea(e.data.CNAEF, d.data.CNAEF) && d.data.CNAEFNome == "All") || (subArea(e.data.CNAEF, d.data.CNAEF) && d.data.CNAEFNome != "All")) {
 					var arcText = d3.select(this.parentNode).select("text");
 					arcText.transition().duration(750)
-						.style("opacity", 1)
+						.style("visibility", "visible")
 						.attr("transform", function() {
 							return "rotate(" + computeTextRotation(e) + ")"
 						})
 						.attr("x", function(d) {
 							return y(d.y0);
 						})
-						.text(function(d) {																							
+						.text(function(d) {
 							return shortenArea(d.data.CNAEFNome, levelArea(clicked));
 						});
 				}
@@ -1008,18 +1015,18 @@ function drawSunburst(data) {
 
 	showLabelsContainer.append("text")
 		.text("Hide labels")
-		.attr("class","labelsText")
+		.attr("class", "labelsText")
 		.attr("x", 483)
 		.attr("y", 585)
 		.on("click", changeLabels);
 
 	function sunburstBreadcrumbClick(datum) {
-		var area = new CourseArea(datum.currentAreaName,datum.CNAEF,d3.select("#AreaCode" + datum.CNAEF).attr("fill"));
-		dispatch.call("selectArea",area,area);
+		var area = new CourseArea(datum.currentAreaName, datum.CNAEF, d3.select("#AreaCode" + datum.CNAEF).attr("fill"));
+		dispatch.call("selectArea", area, area);
 	}
 
 	function click(d) {
-		var area = new CourseArea(d.data.CNAEFNome,d.data.CNAEF,d3.select("#AreaCode" + d.data.CNAEF).attr("fill"));
+		var area = new CourseArea(d.data.CNAEFNome, d.data.CNAEF, d3.select("#AreaCode" + d.data.CNAEF).attr("fill"));
 		dispatch.call("selectArea", area, area);
 	}
 
@@ -1176,9 +1183,9 @@ lineChartObj.addCourse = function(course) {
 	this.currentCourses.push(course);
 };
 lineChartObj.removeCourse = function(course) {
-	for(var i = 0; i < this.currentCourses.length; i++) {
-		if(this.currentCourses[i].equals(course)){
-			this.currentCourses.splice(i,1);
+	for (var i = 0; i < this.currentCourses.length; i++) {
+		if (this.currentCourses[i].equals(course)) {
+			this.currentCourses.splice(i, 1);
 			return;
 		}
 	}
@@ -1194,38 +1201,36 @@ generateLineChartVis();
 
 //Receive event from selecting a course in other views
 dispatch.on("selectCourse", function(d) {
-	if(lineChartObj.currentCourses.length < 5) {
-		for(var i = 0; i < lineChartObj.currentCourses.length; i++) {
-			if(lineChartObj.currentCourses[i].equals(d)){	//Course already selected
+	if (lineChartObj.currentCourses.length < 5) {
+		for (var i = 0; i < lineChartObj.currentCourses.length; i++) {
+			if (lineChartObj.currentCourses[i].equals(d)) { //Course already selected
 				return;
 			}
 		}
 		lineChartObj.addCourse(d);
 		updateLineChartVis(d);
-	}
-	else {
+	} else {
 		var warning = d3.select("#lineFullWarning")
-			.attr("visibility","visible");
-		
+			.attr("visibility", "visible");
+
 		warning.transition()
 			.duration(1000)
 			.delay(2000)
-			.attr("visibility","hidden");
+			.attr("visibility", "hidden");
 	}
 });
 
 //Receive event from other views a course was mouse overed
 dispatch.on("mouseOverCourse.lineChart", function(selected, dummy) {
-	if(selected != null) {
+	if (selected != null) {
 		var id = "LineId" + selected.getId();
 		d3.select("#lineChartVis").select("svg")
 			.select("#" + id)
-			.classed("line",false).classed("line-hover",true);
-	}
-	else{
+			.classed("line", false).classed("line-hover", true);
+	} else {
 		d3.select("#lineChartVis").select("svg")
 			.select(".line-hover")
-			.classed("line",true).classed("line-hover",false);
+			.classed("line", true).classed("line-hover", false);
 	}
 });
 
@@ -1239,45 +1244,45 @@ function drawEmptyLineChartLabel(on) {
 }
 
 //Draw the menu for courses selected in line chart 
-function drawCurrentCoursesMenu(){
+function drawCurrentCoursesMenu() {
 	var menuItemDistance = 5;
 	var menuItemWidth = 350;
-	var	menuItemHeight = 40;
+	var menuItemHeight = 40;
 	var menuItemStartY = 20;
 	var menuItemX = 955;
 	var imageSize = 20;
 	var data = lineChartObj.currentCourses;
-	
+
 	d3.select("#lineChartVis").select("svg")
 		.select("g.lineChartCurrentCourses").remove();
-	
+
 	var currentCoursesContainer = d3.select("#lineChartVis")
 		.select("svg")
 		.append("g")
-		.classed("lineChartCurrentCourses",true);
-		
+		.classed("lineChartCurrentCourses", true);
+
 	var currentCoursesContainerItems = currentCoursesContainer
 		.selectAll("g")
 		.data(lineChartObj.currentCourses)
 		.enter()
 		.append("g")
-		.classed("lineChartCourseMenuItem",true)
+		.classed("lineChartCourseMenuItem", true)
 		.on("mouseover", function(d) {
-			dispatch.call("mouseOverCourse",d,d);
+			dispatch.call("mouseOverCourse", d, d);
 		})
 		.on("mouseout", function(d) {
-			dispatch.call("mouseOverCourse",null,null);
+			dispatch.call("mouseOverCourse", null, null);
 		})
 		.on("click", function(d) {
 			lineChartObj.removeCourse(d);
-			d3.select("#lineChartVis").select("svg").select("#LineId"+d.getId()).remove();
+			d3.select("#lineChartVis").select("svg").select("#LineId" + d.getId()).remove();
 			drawCurrentCoursesMenu();
-			if(lineChartObj.emptyCourses()){
+			if (lineChartObj.emptyCourses()) {
 				drawEmptyLineChartLabel(true);
 			}
 			dispatch.call("mouseOverCourse", null, null);
 		});
-		
+
 	currentCoursesContainerItems.append("title")
 		.text(function(d) {
 			var res = "University: " + d.universityName;
@@ -1285,25 +1290,35 @@ function drawCurrentCoursesMenu(){
 			res += "\nCourse: " + d.courseName;
 			return res;
 		});
-		
+
 	currentCoursesContainerItems.append("rect")
-		.attr("y",function(d,i) { return menuItemStartY + ((menuItemHeight + menuItemDistance) * i) ;})
-		.attr("x",menuItemX)
-		.attr("width",menuItemWidth)
-		.attr("height",menuItemHeight)
-		.attr("fill",function(d) { return getColorToArea("dummy",d.courseAreaCode); });
-	
+		.attr("y", function(d, i) {
+			return menuItemStartY + ((menuItemHeight + menuItemDistance) * i);
+		})
+		.attr("x", menuItemX)
+		.attr("width", menuItemWidth)
+		.attr("height", menuItemHeight)
+		.attr("fill", function(d) {
+			return getColorToArea("dummy", d.courseAreaCode);
+		});
+
 	currentCoursesContainerItems.append("text")
-		.attr("y",function(d,i) { return menuItemStartY + ((menuItemHeight + menuItemDistance) * i) + menuItemHeight/2 + 4 ;})
-		.attr("x",menuItemX + 5)
-		.text(function(d) { return d.courseName; });
-		
+		.attr("y", function(d, i) {
+			return menuItemStartY + ((menuItemHeight + menuItemDistance) * i) + menuItemHeight / 2 + 4;
+		})
+		.attr("x", menuItemX + 5)
+		.text(function(d) {
+			return d.courseName;
+		});
+
 	currentCoursesContainerItems.append("image")
-		.attr("y",function(d,i) { return menuItemStartY + ((menuItemHeight + menuItemDistance) * i) + menuItemHeight/4 ;})
-		.attr("x",menuItemX + 270)
-		.attr("width",imageSize)
-		.attr("height",imageSize)
-		.attr("xlink:href","deleteCross.png");
+		.attr("y", function(d, i) {
+			return menuItemStartY + ((menuItemHeight + menuItemDistance) * i) + menuItemHeight / 4;
+		})
+		.attr("x", menuItemX + 270)
+		.attr("width", imageSize)
+		.attr("height", imageSize)
+		.attr("xlink:href", "deleteCross.png");
 }
 
 //Update the line chart visualization with new data
@@ -1327,7 +1342,7 @@ function updateLineChartVis(collection) {
 			return d3.rgb(d3.select("#AreaCode" + d[0].CodigoArea).attr("fill")).brighter(1.25);
 		})
 		.attr("id", function(d) {
-			var course = new Course(d[0].NomeUniversidade,d[0].NomeFaculdade,d[0].key,d[0].CodigoArea);
+			var course = new Course(d[0].NomeUniversidade, d[0].NomeFaculdade, d[0].key, d[0].CodigoArea);
 			return "LineId" + course.getId();
 		})
 		.on("mouseover", function(d) {
@@ -1344,7 +1359,7 @@ function updateLineChartVis(collection) {
 			res += "\nCourse: " + d[0].key;
 			return res;
 		});
-		
+
 	drawCurrentCoursesMenu();
 }
 
@@ -1384,7 +1399,7 @@ function generateLineChartVis() {
 		.attr("x", ((width - padding.right) - 450) / 2)
 		.attr("y", height / 2)
 		.text("Select multiple courses in the table or scatter to compare here (Up to 5)");
-		
+
 	drawEmptyLineChartLabel(true);
 
 	svg.append("text")
@@ -1393,15 +1408,15 @@ function generateLineChartVis() {
 		.attr("y", 12)
 		.attr("transform", "rotate(-90)")
 		.text("Unemployment %");
-		
+
 	svg.append("image")
-		.attr("id","lineFullWarning")
-		.attr("y",-60)
-		.attr("x",50)
-		.attr("width",500)
-		.attr("height",200)
-		.attr("xlink:href","lineFullWarning.png")
-		.attr("visibility","hidden");
+		.attr("id", "lineFullWarning")
+		.attr("y", -60)
+		.attr("x", 50)
+		.attr("width", 500)
+		.attr("height", 200)
+		.attr("xlink:href", "lineFullWarning.png")
+		.attr("visibility", "hidden");
 }
 
 //#############################################################################
@@ -1411,16 +1426,16 @@ function generateLineChartVis() {
 //#############################################################################
 
 /* Get a short string of the area name to draw */
-function getAreaNameDigest(string){
+function getAreaNameDigest(string) {
 	var res = "";
 	var cleanTokens = string.split(" ");
-	
+
 	var tokensLength = (cleanTokens.length < 7) ? cleanTokens.length : 6;
-	if(tokensLength == 6){
+	if (tokensLength == 6) {
 		tokensLength++;
 		cleanTokens[6] = "...";
 	}
-	
+
 	for (var i = 0; i < tokensLength; i++) {
 		res += cleanTokens[i] + " ";
 	}
@@ -1430,7 +1445,7 @@ function getAreaNameDigest(string){
 /* Return the string to show in tooltip */
 function getScatterPlotTooltip(datum) {
 	var tokens = datum.NomeFaculdade.split(" - ");
-	if(tokens.length == 1){
+	if (tokens.length == 1) {
 		tokens.push(tokens[0]);
 	}
 	var res = "University: " + tokens[0];
@@ -1471,6 +1486,7 @@ function nextArea(a, b) {
 	return false;
 }
 
+
 /*############################# SCATTER PLOT CONTEXT MENU #####################################*/
 
 var scatterPlotContextMenuItems = ["Select Equal College", "Select Equal Area"];
@@ -1484,8 +1500,7 @@ function clickScatterPlotContextMenu() { //Context menu click actions
 		}
 		dispatch.call("selectUniversityScatter", scatterVisObj.selectedUniversity, scatterVisObj.selectedUniversity);
 	} else if (d3.select(this).select("text").text() === "Select Equal Area") {
-		var area = new CourseArea(selectedDatum.CNAEFNome,selectedDatum.CNAEF
-			,d3.select("#AreaCode" + selectedDatum.CNAEF).attr("fill"));
+		var area = new CourseArea(selectedDatum.CNAEFNome, selectedDatum.CNAEF, d3.select("#AreaCode" + selectedDatum.CNAEF).attr("fill"));
 		dispatch.call("selectArea", area, area);
 	}
 }
@@ -1496,7 +1511,7 @@ var fullScatterDataset; //All the data from the entry grades file
 
 var scatterVisObj = new Object(); //Scatter plot vis object
 scatterVisObj.selectedUniversity = ["Public Courses"];
-scatterVisObj.selectedArea = new CourseArea("All",0,rootDataColor);		
+scatterVisObj.selectedArea = new CourseArea("All", 0, rootDataColor);
 
 //Load the Scatter Plot Courses data and prepare it to be used in visualization
 d3.json("EntryGrades.json", function(data) {
@@ -1507,23 +1522,22 @@ d3.json("EntryGrades.json", function(data) {
 //Receive event from views that a course was mouse overed
 dispatch.on("mouseOverCourse.scatterPlot", function(course, dummy) {
 	var overedCircleRadius = 8;
-	if(course != null) {
+	if (course != null) {
 		d3.select("#courseScatterVis").select("svg")
 			.select("#Scatter" + course.getId())
 			.transition().duration(150)
-			.attr("r",overedCircleRadius);
+			.attr("r", overedCircleRadius);
 		d3.select("#courseScatterVis").select("svg")
 			.select("#Scatter" + course.getId())
-			.classed("scatterPlotDot-hover",true);
-	}
-	else{
+			.classed("scatterPlotDot-hover", true);
+	} else {
 		d3.select("#courseScatterVis").select("svg")
 			.selectAll(".scatterPlotDot-hover")
 			.transition().duration(150)
-			.attr("r",3)
+			.attr("r", 3)
 		d3.select("#courseScatterVis").select("svg")
 			.selectAll(".scatterPlotDot-hover")
-			.classed("scatterPlotDot-hover",false);
+			.classed("scatterPlotDot-hover", false);
 	}
 });
 
@@ -1541,8 +1555,8 @@ dispatch.on("selectUniversity", function(selected, dummy) {
 
 // Update the scatter plot info according with external filtering events
 function filterScatterVis() {
-	var allUniversitiesData = scatterVisObj.selectedUniversity[0] === "Public Courses" || 
-								scatterVisObj.selectedUniversity[0] === "Ensino Privado";
+	var allUniversitiesData = scatterVisObj.selectedUniversity[0] === "Public Courses" ||
+		scatterVisObj.selectedUniversity[0] === "Ensino Privado";
 	if (allUniversitiesData) {
 		d3.select(".universitySelected").attr("visibility", "hidden");
 	} else {
@@ -1594,7 +1608,7 @@ function filterScatterVis() {
 		.on("mouseover", function(d) {
 			var tokens = d.NomeFaculdade.split(" - ");
 			var overCourse = new Course(tokens[0], tokens[1], d.NomeCurso, d.CNAEF);
-			dispatch.call("mouseOverCourse",overCourse, overCourse);
+			dispatch.call("mouseOverCourse", overCourse, overCourse);
 		})
 		.on("mouseout", function() {
 			dispatch.call("mouseOverCourse", null, null);
@@ -1619,7 +1633,7 @@ function updateScatterVis(newCollection) {
 		})
 		.attr("id", function(d) {
 			var tokens = d.NomeFaculdade.split(" - ");
-			var course = new Course(tokens[0],tokens[1],d.NomeCurso,d.CodigoArea);
+			var course = new Course(tokens[0], tokens[1], d.NomeCurso, d.CodigoArea);
 			return "Scatter" + course.getId();
 		})
 		.attr("cx", function(d) {
@@ -1634,20 +1648,20 @@ function updateScatterVis(newCollection) {
 	});
 
 	circles.on("contextmenu", function(d) { //Draw the scatter plot context menu
-		d3.event.preventDefault();
-		selectedDatum = d;
-		drawContextMenu(d3.select("#courseScatterVis").select("svg"), d3.mouse(this)[0], d3.mouse(this)[1], scatterVisObj.width, scatterVisObj.height,
-			scatterPlotContextMenuItems, clickScatterPlotContextMenu);
-	})
-	.on("click", function(d) {				//Add the course to the line chart
-		var course;	
-		var tokens = d.NomeFaculdade.split(" - ");
-		if(tokens.length == 1) {
-			tokens.push(tokens[0]);
-		}
-		course = new Course(tokens[0],tokens[1],d.NomeCurso,d.CNAEF);
-		dispatch.call("selectCourseScatter",course,course);
-	});
+			d3.event.preventDefault();
+			selectedDatum = d;
+			drawContextMenu(d3.select("#courseScatterVis").select("svg"), d3.mouse(this)[0], d3.mouse(this)[1], scatterVisObj.width, scatterVisObj.height,
+				scatterPlotContextMenuItems, clickScatterPlotContextMenu);
+		})
+		.on("click", function(d) { //Add the course to the line chart
+			var course;
+			var tokens = d.NomeFaculdade.split(" - ");
+			if (tokens.length == 1) {
+				tokens.push(tokens[0]);
+			}
+			course = new Course(tokens[0], tokens[1], d.NomeCurso, d.CNAEF);
+			dispatch.call("selectCourseScatter", course, course);
+		});
 }
 
 function generateScatterVis() {
@@ -1696,11 +1710,11 @@ function generateScatterVis() {
 		.attr("y", 20)
 		.text("Public Courses");
 	g.append("image")
-		.attr("width",crossImageSize)
-		.attr("height",crossImageSize)
+		.attr("width", crossImageSize)
+		.attr("height", crossImageSize)
 		.attr("x", 578)
 		.attr("y", 5)
-		.attr("xlink:href","deleteCross.png");
+		.attr("xlink:href", "deleteCross.png");
 	g.append("title").text("Public Courses");
 	g.attr("visibility", "hidden")
 		.on("click", function() {
@@ -1720,16 +1734,16 @@ function generateScatterVis() {
 		.attr("y", 55)
 		.text("All");
 	g.append("image")
-		.attr("width",crossImageSize)
-		.attr("height",crossImageSize)
+		.attr("width", crossImageSize)
+		.attr("height", crossImageSize)
 		.attr("x", 578)
 		.attr("y", 40)
-		.attr("xlink:href","deleteCross.png");
-		g.append("title").text("All");
+		.attr("xlink:href", "deleteCross.png");
+	g.append("title").text("All");
 	g.attr("visibility", "hidden")
 		.on("click", function() {
-			var area = new CourseArea("All",0,rootDataColor);
-			dispatch.call("selectArea",area,area);
+			var area = new CourseArea("All", 0, rootDataColor);
+			dispatch.call("selectArea", area, area);
 		});
 
 	svg.append("text")
