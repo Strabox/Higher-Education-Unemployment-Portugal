@@ -453,7 +453,6 @@ function updateBertinMatrixYaxisLabel(collectionHeight) {
 	} else if (universityVisObj.currentCollIndex == 2) {
 		label = "Courses";
 	}
-	console.log(collectionHeight);
 	var x;
 	if (collectionHeight > 120) {
 		x = -(collectionHeight + labelWidth) / 2;
@@ -817,17 +816,16 @@ function levelArea(a) {
 var labelsVisibility = true;
 
 function changeLabels() {
-	if(labelsVisibility){
+	if (labelsVisibility) {
 		d3.selectAll(".sunburstLabel").style("display", "none");
 		d3.selectAll(".labelsText").text("Show labels");
-		labelsVisibility=false;
-	}
-	else{
+		labelsVisibility = false;
+	} else {
 		d3.selectAll(".sunburstLabel").style("display", "inline");
 		d3.selectAll(".labelsText").text("Hide labels");
-		labelsVisibility=true;
+		labelsVisibility = true;
 	}
-	
+
 }
 
 function drawSunburst(data) {
@@ -869,12 +867,9 @@ function drawSunburst(data) {
 
 	data = d3.hierarchy(data);
 	data.sum(function(d) {
-		if (d.CNAEFNome == "All")
+		if (d.children != null)
 			return 0;
-		var n = d.CNAEF.toString();
-		if (n.endsWith("0")) {
-			return 0;
-		} else
+		else
 			return d.TotalDesempregados;
 	});
 
@@ -1033,14 +1028,7 @@ function drawSunburst(data) {
 	d3.select(self.frameElement).style("height", height + "px");
 
 	function computeTextRotation(d) {
-		//var angle = (x(d.x0 + d.x1 / 2) - Math.PI / 2) / Math.PI * 180;
-		//console.log(angle);
-		//return angle;
 		var thetaDeg = (180 / Math.PI * (arc.startAngle()(d) + arc.endAngle()(d)) / 2 - 90);
-		// If we are rotating the text by more than 90 deg, then "flip" it.
-		// This is why "text-anchor", "middle" is important, otherwise, this "flip" would
-		// a little harder.
-		//return (thetaDeg > 90) ? thetaDeg - 180 : thetaDeg;
 		return thetaDeg;
 	}
 
