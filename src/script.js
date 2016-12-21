@@ -1341,6 +1341,16 @@ function updateLineChartVis(collection) {
 		.y(function(d) {
 			return lineChartObj.yscale(d.PercentagemDesemprego);
 		});
+	var ymax = 0;
+	for(var i = 0; i < lineChartObj.currentCourses.length; i++) {
+		for(var k = 0; k < lineChartObj.currentCourses[i].data.length; k++) {
+			ymax = (lineChartObj.currentCourses[i].data[k].PercentagemDesemprego > ymax) ? lineChartObj.currentCourses[i].data[k].PercentagemDesemprego : ymax;
+		}
+	}
+	
+	lineChartObj.yscale.domain([ymax,0]);
+	var yaxis = d3.axisLeft().scale(lineChartObj.yscale);
+	d3.select("#lineChartVis").select("svg").select(".yaxis").attr("transform", "translate(" + 40 + ",0)").call(yaxis);
 
 	//Add/update with the new data
 	d3.select("#lineChartVis").select("svg")
