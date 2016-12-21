@@ -590,7 +590,7 @@ function generateUniversityVis() {
 	var paddingObj = {
 		"top": 40,
 		"bottom": 20,
-		"left": 220,
+		"left": 225,
 		"right": 20
 	}
 	var matrixLineHeight = 23;
@@ -1165,6 +1165,28 @@ function year(x, w) {
 //#             				       			                              #
 //#############################################################################
 
+function digestCourseNames(courseName){
+	var res = "";
+	var tokens = courseName.split(" ");
+	var cleanTokens = [];
+	for(var i = 0; i < tokens.length; i++) {
+		if (tokens[i][0] != null && tokens[i][0].match(/[A-Z]|É|-/)) {
+			cleanTokens.push(tokens[i]);
+		}
+	}
+	
+	var tokensLength = (cleanTokens.length < 4) ? cleanTokens.length : 4;
+	if (tokensLength == 4) {
+		tokensLength++;
+		cleanTokens[4] = "...";
+	}
+
+	for (var i = 0; i < tokensLength; i++) {
+		res += cleanTokens[i] + " ";
+	}
+	return res;
+}
+
 var lineChartObj = new Object();
 lineChartObj.currentCourses = new Array();
 lineChartObj.addCourse = function(course) {
@@ -1296,7 +1318,7 @@ function drawCurrentCoursesMenu() {
 		})
 		.attr("x", menuItemX + 5)
 		.text(function(d) {
-			return d.courseName;
+			return digestCourseNames(d.courseName);
 		});
 
 	currentCoursesContainerItems.append("image")
