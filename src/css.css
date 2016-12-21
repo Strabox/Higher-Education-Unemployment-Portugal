@@ -56,13 +56,13 @@ h1,h4,text {
 	cursor: pointer;
 }
 
-.matrixLine-hover {
-	fill: steelblue;
-	fill-opacity: 0.2;
+.matrixDot,.breadcrumbItem {
 	cursor: pointer;
 }
 
-.breadcrumbItem, .yaxis {
+.matrixLine-hover {
+	fill: steelblue;
+	fill-opacity: 0.2;
 	cursor: pointer;
 }
 

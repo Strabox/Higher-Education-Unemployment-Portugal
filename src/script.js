@@ -514,6 +514,42 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 		})
 		.on("mouseout", function(d) {
 			dispatch.call("mouseOverCourse", null, null);
+		})
+		.on("click", function(d) {
+			var currentCollection = universityVisObj.previousCollections[universityVisObj.currentCollIndex];
+			var newCollection;
+
+			if (universityVisObj.currentCollIndex < 2) {
+				for (var i = 0; i < currentCollection.values.length; i++) {
+					if (currentCollection.values[i].key === d.key) {
+						newCollection = currentCollection.values[i].values;
+						break;
+					}
+				}
+				newCollection.sort(function(d1, d2) {
+					return d2.MediaDesemprego - d1.MediaDesemprego;
+				});
+				universityVisObj.currentCollIndex++;
+				universityVisObj.previousCollections.push({
+					"key": d.key,
+					"values": newCollection
+				});
+
+				updateUniversityVisualization(universityVisObj, newCollection);
+			} else {
+				for (var i = 0; i < currentCollection.values.length; i++) {
+					if (currentCollection.values[i].key === d.key) {
+						var universityName = universityVisObj.previousCollections[1].key;
+						var collegeName = currentCollection.key;
+						var courseName = currentCollection.values[i].NomeCurso;
+						var courseAreaCode = currentCollection.values[i].CodigoArea;
+						var selectedCourse = new Course(universityName, collegeName, courseName, courseAreaCode);
+						selectedCourse.data = currentCollection.values[i].data;
+						dispatch.call("selectCourse", selectedCourse, selectedCourse);
+						break;
+					}
+				}
+			}
 		});
 
 	groupLine.append("rect")
@@ -539,6 +575,7 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 				universityVisObj.width, universityVisObj.height, menuItems, clickBertinMatrixContextMenu);
 		})
 		.transition(transition)
+		.attr("class","matrixDot")
 		.attr("r", function(dy) {
 			return Math.sqrt(universityVisObj.circleScale(dy.PercentagemDesemprego));
 		})
@@ -580,9 +617,6 @@ function updateUniversityVisualization(universityVisObj, newCollection) {
 		universityVisObj.previousCollections, "key", breadCrumbColorObject, matrixBreadcrumbClick, breadcrumbDim);
 
 	updateBertinMatrixYaxisLabel(newCollectionHeight);
-
-	//Register Interaction events to the new elements!!
-	registerEventsUniversityVis();
 }
 
 // Code related to University Visualization creation (Bertin Matrix)
@@ -651,59 +685,6 @@ function generateUniversityVis() {
 
 	//Enter/update the data in visualization
 	updateUniversityVisualization(universityVisObj, fullPublicCourseDataset.values);
-}
-
-/* ########################## Interaction Events ############################# */
-
-function registerEventsUniversityVis() {
-
-	function lineWay() {
-		selectMatrixLine(d3.select(this).attr("id"));
-	}
-
-	function tickWay() {
-		selectMatrixLine(d3.select(this).select("title").text());
-	}
-
-	function selectMatrixLine(selectedItemId) {
-		var currentCollection = universityVisObj.previousCollections[universityVisObj.currentCollIndex];
-		var newCollection;
-
-		if (universityVisObj.currentCollIndex < 2) {
-			for (var i = 0; i < currentCollection.values.length; i++) {
-				if (currentCollection.values[i].key === selectedItemId) {
-					newCollection = currentCollection.values[i].values;
-					break;
-				}
-			}
-			newCollection.sort(function(d1, d2) {
-				return d2.MediaDesemprego - d1.MediaDesemprego;
-			});
-			universityVisObj.currentCollIndex++;
-			universityVisObj.previousCollections.push({
-				"key": selectedItemId,
-				"values": newCollection
-			});
-
-			updateUniversityVisualization(universityVisObj, newCollection);
-		} else {
-			for (var i = 0; i < currentCollection.values.length; i++) {
-				if (currentCollection.values[i].key === selectedItemId) {
-					var universityName = universityVisObj.previousCollections[1].key;
-					var collegeName = currentCollection.key;
-					var courseName = currentCollection.values[i].NomeCurso;
-					var courseAreaCode = currentCollection.values[i].CodigoArea;
-					var selectedCourse = new Course(universityName, collegeName, courseName, courseAreaCode);
-					selectedCourse.data = currentCollection.values[i].data;
-					dispatch.call("selectCourse", selectedCourse, selectedCourse);
-					break;
-				}
-			}
-		}
-	}
-
-	d3.selectAll(".matrixLine").on("click", lineWay);
-	d3.select(".yaxis").selectAll(".tick").on("click", tickWay);
 }
 
 //#############################################################################
@@ -1218,7 +1199,10 @@ dispatch.on("selectCourse", function(d) {
 			}
 		}
 		lineChartObj.addCourse(d);
-		updateLineChartVis(d);
+		for (var i = 0; i < lineChartObj.currentCourses.length; i++){
+			d3.select("#lineChartVis").select("svg").select("#LineId" + lineChartObj.currentCourses[i].getId()).remove();
+			updateLineChartVis(lineChartObj.currentCourses[i]);
+		}
 	} else {
 		var warning = d3.select("#lineFullWarning")
 			.attr("visibility", "visible");
@@ -1286,6 +1270,10 @@ function drawCurrentCoursesMenu() {
 		.on("click", function(d) {
 			lineChartObj.removeCourse(d);
 			d3.select("#lineChartVis").select("svg").select("#LineId" + d.getId()).remove();
+			for (var i = 0; i < lineChartObj.currentCourses.length; i++){
+				d3.select("#lineChartVis").select("svg").select("#LineId" + lineChartObj.currentCourses[i].getId()).remove();
+				updateLineChartVis(lineChartObj.currentCourses[i]);
+			}
 			drawCurrentCoursesMenu();
 			if (lineChartObj.emptyCourses()) {
 				drawEmptyLineChartLabel(true);
@@ -1359,7 +1347,7 @@ function updateLineChartVis(collection) {
 		.attr("class", "line")
 		.attr("d", line)
 		.attr("stroke", function(d) {
-			return d3.rgb(d3.select("#AreaCode" + d[0].CodigoArea).attr("fill")).brighter(1.25);
+			return getColorToArea("dummy",d[0].CodigoArea);
 		})
 		.attr("id", function(d) {
 			var course = new Course(d[0].NomeUniversidade, d[0].NomeFaculdade, d[0].key, d[0].CodigoArea);
